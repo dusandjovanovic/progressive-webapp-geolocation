@@ -1,9 +1,8 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-import Graph from "./graph/graph";
+import Map from "./map/map";
 import Messaging from "./messaging/messaging";
 import Statusbar from "./statusbar/statusbar";
-import AlgorithmCore from "./algorithm/core/algorithm";
 import PropTypes from "prop-types";
 
 import { Redirect } from "react-router-dom";
@@ -52,57 +51,15 @@ class Room extends React.Component {
 				{this.props.redirect ? <Redirect to="/" /> : null}
 				<Grid container>{this.props.children}</Grid>
 				<Grid container>
-					{this.props.competitive || this.props.learn ? null : (
-						<Grid item xs={3}>
-							<Messaging
-								room={this.props.room.name || ""}
-								username={this.props.username}
-								io={this.props.io}
-							/>
-						</Grid>
-					)}
-					<Grid
-						item
-						xs={this.props.competitive || this.props.learn ? 12 : 9}
-						className={classes.whiteboard}
-					>
-						<Graph
-							visualization={this.props.visualization}
-							graphManaged={this.props.graphManaged}
-							graphAnimated={this.props.graphAnimated}
-							graphAnimatedEnded={this.props.graphAnimatedEnded}
-							nodeSelected={this.props.nodeSelected}
-							nodeFocused={this.props.nodeFocused}
-							nodeCurrent={this.props.nodeCurrent}
-							nodesHighlighted={this.props.nodesHighlighted}
-							nodesAdjacent={this.props.nodesAdjacent}
-							nodeRoot={this.props.nodeRoot}
-							handlerNodeSelected={this.props.handlerNodeSelected}
-							handlerNodeFocused={this.props.handlerNodeFocused}
-							handlerNodeLostFocus={
-								this.props.handlerNodeLostFocus
-							}
-							handlerViewport={this.props.handlerViewport}
-							managedAddEdge={this.props.graphManagedAddEdge}
-							managedRemoveNode={
-								this.props.graphManagedRemoveNode
-							}
-							managedRemoveEdge={
-								this.props.graphManagedRemoveEdge
-							}
-							algorithm={this.props.algorithm}
-							algorithmState={this.props.algorithmState}
-							algorithmType={this.props.algorithmType}
-							removeEdge={(source, target) =>
-								this.props.removeEdge(source, target)
-							}
-							addEdge={(source, target) =>
-								this.props.addEdge(source, target)
-							}
-							removeNode={node => this.props.removeNode(node)}
-							width={800}
-							height={600}
+					<Grid item xs={3}>
+						<Messaging
+							room={this.props.room.name || ""}
+							username={this.props.username}
+							io={this.props.io}
 						/>
+					</Grid>
+					<Grid item xs={9} className={classes.whiteboard}>
+						<Map />
 					</Grid>
 					<Statusbar
 						users={this.props.data.users || []}
@@ -114,19 +71,6 @@ class Room extends React.Component {
 						}
 					/>
 				</Grid>
-				{this.props.algorithm ? (
-					<AlgorithmCore
-						algorithmNextState={this.props.algorithmNextState}
-						algorithmPreviousState={
-							this.props.algorithmPreviousState
-						}
-						algorithmVisualize={this.props.algorithmVisualize}
-						algorithmPause={this.props.algorithmPause}
-						algorithmType={this.props.algorithmType}
-						algorithmState={this.props.algorithmState}
-						algorithmActive={this.props.algorithmActive}
-					/>
-				) : null}
 			</Grid>
 		);
 	}
