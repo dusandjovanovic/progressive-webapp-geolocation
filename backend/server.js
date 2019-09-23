@@ -41,12 +41,11 @@ function listen() {
 }
 
 function connect() {
-	var options = {
+	mongoose.connect(config.db, {
 		keepAlive: 1,
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		useCreateIndex: true
-	};
-	mongoose.connect(config.db, options);
+	});
 	return mongoose.connection;
 }
