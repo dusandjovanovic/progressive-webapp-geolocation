@@ -1,6 +1,5 @@
 const Room = require("../models/room");
 const User = require("../models/user");
-const Graph = require("./graph");
 const { validationResult, body, param } = require("express-validator");
 
 exports.validate = method => {
@@ -40,10 +39,7 @@ exports.validate = method => {
 						return (await User.isUserByUsername(value))
 							? Promise.resolve()
 							: Promise.reject();
-					}),
-				body("maxUsers")
-					.exists()
-					.isInt()
+					})
 			];
 		}
 		case "/api/room/join/post": {
@@ -94,29 +90,13 @@ exports.validate = method => {
 					.isMongoId()
 			];
 		}
-		case "/api/room/traversal/get": {
+		case "/api/room/id/put": {
 			return [
-				param("name")
+				param("id")
 					.exists()
 					.isString()
-					.custom(async value => {
-						return (await Room.isRoomByName(value))
-							? Promise.resolve()
-							: Promise.reject();
-					})
-			];
-		}
-		case "/api/room/traversal/put": {
-			return [
-				param("name")
-					.exists()
-					.isString()
-					.custom(async value => {
-						return (await Room.isRoomByName(value))
-							? Promise.resolve()
-							: Promise.reject();
-					}),
-				body("graphTraversed").exists()
+					.isMongoId(),
+				body("payload").exists()
 			];
 		}
 		default: {
@@ -160,50 +140,69 @@ exports.getRoomByName = function(request, response, next) {
 	Room.findOne({ name: name }, function(error, room) {
 		if (error) return next(error);
 		else {
-			Graph.getGraph(room.graphId, function(error, graph) {
-				if (error) return next(error);
-				else
-					response.json({
-						success: true,
-						data: {
-							...room.toObject(),
-							graph: { ...graph.toObject() }
-						}
-					});
+			response.json({
+				success: true,
+				data: {
+					...room.toObject()
+				}
 			});
 		}
 	});
+};
+
+exports.putData = function(request, response, next) {
+	const validation = validationResult(request);
+	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
+
+	const { id } = request.params;
+	const { payload } = request.body;
+
+	Room.findOneAndUpdate(
+		{ _id: id },
+		{
+			$push: {
+				roomData: payload
+			}
+		},
+		{ new: true },
+		function(error, room) {
+			if (error) return next(error);
+			else {
+				response.json({
+					success: true,
+					data: {
+						...room.toObject()
+					}
+				});
+			}
+		}
+	);
 };
 
 exports.postCreate = function(request, response, next) {
 	const validation = validationResult(request);
 	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
 
-	const { name, maxUsers, createdBy, roomType } = request.body;
+	const { name, createdBy, roomType } = request.body;
 
-	Graph.createGraph(null, function(error, object) {
-		if (error) return next(error);
-		Room.create(
-			{
-				name: name,
-				roomType: roomType,
-				currentUsers: 1,
-				maxUsers: maxUsers,
-				createdBy: createdBy,
-				users: [createdBy],
-				graphId: object["_id"]
-			},
-			function(error) {
-				if (error) return next(error);
-				else
-					response.json({
-						success: true,
-						message:
-							"Room created successfully. You are a room master now."
-					});
-			}
-		);
-	});
+	Room.create(
+		{
+			name: name,
+			currentUsers: 1,
+			users: [createdBy],
+			roomType: roomType,
+			roomData: []
+		},
+		function(error) {
+			if (error) return next(error);
+			else
+				response.json({
+					success: true,
+					message:
+						"Room created successfully. You are a room master now."
+				});
+		}
+	);
 };
 
 exports.postJoin = function(request, response, next) {
@@ -219,11 +218,7 @@ exports.postJoin = function(request, response, next) {
 				message: "Room with the name provided was not found."
 			});
 		else {
-			if (room.currentUsers === room.maxUsers)
-				return next({
-					message: "Room is full. You cannot join at this time."
-				});
-			else if (room.users.indexOf(username) === -1)
+			if (room.users.indexOf(username) === -1)
 				Room.update(
 					{ name: roomName },
 					{
@@ -264,8 +259,13 @@ exports.postLeave = function(request, response, next) {
 			if (room.users.includes(username)) {
 				const users = room.users.filter(user => user !== username);
 				const currentUsers = room.currentUsers - 1;
-				if (currentUsers === 0) {
-					Room.deleteOne({ name: roomName }, function(error) {
+				Room.update(
+					{ name: roomName },
+					{
+						currentUsers: currentUsers,
+						users: users
+					},
+					function(error) {
 						if (error) return next(error);
 						else
 							Room.find(function(error, rooms) {
@@ -274,41 +274,12 @@ exports.postLeave = function(request, response, next) {
 									response.json({
 										success: true,
 										message:
-											username +
-											" has deleted the room. You will now leave.",
-										newMaster: null,
+											username + " has left the room.",
 										rooms: rooms
 									});
 							});
-					});
-				} else {
-					const newMaster =
-						room.createdBy === username ? users[0] : null;
-					Room.update(
-						{ name: roomName },
-						{
-							createdBy: newMaster || room.createdBy,
-							currentUsers: currentUsers,
-							users: users
-						},
-						function(error) {
-							if (error) return next(error);
-							else
-								Room.find(function(error, rooms) {
-									if (error) return next(error);
-									else
-										response.json({
-											success: true,
-											message:
-												username +
-												" has left the room.",
-											newMaster: newMaster,
-											rooms: rooms
-										});
-								});
-						}
-					);
-				}
+					}
+				);
 			} else
 				return next({
 					message:
@@ -338,42 +309,4 @@ exports.delete = function(request, response, next) {
 			});
 		}
 	});
-};
-
-exports.getTraversalByName = function(request, response, next) {
-	const validation = validationResult(request);
-	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
-
-	const { name } = request.params;
-
-	Room.findOne({ name: name }, function(error, room) {
-		if (error) return next(error);
-		else
-			response.json({
-				success: true,
-				graphTraversed: room.graphTraversed
-			});
-	});
-};
-
-exports.putTraversal = function(request, response, next) {
-	const validation = validationResult(request);
-	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
-
-	const { name } = request.params;
-	const { graphTraversed } = request.body;
-
-	Room.findOneAndUpdate(
-		{ name: name },
-		{ $set: { graphTraversed: graphTraversed } },
-		{ new: true },
-		function(error, room) {
-			if (error) return next(error);
-			else
-				response.json({
-					success: true,
-					graphTraversed: room.graphTraversed
-				});
-		}
-	);
 };
