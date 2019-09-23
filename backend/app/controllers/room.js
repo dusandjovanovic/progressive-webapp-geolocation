@@ -218,7 +218,7 @@ exports.postJoin = function(request, response, next) {
 			});
 		else {
 			if (room.users.indexOf(username) === -1)
-				Room.update(
+				Room.updateOne(
 					{ name: roomName },
 					{
 						currentUsers: room.currentUsers + 1,
@@ -258,7 +258,7 @@ exports.postLeave = function(request, response, next) {
 			if (room.users.includes(username)) {
 				const users = room.users.filter(user => user !== username);
 				const currentUsers = room.currentUsers - 1;
-				Room.update(
+				Room.updateOne(
 					{ name: roomName },
 					{
 						currentUsers: currentUsers,
