@@ -3,7 +3,7 @@ require("dotenv").config();
 module.exports = {
 	apps: [
 		{
-			name: "Structured",
+			name: "Mapper",
 			script: "server.js",
 			instances: 2,
 			autorestart: true,
