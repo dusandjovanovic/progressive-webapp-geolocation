@@ -198,8 +198,7 @@ exports.postCreate = function(request, response, next) {
 			else
 				response.json({
 					success: true,
-					message:
-						"Room created successfully. You are a room master now."
+					message: "Room created successfully."
 				});
 		}
 	);
