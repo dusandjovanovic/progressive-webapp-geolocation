@@ -22,6 +22,12 @@ export const styles = theme => ({
 		flexDirection: "column",
 		alignItems: "flex-start"
 	},
+	description: {
+		height: "2.5rem",
+		overflow: "hidden",
+		whiteSpace: "nowrap",
+		textOverflow: "ellipsis"
+	},
 	actions: {
 		padding: theme.spacing(1.25),
 		display: "flex",
@@ -30,6 +36,9 @@ export const styles = theme => ({
 	},
 	chip: {
 		margin: theme.spacing(0.25)
+	},
+	chipWrapper: {
+		height: "32px"
 	},
 	icon: {
 		marginLeft: theme.spacing(0.5)

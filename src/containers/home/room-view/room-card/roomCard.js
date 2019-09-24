@@ -11,23 +11,27 @@ import Avatar from "@material-ui/core/Avatar";
 import FaceIcon from "@material-ui/icons/Face";
 import ChevronRightIcon from "@material-ui/icons/ArrowForwardIos";
 import RoomBackground from "../../../../assets/images/room-background.jpg";
-import RoomBackgroundAlt from "../../../../assets/images/room-background-alt.jpg";
+import RoomBackgroundPolution from "../../../../assets/images/room-background-polution.jpg";
 import PropTypes from "prop-types";
 
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
+import {
+	ROOM_TYPE_POLUTION,
+	ROOM_TYPE_PLACES
+} from "../../../../utils/constants";
 
 const roomCard = props => {
 	const { classes } = props;
 
 	const prettyDescription = type => {
 		switch (type) {
-			case "practice":
-				return "This is a practice room where you get to know graphs and algorithms along with chatting.";
-			case "compete":
-				return "This is a compete room where you get to check how much you know about graph traversals.";
+			case ROOM_TYPE_POLUTION:
+				return "This is room dedicated to sharing current Air polution metrics and insights.";
+			case ROOM_TYPE_PLACES:
+				return "This is room dedicated to sharing interesteing and intriguing places with others along with chatting.";
 			default:
-				return "This is learn room wjere you can learn about graphs alone.";
+				return "This is an empty room.";
 		}
 	};
 
@@ -41,7 +45,9 @@ const roomCard = props => {
 	};
 
 	const imageByType = type => {
-		return type === "practice" ? RoomBackground : RoomBackgroundAlt;
+		return type === ROOM_TYPE_PLACES
+			? RoomBackground
+			: RoomBackgroundPolution;
 	};
 
 	return (
@@ -61,7 +67,11 @@ const roomCard = props => {
 				>
 					{prettyDateFormat(props.time)}
 				</Typography>
-				<Typography variant="subtitle2" color="textSecondary">
+				<Typography
+					variant="subtitle2"
+					color="textSecondary"
+					className={classes.description}
+				>
 					{prettyDescription(props.type)}
 				</Typography>
 				<Divider variant="middle" light className={classes.divider} />
@@ -83,9 +93,7 @@ const roomCard = props => {
 			</CardContent>
 			<CardActions
 				className={classes.actions}
-				onClick={() =>
-					props.enterRoom(props.name, props.maxUsers, props.type)
-				}
+				onClick={() => props.enterRoom(props.name, 10, props.type)}
 			>
 				<Button
 					variant="text"
@@ -99,23 +107,6 @@ const roomCard = props => {
 					/>
 				</Button>
 			</CardActions>
-			{props.currentUsers === props.maxUsers ? (
-				<div className={classes.occupied}>
-					<Typography
-						variant="h5"
-						color="textSecondary"
-						className={classes.occupiedTitle}
-					>
-						Room is full
-					</Typography>
-					<Typography variant="h4" color="textSecondary">
-						{props.currentUsers}
-					</Typography>
-					<Typography variant="h5" color="textSecondary">
-						{props.maxUsers}
-					</Typography>
-				</div>
-			) : null}
 		</Card>
 	);
 };
@@ -126,8 +117,6 @@ roomCard.propTypes = {
 	name: PropTypes.string.isRequired,
 	time: PropTypes.string.isRequired,
 	users: PropTypes.array.isRequired,
-	currentUsers: PropTypes.number.isRequired,
-	maxUsers: PropTypes.number.isRequired,
 	enterRoom: PropTypes.func.isRequired
 };
 
