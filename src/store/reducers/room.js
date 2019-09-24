@@ -2,14 +2,13 @@ import {
 	ROOM_INIT,
 	ROOM_END,
 	ROOM_DATA,
+	ROOM_METADATA_ADD,
+	ROOM_METADATA_CHANGE,
 	ROOM_ALL,
 	ROOM_CREATE,
 	ROOM_ADD,
-	ROOM_DELETE,
 	ROOM_JOIN,
 	ROOM_LEAVE,
-	ROOM_GRAPH_CHANGE,
-	ROOM_TRAVERSAL_CHANGE,
 	ROOM_ERROR
 } from "../actions.js";
 
@@ -21,9 +20,8 @@ const initialState = {
 	},
 	data: {
 		_id: null,
-		graph: null,
-		graphTraversed: null,
-		users: []
+		users: [],
+		roomData: []
 	},
 	waiting: false,
 	error: null
@@ -81,6 +79,25 @@ const reducer = (state = initialState, action) => {
 					master: action.master
 				}
 			};
+		case ROOM_METADATA_ADD: {
+			let roomData = [...state.data.roomData];
+			roomData.push(action.payload);
+			return {
+				...state,
+				data: {
+					...state.data,
+					roomData: roomData
+				}
+			};
+		}
+		case ROOM_METADATA_CHANGE: {
+			return {
+				...state,
+				data: {
+					...action.data
+				}
+			};
+		}
 		case ROOM_JOIN:
 			return {
 				...state,
@@ -102,30 +119,6 @@ const reducer = (state = initialState, action) => {
 					users: []
 				}
 			};
-		case ROOM_DELETE:
-			return {
-				...state,
-				rooms: [...state.rooms].filter(
-					element => element["_id"] !== state.data["_id"]
-				)
-			};
-		case ROOM_GRAPH_CHANGE:
-			return {
-				...state,
-				data: {
-					...state.data,
-					graph: action.graph
-				}
-			};
-		case ROOM_TRAVERSAL_CHANGE: {
-			return {
-				...state,
-				data: {
-					...state.data,
-					graphTraversed: action.graphTraversed
-				}
-			};
-		}
 		case ROOM_ERROR:
 			return {
 				...state,

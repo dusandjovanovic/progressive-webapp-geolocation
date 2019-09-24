@@ -8,7 +8,20 @@ const RoomSchema = new mongoose.Schema({
 	},
 	users: [
 		{
-			type: String
+			username: {
+				type: String,
+				required: true
+			},
+			location: {
+				latitude: {
+					type: Number,
+					required: true
+				},
+				longitude: {
+					type: Number,
+					required: true
+				}
+			}
 		}
 	],
 	time: {
@@ -22,20 +35,34 @@ const RoomSchema = new mongoose.Schema({
 	},
 	roomData: [
 		{
-			type: String,
 			properties: {
-				time: Date,
-				name: String,
-				value: Number,
-				amenity: String
+				time: {
+					type: Date,
+					required: true
+				},
+				name: {
+					type: String,
+					required: true
+				},
+				value: {
+					type: Number,
+					required: false
+				},
+				amenity: {
+					type: String,
+					required: false
+				},
+				author: {
+					type: String,
+					required: true
+				}
 			},
 			geometry: {
-				type: String,
-				coordinates: [
-					{
-						type: Number
-					}
-				]
+				type: {
+					type: String,
+					required: true
+				},
+				coordinates: [Number]
 			}
 		}
 	]

@@ -4,12 +4,9 @@ import {
 	roomLeaveRoute,
 	roomGetAllRoute,
 	roomGetDataRoute,
-	roomGetGraphRoute,
-	roomChangeGraphRoute,
-	roomGetTraversalRoute,
-	roomChangeTraversalRoute,
-	roomDeleteRoute,
-	roomCreateNewRoute
+	roomCreateNewRoute,
+	roomChangeMetadataRoute,
+	roomGetMetadataRoute
 } from "../../utils/constantsAPI";
 
 import {
@@ -19,12 +16,11 @@ import {
 	ROOM_ALL,
 	ROOM_CREATE,
 	ROOM_ADD,
-	ROOM_DELETE,
 	ROOM_JOIN,
 	ROOM_LEAVE,
-	ROOM_GRAPH_CHANGE,
-	ROOM_TRAVERSAL_CHANGE,
-	ROOM_ERROR
+	ROOM_ERROR,
+	ROOM_METADATA_CHANGE,
+	ROOM_METADATA_ADD
 } from "../actions.js";
 
 const roomCreate = name => {
@@ -38,12 +34,6 @@ const roomAdd = room => {
 	return {
 		type: ROOM_ADD,
 		room: room
-	};
-};
-
-const roomDelete = () => {
-	return {
-		type: ROOM_DELETE
 	};
 };
 
@@ -90,24 +80,24 @@ const roomAll = rooms => {
 	};
 };
 
-const roomGraphChange = graph => {
-	return {
-		type: ROOM_GRAPH_CHANGE,
-		graph: graph
-	};
-};
-
-const roomTraversalChange = graphTraversed => {
-	return {
-		type: ROOM_TRAVERSAL_CHANGE,
-		graphTraversed: graphTraversed
-	};
-};
-
 const roomError = error => {
 	return {
 		type: ROOM_ERROR,
 		error: error
+	};
+};
+
+export const roomMetadataAdd = payload => {
+	return {
+		type: ROOM_METADATA_ADD,
+		payload: payload
+	};
+};
+
+export const roomMetadataChange = data => {
+	return {
+		type: ROOM_METADATA_CHANGE,
+		data: data
 	};
 };
 
@@ -131,12 +121,12 @@ export const roomGetAll = (mode = "all") => {
 	};
 };
 
-export const roomGetData = (name, overwriteGraph = true) => {
+export const roomGetData = (id, overwriteGraph = true) => {
 	return async (dispatch, getState) => {
 		let response;
 
 		try {
-			response = await axios.getInstance().get(roomGetDataRoute(name));
+			response = await axios.getInstance().get(roomGetDataRoute(id));
 
 			if (response.data.success) {
 				dispatch(
@@ -189,14 +179,16 @@ export const roomCreateNew = (name, maxUsers, roomType) => {
 	};
 };
 
-export const roomJoinExisting = name => {
+export const roomJoinExisting = (id, name, latitude = 0.0, longitude = 0.0) => {
 	return async (dispatch, getState) => {
 		const username = getState().auth.username;
 
 		dispatch(roomInitiate());
 		const payload = {
 			roomName: name,
-			username: username
+			username: username,
+			latitude: latitude,
+			longitude: longitude
 		};
 
 		try {
@@ -207,7 +199,7 @@ export const roomJoinExisting = name => {
 				});
 
 			if (response.data.success) {
-				const roomData = await dispatch(roomGetData(name));
+				const roomData = await dispatch(roomGetData(id));
 				dispatch(
 					roomJoin(
 						roomData.data.data.name,
@@ -224,7 +216,7 @@ export const roomJoinExisting = name => {
 	};
 };
 
-export const roomLeaveExisting = roomDeleted => {
+export const roomLeaveExisting = () => {
 	return async (dispatch, getState) => {
 		dispatch(roomInitiate());
 		const payload = {
@@ -233,48 +225,13 @@ export const roomLeaveExisting = roomDeleted => {
 		};
 		let response;
 
-		if (roomDeleted) {
-			dispatch(roomLeave(getState().auth.username));
-			dispatch(roomDelete());
-			dispatch(roomEnd());
-		} else {
-			try {
-				response = await axios
-					.getInstance()
-					.post(roomLeaveRoute, payload, {
-						"Content-Type": "application/x-www-form-urlencoded"
-					});
-
-				if (response.data.success) {
-					dispatch(roomLeave(getState().auth.username));
-					dispatch(roomAll(response.data.rooms));
-					dispatch(roomEnd());
-				} else {
-					dispatch(roomError(response.data.message));
-				}
-			} catch (error) {
-				dispatch(roomError(error.response.data.message));
-			}
-		}
-
-		return response;
-	};
-};
-
-export const roomDeleteExisting = () => {
-	return async (dispatch, getState) => {
-		dispatch(roomInitiate());
-		const roomId = getState().room.data["_id"];
-		const username = getState().auth.username;
-
 		try {
-			const response = await axios
-				.getInstance()
-				.delete(roomDeleteRoute(roomId));
+			response = await axios.getInstance().post(roomLeaveRoute, payload, {
+				"Content-Type": "application/x-www-form-urlencoded"
+			});
 
 			if (response.data.success) {
-				dispatch(roomLeave(username));
-				dispatch(roomDelete());
+				dispatch(roomLeave(getState().auth.username));
 				dispatch(roomAll(response.data.rooms));
 				dispatch(roomEnd());
 			} else {
@@ -283,21 +240,23 @@ export const roomDeleteExisting = () => {
 		} catch (error) {
 			dispatch(roomError(error.response.data.message));
 		}
+
+		return response;
 	};
 };
 
-export const roomGetGraph = () => {
+export const roomGetMetadata = () => {
 	return async (dispatch, getState) => {
-		const graphId = getState().room.data.graphId;
+		dispatch(roomInitiate());
+		const id = getState().room._id;
 		let response;
 
 		try {
-			response = await axios
-				.getInstance()
-				.get(roomGetGraphRoute(graphId));
+			response = await axios.getInstance().get(roomGetMetadataRoute(id));
 
 			if (response.data.success) {
-				dispatch(roomGraphChange(response.data.data));
+				dispatch(roomMetadataChange(response.data.data));
+				dispatch(roomEnd());
 			} else {
 				dispatch(roomError(response.data.message));
 			}
@@ -309,23 +268,25 @@ export const roomGetGraph = () => {
 	};
 };
 
-export const roomChangeGraph = graph => {
+export const roomChangeMetadata = metadata => {
 	return async (dispatch, getState) => {
-		const graphId = getState().room.data.graphId;
+		dispatch(roomInitiate());
+		const id = getState().room._id;
 		let response;
 		const payload = {
-			graph: graph
+			roomData: metadata
 		};
 
 		try {
 			response = await axios
 				.getInstance()
-				.put(roomChangeGraphRoute(graphId), payload, {
+				.put(roomChangeMetadataRoute(id), payload, {
 					"Content-Type": "application/x-www-form-urlencoded"
 				});
 
 			if (response.data.success) {
-				dispatch(roomGraphChange(graph));
+				dispatch(roomMetadataChange(metadata));
+				dispatch(roomEnd());
 			} else {
 				dispatch(roomError(response.data.message));
 			}
@@ -337,53 +298,10 @@ export const roomChangeGraph = graph => {
 	};
 };
 
-export const roomGetTraversal = () => {
-	return async (dispatch, getState) => {
-		const roomName = getState().room.data.name;
-		let response;
-
-		try {
-			response = await axios
-				.getInstance()
-				.get(roomGetTraversalRoute(roomName));
-
-			if (response.data.success) {
-				dispatch(roomTraversalChange(response.data.graphTraversed));
-			} else {
-				dispatch(roomError(response.data.message));
-			}
-		} catch (error) {
-			dispatch(roomError(error.response.data.message));
-		}
-
-		return response;
-	};
-};
-
-export const roomChangeTraversal = graphTraversed => {
-	return async (dispatch, getState) => {
-		const roomName = getState().room.data.name;
-		let response;
-		const payload = {
-			graphTraversed: graphTraversed
-		};
-
-		try {
-			response = await axios
-				.getInstance()
-				.put(roomChangeTraversalRoute(roomName), payload, {
-					"Content-Type": "application/x-www-form-urlencoded"
-				});
-
-			if (response.data.success) {
-				dispatch(roomTraversalChange(response.data.graphTraversed));
-			} else {
-				dispatch(roomError(response.data.message));
-			}
-		} catch (error) {
-			dispatch(roomError(error.response.data.message));
-		}
-
-		return response;
+export const roomPushMetadata = metadataItem => {
+	return async dispatch => {
+		dispatch(roomInitiate());
+		dispatch(roomMetadataAdd(metadataItem));
+		dispatch(roomEnd());
 	};
 };

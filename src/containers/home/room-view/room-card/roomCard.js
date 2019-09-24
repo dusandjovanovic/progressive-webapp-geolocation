@@ -79,8 +79,8 @@ const roomCard = props => {
 					{props.users.map(user => (
 						<Chip
 							color="primary"
-							key={user}
-							label={user}
+							key={user.username}
+							label={user.username}
 							className={classes.chip}
 							avatar={
 								<Avatar>
@@ -93,7 +93,7 @@ const roomCard = props => {
 			</CardContent>
 			<CardActions
 				className={classes.actions}
-				onClick={() => props.enterRoom(props.name, 10, props.type)}
+				onClick={() => props.enterRoom(props.id, props.name)}
 			>
 				<Button
 					variant="text"
@@ -114,6 +114,7 @@ const roomCard = props => {
 roomCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	type: PropTypes.string.isRequired,
+	id: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
 	time: PropTypes.string.isRequired,
 	users: PropTypes.array.isRequired,

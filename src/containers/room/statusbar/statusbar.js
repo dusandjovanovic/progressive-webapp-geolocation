@@ -35,9 +35,9 @@ const statusbar = props => {
 						classes.element,
 						classes.elementLight
 					)}
-					key={user}
+					key={user.user}
 				>
-					{user}
+					{user.user}
 				</Typography>
 			))}
 			{props.graphManaged ? (

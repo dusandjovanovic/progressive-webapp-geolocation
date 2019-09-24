@@ -12,16 +12,23 @@ exports.validate = method => {
 					.isIn(["all", "learn", "practice", "compete"])
 			];
 		}
-		case "/api/room/get/name/get": {
+		case "/api/room/get/id/get": {
 			return [
-				param("name")
+				param("id")
 					.exists()
 					.isString()
-					.custom(async value => {
-						return (await Room.isRoomByName(value))
-							? Promise.resolve()
-							: Promise.reject();
-					})
+					.isMongoId()
+			];
+		}
+		case "/api/room/metadata/post": {
+			return [
+				param("id")
+					.exists()
+					.isString()
+					.isMongoId(),
+				body("roomData")
+					.exists()
+					.isString()
 			];
 		}
 		case "/api/room/create/post": {
@@ -59,7 +66,13 @@ exports.validate = method => {
 						return (await Room.isRoomByName(value))
 							? Promise.resolve()
 							: Promise.reject();
-					})
+					}),
+				body("latitude")
+					.exists()
+					.isNumeric(),
+				body("longitude")
+					.exists()
+					.isNumeric()
 			];
 		}
 		case "/api/room/leave/post": {
@@ -131,13 +144,13 @@ exports.get = function(request, response, next) {
 		});
 };
 
-exports.getRoomByName = function(request, response, next) {
+exports.getRoomById = function(request, response, next) {
 	const validation = validationResult(request);
 	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
 
-	const { name } = request.params;
+	const { id } = request.params;
 
-	Room.findOne({ name: name }, function(error, room) {
+	Room.findById(id, function(error, room) {
 		if (error) return next(error);
 		else {
 			response.json({
@@ -179,6 +192,51 @@ exports.putData = function(request, response, next) {
 	);
 };
 
+exports.getMetdata = function(request, response, next) {
+	const validation = validationResult(request);
+	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
+
+	const { id } = request.params;
+
+	Room.findById(id, function(error, room) {
+		if (error) return next(error);
+		else {
+			response.json({
+				success: true,
+				data: {
+					data: room.roomData
+				}
+			});
+		}
+	});
+};
+
+exports.postMetadata = function(request, response, next) {
+	const validation = validationResult(request);
+	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
+
+	const { id } = request.params;
+	const { roomData } = request.body;
+
+	Room.findOneAndUpdate(
+		{ _id: id },
+		{
+			$set: {
+				roomData: roomData
+			}
+		},
+		{ new: true },
+		function(error) {
+			if (error) return next(error);
+			else {
+				response.json({
+					success: true
+				});
+			}
+		}
+	);
+};
+
 exports.postCreate = function(request, response, next) {
 	const validation = validationResult(request);
 	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
@@ -188,7 +246,6 @@ exports.postCreate = function(request, response, next) {
 	Room.create(
 		{
 			name: name,
-			currentUsers: 1,
 			users: [createdBy],
 			roomType: roomType,
 			roomData: []
@@ -208,7 +265,7 @@ exports.postJoin = function(request, response, next) {
 	const validation = validationResult(request);
 	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
 
-	const { roomName, username } = request.body;
+	const { roomName, username, latitude, longitude } = request.body;
 
 	Room.findOne({ name: roomName }, function(error, room) {
 		if (error) return next(error);
@@ -217,12 +274,20 @@ exports.postJoin = function(request, response, next) {
 				message: "Room with the name provided was not found."
 			});
 		else {
-			if (room.users.indexOf(username) === -1)
+			let usersInRoom = room.users.map(element => element.username);
+			if (usersInRoom.includes(username))
 				Room.updateOne(
 					{ name: roomName },
 					{
-						currentUsers: room.currentUsers + 1,
-						$push: { users: username }
+						$push: {
+							users: {
+								username: username,
+								location: {
+									latitude,
+									longitude
+								}
+							}
+						}
 					},
 					function(error) {
 						if (error) return next(error);
@@ -255,13 +320,14 @@ exports.postLeave = function(request, response, next) {
 				message: "Room with the name provided was not found."
 			});
 		else {
-			if (room.users.includes(username)) {
-				const users = room.users.filter(user => user !== username);
-				const currentUsers = room.currentUsers - 1;
+			let usersInRoom = room.users.map(element => element.username);
+			if (usersInRoom.includes(username)) {
+				const users = room.users.filter(
+					element => element.username !== username
+				);
 				Room.updateOne(
 					{ name: roomName },
 					{
-						currentUsers: currentUsers,
 						users: users
 					},
 					function(error) {
