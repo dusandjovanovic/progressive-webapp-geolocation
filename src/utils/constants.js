@@ -1,6 +1,8 @@
 export const ROOM_TYPE_LEARN = "learn";
 export const ROOM_TYPE_PRACTICE = "practice";
 export const ROOM_TYPE_COMPETE = "compete";
+export const ROOM_TYPE_POLUTION = "ROOM_POLUTION";
+export const ROOM_TYPE_PLACES = "ROOM_PLACES";
 
 export const ALGORITHM_BREADTH = "ALGORITHM_BREADTH";
 export const ALGORITHM_DEPTH = "ALGORITHM_DEPTH";

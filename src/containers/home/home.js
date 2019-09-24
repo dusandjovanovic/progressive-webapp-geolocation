@@ -1,22 +1,18 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import RoomNew from "./room-new/roomNew";
-import RoomNewModal from "./room-new-modal/roomNewModal";
 import RoomView from "./room-view/roomView";
 import Divider from "@material-ui/core/Divider";
 import PropTypes from "prop-types";
 
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import {
-	roomGetAll,
-	roomJoinExisting,
-	roomCreateNew
-} from "../../store/actions/index";
+import { roomGetAll, roomJoinExisting } from "../../store/actions/index";
 
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
 import withErrorHandler from "../../hoc/with-error-handler/withErrorHandler";
+import { ROOM_TYPE_PLACES, ROOM_TYPE_POLUTION } from "../../utils/constants";
 
 class Home extends React.Component {
 	state = {
@@ -46,27 +42,6 @@ class Home extends React.Component {
 		});
 	};
 
-	createAndEnterRoom = (name, maxUsers, roomType) => {
-		this.props.roomCreateNew(name, maxUsers, roomType);
-		this.setState({
-			redirect: true
-		});
-	};
-
-	handleNewRoomOpen = () => {
-		this.setState({
-			newRoom: true
-		});
-	};
-
-	handleNewRoomClose = () => {
-		if (!this.state.error.hasError) {
-			this.setState({
-				newRoom: false
-			});
-		}
-	};
-
 	render() {
 		const { classes } = this.props;
 
@@ -78,28 +53,20 @@ class Home extends React.Component {
 			!this.props.error &&
 			this.props.data._id
 		) {
-			if (this.props.data.roomType === "practice")
+			if (
+				this.props.data.roomType === ROOM_TYPE_PLACES ||
+				this.props.data.roomType === ROOM_TYPE_POLUTION
+			)
 				redirection = <Redirect to="/room" />;
-			else if (this.props.data.roomType === "compete")
-				redirection = <Redirect to="/compete" />;
-			else if (this.props.data.roomType === "learn")
-				redirection = <Redirect to="/learn" />;
 		}
 
 		return (
 			<Grid container className={classes.root}>
 				{redirection}
-				<RoomNewModal
-					open={this.state.newRoom}
-					handleModalClose={this.handleNewRoomClose}
-					createAndEnterRoom={this.createAndEnterRoom}
-				/>
+
 				<Grid container justify="center" alignItems="center">
 					<Grid item md={8} xs={10}>
-						<RoomNew
-							username={this.props.username}
-							handleNewRoomOpen={this.handleNewRoomOpen}
-						/>
+						<RoomNew username={this.props.username} />
 					</Grid>
 					<Grid item xs={10}>
 						<Divider variant="middle" className={classes.divider} />
@@ -131,9 +98,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		roomGetAll: mode => dispatch(roomGetAll(mode)),
-		roomJoinExisting: name => dispatch(roomJoinExisting(name)),
-		roomCreateNew: (name, maxUsers, roomType) =>
-			dispatch(roomCreateNew(name, maxUsers, roomType))
+		roomJoinExisting: name => dispatch(roomJoinExisting(name))
 	};
 };
 
@@ -146,8 +111,7 @@ Home.propTypes = {
 	waiting: PropTypes.bool.isRequired,
 	error: PropTypes.string,
 	roomGetAll: PropTypes.func.isRequired,
-	roomJoinExisting: PropTypes.func.isRequired,
-	roomCreateNew: PropTypes.func.isRequired
+	roomJoinExisting: PropTypes.func.isRequired
 };
 
 export default connect(

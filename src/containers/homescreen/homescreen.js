@@ -20,7 +20,7 @@ class Homescreen extends React.Component {
 							gutterBottom
 							className={classes.headingText}
 						>
-							structured
+							mapped
 						</Typography>
 					</Grow>
 					<Grow in timeout={1500}>
@@ -28,7 +28,7 @@ class Homescreen extends React.Component {
 							variant="h5"
 							className={classes.headingSubtext}
 						>
-							learning graphs effortlessly.
+							progressive geolocation-based application.
 						</Typography>
 					</Grow>
 				</div>

@@ -41,7 +41,11 @@ function listen() {
 }
 
 function connect() {
-	var options = { keepAlive: 1, useNewUrlParser: true, useCreateIndex: true };
-	mongoose.connect(config.db, options);
+	mongoose.connect(config.db, {
+		keepAlive: 1,
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useCreateIndex: true
+	});
 	return mongoose.connection;
 }

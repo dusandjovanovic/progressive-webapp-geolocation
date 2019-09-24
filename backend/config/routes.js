@@ -3,7 +3,6 @@
 const home = require("../app/controllers/home");
 const user = require("../app/controllers/user");
 const room = require("../app/controllers/room");
-const graph = require("../app/controllers/graph");
 const friendRequest = require("../app/controllers/friend-request");
 
 module.exports = function(app, passport) {
@@ -95,6 +94,13 @@ module.exports = function(app, passport) {
 		room.getRoomByName
 	);
 
+	app.put(
+		"/api/room/:id",
+		authenticated,
+		room.validate("/api/room/id/put"),
+		room.putData
+	);
+
 	app.post(
 		"/api/room/create",
 		authenticated,
@@ -121,41 +127,6 @@ module.exports = function(app, passport) {
 		authenticated,
 		room.validate("/api/room/id/delete"),
 		room.delete
-	);
-
-	app.get(
-		"/api/room/traversal/:name",
-		room.validate("/api/room/traversal/get"),
-		authenticated,
-		room.getTraversalByName
-	);
-
-	app.put(
-		"/api/room/traversal/:name",
-		graph.validate("/api/room/traversal/put"),
-		authenticated,
-		room.putTraversal
-	);
-
-	app.get(
-		"/api/graph/:id",
-		graph.validate("/api/graph/get"),
-		authenticated,
-		graph.get
-	);
-
-	app.put(
-		"/api/graph/:id",
-		graph.validate("/api/graph/put"),
-		authenticated,
-		graph.put
-	);
-
-	app.post(
-		"/api/graph/",
-		graph.validate("/api/graph/post"),
-		authenticated,
-		graph.post
 	);
 
 	app.use(function(error, request, response, next) {

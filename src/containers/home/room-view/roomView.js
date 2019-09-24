@@ -23,8 +23,6 @@ const roomView = props => {
 									name={room.name}
 									time={room.time}
 									users={room.users}
-									currentUsers={room.currentUsers}
-									maxUsers={room.maxUsers}
 									enterRoom={props.enterRoom}
 								/>
 							</Grid>

@@ -81,7 +81,7 @@ class Header extends React.Component {
 					<div className={classes.flex}>
 						<Hidden mdDown implementation="css">
 							<Button className={classes.title}>
-								structured
+								mapped
 							</Button>
 						</Hidden>
 					</div>
