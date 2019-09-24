@@ -29,5 +29,8 @@ export {
 	roomLeaveExisting,
 	roomPushMetadata,
 	roomChangeMetadata,
-	roomGetMetadata
+	roomGetMetadata,
+	roomAddNewUser,
+	roomChangeUser,
+	roomDeleteUser
 } from "./room";

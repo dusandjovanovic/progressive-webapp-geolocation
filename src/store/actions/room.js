@@ -20,7 +20,10 @@ import {
 	ROOM_LEAVE,
 	ROOM_ERROR,
 	ROOM_METADATA_CHANGE,
-	ROOM_METADATA_ADD
+	ROOM_METADATA_ADD,
+	ROOM_USER_CHANGED,
+	ROOM_USER_ENTERED,
+	ROOM_USER_LEFT
 } from "../actions.js";
 
 const roomCreate = name => {
@@ -64,12 +67,12 @@ const roomEnd = () => {
 	};
 };
 
-const roomData = (data, master, overwriteGraph) => {
+const roomData = (data, master, overwriteMetadata) => {
 	return {
 		type: ROOM_DATA,
 		master: master,
 		data: data,
-		overwriteGraph: overwriteGraph
+		overwriteMetadata: overwriteMetadata
 	};
 };
 
@@ -87,14 +90,35 @@ const roomError = error => {
 	};
 };
 
-export const roomMetadataAdd = payload => {
+const roomUserEntered = user => {
+	return {
+		type: ROOM_USER_ENTERED,
+		user: user
+	};
+};
+
+const roomUserChanged = user => {
+	return {
+		type: ROOM_USER_CHANGED,
+		user: user
+	};
+};
+
+const roomUserLeft = username => {
+	return {
+		type: ROOM_USER_LEFT,
+		username: username
+	};
+};
+
+const roomMetadataAdd = payload => {
 	return {
 		type: ROOM_METADATA_ADD,
 		payload: payload
 	};
 };
 
-export const roomMetadataChange = data => {
+const roomMetadataChange = data => {
 	return {
 		type: ROOM_METADATA_CHANGE,
 		data: data
@@ -121,7 +145,7 @@ export const roomGetAll = (mode = "all") => {
 	};
 };
 
-export const roomGetData = (id, overwriteGraph = true) => {
+export const roomGetData = (id, overwriteMetadata = true) => {
 	return async (dispatch, getState) => {
 		let response;
 
@@ -134,7 +158,7 @@ export const roomGetData = (id, overwriteGraph = true) => {
 						response.data.data,
 						getState().auth.username ===
 							response.data.data.createdBy,
-						overwriteGraph
+						overwriteMetadata
 					)
 				);
 			} else {
@@ -302,6 +326,30 @@ export const roomPushMetadata = metadataItem => {
 	return async dispatch => {
 		dispatch(roomInitiate());
 		dispatch(roomMetadataAdd(metadataItem));
+		dispatch(roomEnd());
+	};
+};
+
+export const roomAddNewUser = user => {
+	return async dispatch => {
+		dispatch(roomInitiate());
+		dispatch(roomUserEntered(user));
+		dispatch(roomEnd());
+	};
+};
+
+export const roomChangeUser = user => {
+	return async dispatch => {
+		dispatch(roomInitiate());
+		dispatch(roomUserChanged(user));
+		dispatch(roomEnd());
+	};
+};
+
+export const roomDeleteUser = username => {
+	return async dispatch => {
+		dispatch(roomInitiate());
+		dispatch(roomUserLeft(username));
 		dispatch(roomEnd());
 	};
 };

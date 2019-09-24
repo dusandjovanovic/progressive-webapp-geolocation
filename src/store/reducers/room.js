@@ -4,6 +4,9 @@ import {
 	ROOM_DATA,
 	ROOM_METADATA_ADD,
 	ROOM_METADATA_CHANGE,
+	ROOM_USER_CHANGED,
+	ROOM_USER_ENTERED,
+	ROOM_USER_LEFT,
 	ROOM_ALL,
 	ROOM_CREATE,
 	ROOM_ADD,
@@ -11,6 +14,9 @@ import {
 	ROOM_LEAVE,
 	ROOM_ERROR
 } from "../actions.js";
+
+import cloneDeep from "lodash/cloneDeep";
+import filter from "lodash/filter";
 
 const initialState = {
 	rooms: [],
@@ -55,9 +61,7 @@ const reducer = (state = initialState, action) => {
 				}
 			};
 		case ROOM_ADD: {
-			let rooms = state.rooms.map(room => ({
-				...room
-			}));
+			let rooms = cloneDeep(state.rooms);
 			rooms.push(action.room);
 			return {
 				...state,
@@ -70,9 +74,9 @@ const reducer = (state = initialState, action) => {
 				data: {
 					...state.data,
 					...action.data,
-					graph: action.overwriteGraph
-						? action.data.graph
-						: state.data.graph
+					roomData: action.overwriteMetadata
+						? action.data.roomData
+						: state.data.roomData
 				},
 				room: {
 					...state.room,
@@ -80,7 +84,7 @@ const reducer = (state = initialState, action) => {
 				}
 			};
 		case ROOM_METADATA_ADD: {
-			let roomData = [...state.data.roomData];
+			let roomData = cloneDeep(state.data.roomData);
 			roomData.push(action.payload);
 			return {
 				...state,
@@ -98,6 +102,40 @@ const reducer = (state = initialState, action) => {
 				}
 			};
 		}
+		case ROOM_USER_ENTERED: {
+			let users = cloneDeep(state.data.users);
+			users.push(action.user);
+			return {
+				...state,
+				data: {
+					...state.data,
+					users: users
+				}
+			};
+		}
+		case ROOM_USER_LEFT:
+			return {
+				...state,
+				data: {
+					...state.data,
+					users: filter(state.data.users, {
+						username: !action.username
+					})
+				}
+			};
+
+		case ROOM_USER_CHANGED:
+			return {
+				...state,
+				data: {
+					...state.data,
+					users: state.data.users.map(element =>
+						element.username === action.user.username
+							? { ...action.user }
+							: { ...element }
+					)
+				}
+			};
 		case ROOM_JOIN:
 			return {
 				...state,
