@@ -60,14 +60,12 @@ const reducer = (state = initialState, action) => {
 					master: true
 				}
 			};
-		case ROOM_ADD: {
-			let rooms = cloneDeep(state.rooms);
-			rooms.push(action.room);
+		case ROOM_ADD:
 			return {
 				...state,
-				rooms: rooms
+				rooms: [...state.rooms, action.room]
 			};
-		}
+
 		case ROOM_DATA:
 			return {
 				...state,
@@ -83,17 +81,15 @@ const reducer = (state = initialState, action) => {
 					master: action.master
 				}
 			};
-		case ROOM_METADATA_ADD: {
-			let roomData = cloneDeep(state.data.roomData);
-			roomData.push(action.payload);
+		case ROOM_METADATA_ADD:
 			return {
 				...state,
 				data: {
 					...state.data,
-					roomData: roomData
+					roomData: [...state.data.roomData, action.payload]
 				}
 			};
-		}
+
 		case ROOM_METADATA_CHANGE: {
 			return {
 				...state,
@@ -102,17 +98,15 @@ const reducer = (state = initialState, action) => {
 				}
 			};
 		}
-		case ROOM_USER_ENTERED: {
-			let users = cloneDeep(state.data.users);
-			users.push(action.user);
+		case ROOM_USER_ENTERED:
 			return {
 				...state,
 				data: {
 					...state.data,
-					users: users
+					users: [...state.data.users, action.user]
 				}
 			};
-		}
+
 		case ROOM_USER_LEFT:
 			return {
 				...state,
