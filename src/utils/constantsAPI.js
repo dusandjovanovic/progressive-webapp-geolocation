@@ -17,12 +17,9 @@ export const roomCreateNewRoute = "/api/room/create";
 export const roomJoinRoute = "/api/room/join";
 export const roomLeaveRoute = "/api/room/leave";
 export const roomGetAllRoute = mode => "/api/room/" + mode;
-export const roomGetDataRoute = name => "/api/room/get/" + name;
-export const roomGetGraphRoute = id => "/api/graph/" + id;
-export const roomChangeGraphRoute = id => "/api/graph/" + id;
-export const roomGetTraversalRoute = name => "/api/room/traversal/" + name;
-export const roomChangeTraversalRoute = name => "/api/room/traversal/" + name;
-export const roomDeleteRoute = id => "/api/room/" + id;
+export const roomGetDataRoute = id => "/api/room/get/" + id;
+export const roomGetMetadataRoute = id => "/api/room/metadata/" + id;
+export const roomChangeMetadataRoute = id => "/api/room/metadata/" + id;
 
 export const userGetDataRoute = username => "/api/user/" + username;
 export const userGetHistoryRoute = username =>

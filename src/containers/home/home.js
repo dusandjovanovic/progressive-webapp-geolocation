@@ -12,6 +12,7 @@ import { roomGetAll, roomJoinExisting } from "../../store/actions/index";
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
 import withErrorHandler from "../../hoc/with-error-handler/withErrorHandler";
+import withGeolocation from "../../hoc/with-geolocation/withGeolocation";
 import { ROOM_TYPE_PLACES, ROOM_TYPE_POLUTION } from "../../utils/constants";
 
 class Home extends React.Component {
@@ -35,8 +36,13 @@ class Home extends React.Component {
 		clearInterval(this.interval);
 	}
 
-	enterRoom = name => {
-		this.props.roomJoinExisting(name);
+	enterRoom = (id, name) => {
+		this.props.roomJoinExisting(
+			id,
+			name,
+			this.props.location.latitude,
+			this.props.location.longitude
+		);
 		this.setState({
 			redirect: true
 		});
@@ -53,11 +59,10 @@ class Home extends React.Component {
 			!this.props.error &&
 			this.props.data._id
 		) {
-			if (
-				this.props.data.roomType === ROOM_TYPE_PLACES ||
-				this.props.data.roomType === ROOM_TYPE_POLUTION
-			)
-				redirection = <Redirect to="/room" />;
+			if (this.props.data.roomType === ROOM_TYPE_PLACES)
+				redirection = <Redirect to="/room/places" />;
+			else if (this.props.data.roomType === ROOM_TYPE_POLUTION)
+				redirection = <Redirect to="/room/polution" />;
 		}
 
 		return (
@@ -73,7 +78,7 @@ class Home extends React.Component {
 					</Grid>
 					<Grid item xs={12}>
 						<RoomView
-							enterRoom={name => this.enterRoom(name)}
+							enterRoom={(id, name) => this.enterRoom(id, name)}
 							rooms={this.props.rooms}
 							waiting={this.props.waiting}
 						/>
@@ -98,12 +103,14 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		roomGetAll: mode => dispatch(roomGetAll(mode)),
-		roomJoinExisting: name => dispatch(roomJoinExisting(name))
+		roomJoinExisting: (id, name, latitude, longitude) =>
+			dispatch(roomJoinExisting(id, name, latitude, longitude))
 	};
 };
 
 Home.propTypes = {
 	classes: PropTypes.object.isRequired,
+	location: PropTypes.object.isRequired,
 	username: PropTypes.string.isRequired,
 	room: PropTypes.object.isRequired,
 	rooms: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -117,4 +124,4 @@ Home.propTypes = {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withStyles(styles)(withErrorHandler(Home)));
+)(withGeolocation(withStyles(styles)(withErrorHandler(Home))));

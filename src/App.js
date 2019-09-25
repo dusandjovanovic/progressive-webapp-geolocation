@@ -11,13 +11,22 @@ import { connect } from "react-redux";
 
 import { authenticatePersisted } from "./store/actions/index";
 
-const Homescreen = React.lazy(() => import("./containers/homescreen/homescreen"));
+const Homescreen = React.lazy(() =>
+	import("./containers/homescreen/homescreen")
+);
 const Auth = React.lazy(() => import("./containers/auth/auth"));
 const Home = React.lazy(() => import("./containers/home/home"));
 const Dashboard = React.lazy(() => import("./containers/dashboard/dashboard"));
-const RoomPlayground = React.lazy(() => import("./containers/room/room").then(module => ({ default: module.RoomPlayground })));
-const RoomCompete = React.lazy(() => import("./containers/room/room").then(module => ({ default: module.RoomCompete })));
-const RoomLearn = React.lazy(() => import("./containers/room/room").then(module => ({ default: module.RoomLearn })));
+const RoomPlaces = React.lazy(() =>
+	import("./containers/room/room").then(module => ({
+		default: module.RoomPlaces
+	}))
+);
+const RoomPolution = React.lazy(() =>
+	import("./containers/room/room").then(module => ({
+		default: module.RoomPolution
+	}))
+);
 
 class App extends React.Component {
 	componentDidMount() {
@@ -50,14 +59,11 @@ class App extends React.Component {
 								<Route path="/dashboard" exact>
 									<Dashboard />
 								</Route>
-								<Route path="/room" exact>
-									<RoomPlayground />
+								<Route path="/room/places" exact>
+									<RoomPlaces />
 								</Route>
-								<Route path="/compete" exact>
-									<RoomCompete />
-								</Route>
-								<Route path="/learn" exact>
-									<RoomLearn />
+								<Route path="/room/polution" exact>
+									<RoomPolution />
 								</Route>
 								<Route path="/" exact>
 									<Home />

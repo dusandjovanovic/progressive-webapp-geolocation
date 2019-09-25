@@ -27,9 +27,10 @@ export {
 	roomCreateNew,
 	roomJoinExisting,
 	roomLeaveExisting,
-	roomDeleteExisting,
-	roomGetGraph,
-	roomChangeGraph,
-	roomGetTraversal,
-	roomChangeTraversal
+	roomPushMetadata,
+	roomChangeMetadata,
+	roomGetMetadata,
+	roomAddNewUser,
+	roomChangeUser,
+	roomDeleteUser
 } from "./room";

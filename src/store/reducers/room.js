@@ -2,16 +2,21 @@ import {
 	ROOM_INIT,
 	ROOM_END,
 	ROOM_DATA,
+	ROOM_METADATA_ADD,
+	ROOM_METADATA_CHANGE,
+	ROOM_USER_CHANGED,
+	ROOM_USER_ENTERED,
+	ROOM_USER_LEFT,
 	ROOM_ALL,
 	ROOM_CREATE,
 	ROOM_ADD,
-	ROOM_DELETE,
 	ROOM_JOIN,
 	ROOM_LEAVE,
-	ROOM_GRAPH_CHANGE,
-	ROOM_TRAVERSAL_CHANGE,
 	ROOM_ERROR
 } from "../actions.js";
+
+import cloneDeep from "lodash/cloneDeep";
+import filter from "lodash/filter";
 
 const initialState = {
 	rooms: [],
@@ -21,9 +26,8 @@ const initialState = {
 	},
 	data: {
 		_id: null,
-		graph: null,
-		graphTraversed: null,
-		users: []
+		users: [],
+		roomData: []
 	},
 	waiting: false,
 	error: null
@@ -56,29 +60,74 @@ const reducer = (state = initialState, action) => {
 					master: true
 				}
 			};
-		case ROOM_ADD: {
-			let rooms = state.rooms.map(room => ({
-				...room
-			}));
-			rooms.push(action.room);
+		case ROOM_ADD:
 			return {
 				...state,
-				rooms: rooms
+				rooms: [...state.rooms, action.room]
 			};
-		}
+
 		case ROOM_DATA:
 			return {
 				...state,
 				data: {
 					...state.data,
 					...action.data,
-					graph: action.overwriteGraph
-						? action.data.graph
-						: state.data.graph
+					roomData: action.overwriteMetadata
+						? action.data.roomData
+						: state.data.roomData
 				},
 				room: {
 					...state.room,
 					master: action.master
+				}
+			};
+		case ROOM_METADATA_ADD:
+			return {
+				...state,
+				data: {
+					...state.data,
+					roomData: [...state.data.roomData, action.payload]
+				}
+			};
+
+		case ROOM_METADATA_CHANGE: {
+			return {
+				...state,
+				data: {
+					...action.data
+				}
+			};
+		}
+		case ROOM_USER_ENTERED:
+			return {
+				...state,
+				data: {
+					...state.data,
+					users: [...state.data.users, action.user]
+				}
+			};
+
+		case ROOM_USER_LEFT:
+			return {
+				...state,
+				data: {
+					...state.data,
+					users: filter(state.data.users, {
+						username: !action.username
+					})
+				}
+			};
+
+		case ROOM_USER_CHANGED:
+			return {
+				...state,
+				data: {
+					...state.data,
+					users: state.data.users.map(element =>
+						element.username === action.user.username
+							? { ...action.user }
+							: { ...element }
+					)
 				}
 			};
 		case ROOM_JOIN:
@@ -102,30 +151,6 @@ const reducer = (state = initialState, action) => {
 					users: []
 				}
 			};
-		case ROOM_DELETE:
-			return {
-				...state,
-				rooms: [...state.rooms].filter(
-					element => element["_id"] !== state.data["_id"]
-				)
-			};
-		case ROOM_GRAPH_CHANGE:
-			return {
-				...state,
-				data: {
-					...state.data,
-					graph: action.graph
-				}
-			};
-		case ROOM_TRAVERSAL_CHANGE: {
-			return {
-				...state,
-				data: {
-					...state.data,
-					graphTraversed: action.graphTraversed
-				}
-			};
-		}
 		case ROOM_ERROR:
 			return {
 				...state,

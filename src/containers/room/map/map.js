@@ -18,7 +18,7 @@ class MapContainer extends React.Component {
 					zoom={1}
 					center={[-0.09, 51.505]}
 				>
-					<TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+					<TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
 					<CircleMarker center={[51.505, -0.09]} />
 				</Map>
 			</Grid>

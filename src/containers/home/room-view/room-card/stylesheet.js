@@ -25,7 +25,7 @@ export const styles = theme => ({
 	description: {
 		height: "2.5rem",
 		overflow: "hidden",
-		whiteSpace: "nowrap",
+		wordWrap: "break-word",
 		textOverflow: "ellipsis"
 	},
 	actions: {
