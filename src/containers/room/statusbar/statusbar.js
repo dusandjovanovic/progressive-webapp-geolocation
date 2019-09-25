@@ -12,18 +12,6 @@ const statusbar = props => {
 		<footer className={classes.root}>
 			<Typography
 				variant="caption"
-				className={classNames(
-					classes.element,
-					classes.bordered,
-					classes.elementHighlighted
-				)}
-			>
-				{props.master
-					? "You are a room master"
-					: "Room master is " + props.createdBy}
-			</Typography>
-			<Typography
-				variant="caption"
 				className={classNames(classes.element, classes.elementLight)}
 			>
 				Everyone in the room:
@@ -35,9 +23,9 @@ const statusbar = props => {
 						classes.element,
 						classes.elementLight
 					)}
-					key={user.user}
+					key={user.username}
 				>
-					{user.user}
+					{user.username}
 				</Typography>
 			))}
 			{props.graphManaged ? (
@@ -60,7 +48,6 @@ const statusbar = props => {
 
 statusbar.propTypes = {
 	classes: PropTypes.object.isRequired,
-	master: PropTypes.bool.isRequired,
 	graphOperation: PropTypes.string,
 	graphManaged: PropTypes.bool.isRequired,
 	users: PropTypes.arrayOf(PropTypes.string).isRequired,

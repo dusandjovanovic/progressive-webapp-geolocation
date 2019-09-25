@@ -275,7 +275,7 @@ exports.postJoin = function(request, response, next) {
 			});
 		else {
 			let usersInRoom = room.users.map(element => element.username);
-			if (usersInRoom.includes(username))
+			if (!usersInRoom.includes(username))
 				Room.updateOne(
 					{ name: roomName },
 					{
