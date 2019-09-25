@@ -5,7 +5,8 @@ export const styles = theme => ({
 		width: "100%",
 		height: "34px",
 		lineHeight: "34px",
-		backgroundColor: theme.palette.primary.dark
+		backgroundColor: theme.palette.primary.dark,
+		zIndex: 1001
 	},
 	element: {
 		padding: theme.spacing(0, 0.5)

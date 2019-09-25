@@ -12,12 +12,14 @@ const withGeolocation = WrappedComponent => {
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(
 					this.handleLocationChange,
-					this.handleLocationError
+					this.handleLocationError,
+					{ enableHighAccuracy: true }
 				);
 				this.setState({
 					locationWatcher: navigator.geolocation.watchPosition(
 						this.handleLocationChange,
-						this.handleLocationError
+						this.handleLocationError,
+						{ enableHighAccuracy: true }
 					)
 				});
 			}

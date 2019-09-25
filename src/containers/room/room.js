@@ -10,6 +10,7 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import withIO from "../../hoc/with-io/withIO";
 import withGeolocation from "../../hoc/with-geolocation/withGeolocation";
+import withMarkersUsers from "../../hoc/with-markers-users/withMarkersUsers";
 import withErrorHandler from "../../hoc/with-error-handler/withErrorHandler";
 
 import {
@@ -56,7 +57,13 @@ class Room extends React.Component {
 						/>
 					</Grid>
 					<Grid item xs={9} className={classes.whiteboard}>
-						<Map />
+						<Map
+							location={this.props.location}
+							markersUsers={this.props.markersUsers}
+							markerCurrentLocation={
+								this.props.markerCurrentLocation
+							}
+						/>
 					</Grid>
 					<Statusbar
 						users={this.props.data.users || []}
@@ -78,7 +85,14 @@ Room.propTypes = {
 	children: PropTypes.oneOfType([
 		PropTypes.arrayOf(PropTypes.node),
 		PropTypes.node
-	]).isRequired
+	]).isRequired,
+	username: PropTypes.string.isRequired,
+	data: PropTypes.object.isRequired,
+	room: PropTypes.object.isRequired,
+	error: PropTypes.string,
+	location: PropTypes.object.isRequired,
+	markersUsers: PropTypes.object,
+	markerCurrentLocation: PropTypes.object
 };
 
 const mapStateToProps = state => {
@@ -104,9 +118,17 @@ const mapDispatchToProps = dispatch => {
 export const RoomPlaces = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withGeolocation(withIO(withStyles(styles)(withErrorHandler(Room)))));
+)(
+	withGeolocation(
+		withMarkersUsers(withIO(withStyles(styles)(withErrorHandler(Room))))
+	)
+);
 
 export const RoomPolution = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withGeolocation(withIO(withStyles(styles)(withErrorHandler(Room)))));
+)(
+	withGeolocation(
+		withMarkersUsers(withIO(withStyles(styles)(withErrorHandler(Room))))
+	)
+);
