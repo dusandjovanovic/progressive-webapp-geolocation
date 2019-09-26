@@ -14,8 +14,14 @@ import withMarkersUsers from "../../hoc/with-markers-users/withMarkersUsers";
 import withErrorHandler from "../../hoc/with-error-handler/withErrorHandler";
 
 import {
-	roomLeaveExisting,
 	roomGetData,
+	roomLeaveExisting,
+	roomPushMetadata,
+	roomChangeMetadata,
+	roomGetMetadata,
+	roomAddNewUser,
+	roomChangeUser,
+	roomDeleteUser,
 	userHistoryAdd,
 	internalNotificationsAdd
 } from "../../store/actions/index";
@@ -92,7 +98,17 @@ Room.propTypes = {
 	error: PropTypes.string,
 	location: PropTypes.object.isRequired,
 	markersUsers: PropTypes.object,
-	markerCurrentLocation: PropTypes.object
+	markerCurrentLocation: PropTypes.object,
+	roomGetData: PropTypes.func.isRequired,
+	roomLeaveExisting: PropTypes.func.isRequired,
+	roomPushMetadata: PropTypes.func.isRequired,
+	roomChangeMetadata: PropTypes.func.isRequired,
+	roomGetMetadata: PropTypes.func.isRequired,
+	roomAddNewUser: PropTypes.func.isRequired,
+	roomChangeUser: PropTypes.func.isRequired,
+	roomDeleteUser: PropTypes.func.isRequired,
+	userHistoryAdd: PropTypes.func.isRequired,
+	internalNotificationsAdd: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -106,9 +122,16 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
+		roomGetData: name => dispatch(roomGetData(name)),
 		roomLeaveExisting: roomDeleted =>
 			dispatch(roomLeaveExisting(roomDeleted)),
-		roomGetData: name => dispatch(roomGetData(name)),
+		roomPushMetadata: metadataItem =>
+			dispatch(roomPushMetadata(metadataItem)),
+		roomChangeMetadata: metadata => dispatch(roomChangeMetadata(metadata)),
+		roomGetMetadata: () => dispatch(roomGetMetadata()),
+		roomAddNewUser: user => dispatch(roomAddNewUser(user)),
+		roomChangeUser: user => dispatch(roomChangeUser(user)),
+		roomDeleteUser: username => dispatch(roomDeleteUser(username)),
 		userHistoryAdd: score => dispatch(userHistoryAdd(score)),
 		internalNotificationsAdd: (message, variant) =>
 			dispatch(internalNotificationsAdd(message, variant))

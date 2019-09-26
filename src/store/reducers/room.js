@@ -15,7 +15,6 @@ import {
 	ROOM_ERROR
 } from "../actions.js";
 
-import cloneDeep from "lodash/cloneDeep";
 import filter from "lodash/filter";
 
 const initialState = {
