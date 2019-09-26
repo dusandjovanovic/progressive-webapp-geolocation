@@ -142,8 +142,10 @@ export const RoomPlaces = connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(
-	withGeolocation(
-		withMarkersUsers(withIO(withStyles(styles)(withErrorHandler(Room))))
+	withIO(
+		withGeolocation(
+			withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+		)
 	)
 );
 
@@ -151,7 +153,9 @@ export const RoomPolution = connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(
-	withGeolocation(
-		withMarkersUsers(withIO(withStyles(styles)(withErrorHandler(Room))))
+	withIO(
+		withGeolocation(
+			withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+		)
 	)
 );

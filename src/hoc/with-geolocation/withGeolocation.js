@@ -37,7 +37,6 @@ const withGeolocation = WrappedComponent => {
 		}
 
 		handleLocationChange = position => {
-			console.log(position);
 			this.setState(
 				{
 					location: {

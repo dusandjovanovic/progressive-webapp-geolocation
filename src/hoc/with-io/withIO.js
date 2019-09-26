@@ -203,19 +203,19 @@ const withIO = WrappedComponent => {
 	}
 
 	WIthIO.propTypes = {
-		username: PropTypes.string.isRequired,
-		data: PropTypes.object.isRequired,
-		room: PropTypes.object.isRequired,
-		error: PropTypes.string,
-		roomLeaveExisting: PropTypes.func.isRequired,
-		roomDeleteExisting: PropTypes.func.isRequired,
-		roomGetGraph: PropTypes.func.isRequired,
-		roomChangeGraph: PropTypes.func.isRequired,
-		roomGetTraversal: PropTypes.func.isRequired,
-		roomChangeTraversal: PropTypes.func.isRequired,
-		roomGetData: PropTypes.func.isRequired,
-		userHistoryAdd: PropTypes.func.isRequired,
-		internalNotificationsAdd: PropTypes.func.isRequired
+		username: PropTypes.string,
+		data: PropTypes.object,
+		room: PropTypes.object,
+		roomGetData: PropTypes.func,
+		roomLeaveExisting: PropTypes.func,
+		roomPushMetadata: PropTypes.func,
+		roomChangeMetadata: PropTypes.func,
+		roomGetMetadata: PropTypes.func,
+		roomAddNewUser: PropTypes.func,
+		roomChangeUser: PropTypes.func,
+		roomDeleteUser: PropTypes.func,
+		userHistoryAdd: PropTypes.func,
+		internalNotificationsAdd: PropTypes.func
 	};
 
 	return WIthIO;
