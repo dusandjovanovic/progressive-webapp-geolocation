@@ -29,6 +29,7 @@ export {
 	roomLeaveExisting,
 	roomPushMetadata,
 	roomChangeMetadata,
+	roomAddMetadata,
 	roomGetMetadata,
 	roomAddNewUser,
 	roomChangeUser,

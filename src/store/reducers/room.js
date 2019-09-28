@@ -15,14 +15,12 @@ import {
 	ROOM_ERROR
 } from "../actions.js";
 
-import cloneDeep from "lodash/cloneDeep";
 import filter from "lodash/filter";
 
 const initialState = {
 	rooms: [],
 	room: {
-		name: null,
-		master: false
+		name: null
 	},
 	data: {
 		_id: null,
@@ -56,8 +54,7 @@ const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				room: {
-					name: action.name,
-					master: true
+					name: action.name
 				}
 			};
 		case ROOM_ADD:
@@ -77,8 +74,7 @@ const reducer = (state = initialState, action) => {
 						: state.data.roomData
 				},
 				room: {
-					...state.room,
-					master: action.master
+					...state.room
 				}
 			};
 		case ROOM_METADATA_ADD:
@@ -134,16 +130,14 @@ const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				room: {
-					name: action.name,
-					master: action.master
+					name: action.name
 				}
 			};
 		case ROOM_LEAVE:
 			return {
 				...state,
 				room: {
-					name: null,
-					master: false
+					name: null
 				},
 				data: {
 					_id: null,

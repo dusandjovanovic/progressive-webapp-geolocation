@@ -13,7 +13,11 @@ import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
 import withErrorHandler from "../../hoc/with-error-handler/withErrorHandler";
 import withGeolocation from "../../hoc/with-geolocation/withGeolocation";
-import { ROOM_TYPE_PLACES, ROOM_TYPE_POLUTION } from "../../utils/constants";
+import {
+	ROOM_TYPE_PLACES,
+	ROOM_TYPE_POLLUTION,
+	ROOM_TYPE_TRAFFIC
+} from "../../utils/constants";
 
 class Home extends React.Component {
 	state = {
@@ -61,8 +65,10 @@ class Home extends React.Component {
 		) {
 			if (this.props.data.roomType === ROOM_TYPE_PLACES)
 				redirection = <Redirect to="/room/places" />;
-			else if (this.props.data.roomType === ROOM_TYPE_POLUTION)
-				redirection = <Redirect to="/room/polution" />;
+			else if (this.props.data.roomType === ROOM_TYPE_POLLUTION)
+				redirection = <Redirect to="/room/pollution" />;
+			else if (this.props.data.roomType === ROOM_TYPE_TRAFFIC)
+				redirection = <Redirect to="/room/traffic" />;
 		}
 
 		return (

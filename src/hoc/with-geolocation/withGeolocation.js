@@ -1,4 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
+
+const LOCATION_OPTIONS = {
+	enableHighAccuracy: true,
+	timeout: 10000,
+	maximumAge: 0
+};
 
 const withGeolocation = WrappedComponent => {
 	class withGeolocation extends React.Component {
@@ -13,13 +20,13 @@ const withGeolocation = WrappedComponent => {
 				navigator.geolocation.getCurrentPosition(
 					this.handleLocationChange,
 					this.handleLocationError,
-					{ enableHighAccuracy: true }
+					LOCATION_OPTIONS
 				);
 				this.setState({
 					locationWatcher: navigator.geolocation.watchPosition(
 						this.handleLocationChange,
 						this.handleLocationError,
-						{ enableHighAccuracy: true }
+						LOCATION_OPTIONS
 					)
 				});
 			}
@@ -30,12 +37,22 @@ const withGeolocation = WrappedComponent => {
 		}
 
 		handleLocationChange = position => {
-			this.setState({
-				location: {
-					latitude: position.coords.latitude,
-					longitude: position.coords.longitude
+			this.setState(
+				{
+					location: {
+						latitude: position.coords.latitude,
+						longitude: position.coords.longitude
+					}
+				},
+				() => {
+					if (this.props.room && this.props.room.name) {
+						this.props.roomChangeUser({
+							username: this.props.username,
+							location: this.state.location
+						});
+					}
 				}
-			});
+			);
 		};
 
 		handleLocationError = error => {
@@ -44,7 +61,9 @@ const withGeolocation = WrappedComponent => {
 					locationError: error
 				},
 				() => {
-					alert(this.state.locationError);
+					alert(
+						"Something went wrong and your location could not be determined."
+					);
 				}
 			);
 		};
@@ -58,6 +77,22 @@ const withGeolocation = WrappedComponent => {
 			);
 		}
 	}
+
+	withGeolocation.propTypes = {
+		username: PropTypes.string,
+		data: PropTypes.object,
+		room: PropTypes.object,
+		roomGetData: PropTypes.func,
+		roomLeaveExisting: PropTypes.func,
+		roomPushMetadata: PropTypes.func,
+		roomChangeMetadata: PropTypes.func,
+		roomGetMetadata: PropTypes.func,
+		roomAddNewUser: PropTypes.func,
+		roomChangeUser: PropTypes.func,
+		roomDeleteUser: PropTypes.func,
+		userHistoryAdd: PropTypes.func,
+		internalNotificationsAdd: PropTypes.func
+	};
 
 	return withGeolocation;
 };

@@ -21,8 +21,7 @@ class ToolbarContainer extends React.PureComponent {
 					<Button
 						size="small"
 						color="secondary"
-						disabled={this.props.disabled}
-						onClick={null}
+						onClick={() => this.props.roomAddMetadataInit()}
 					>
 						<Add
 							fontSize="small"
@@ -31,12 +30,7 @@ class ToolbarContainer extends React.PureComponent {
 						/>{" "}
 						Share location
 					</Button>
-					<Button
-						size="small"
-						color="secondary"
-						disabled={this.props.disabled}
-						onClick={null}
-					>
+					<Button size="small" color="secondary" onClick={null}>
 						<MyLocation
 							fontSize="small"
 							color="secondary"
@@ -44,12 +38,7 @@ class ToolbarContainer extends React.PureComponent {
 						/>{" "}
 						Show nearby
 					</Button>
-					<Button
-						size="small"
-						color="secondary"
-						disabled={this.props.disabled}
-						onClick={null}
-					>
+					<Button size="small" color="secondary" onClick={null}>
 						<AccessTime
 							fontSize="small"
 							color="secondary"
@@ -72,7 +61,7 @@ class ToolbarContainer extends React.PureComponent {
 
 ToolbarContainer.propTypes = {
 	classes: PropTypes.object.isRequired,
-	disabled: PropTypes.bool.isRequired,
+	roomAddMetadataInit: PropTypes.func.isRequired,
 	leaveRoomIOInit: PropTypes.func.isRequired
 };
 

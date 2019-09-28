@@ -12,10 +12,20 @@ import withIO from "../../hoc/with-io/withIO";
 import withGeolocation from "../../hoc/with-geolocation/withGeolocation";
 import withMarkersUsers from "../../hoc/with-markers-users/withMarkersUsers";
 import withErrorHandler from "../../hoc/with-error-handler/withErrorHandler";
+import withMetadataPollution from "../../hoc/with-metadata-pollution/withMetadataPollution";
+import withMetadataPlaces from "../../hoc/with-metadata-places/withMetadataPlaces";
+import withMetadataTraffic from "../../hoc/with-metadata-traffic/withMetadataTraffic";
 
 import {
-	roomLeaveExisting,
 	roomGetData,
+	roomLeaveExisting,
+	roomPushMetadata,
+	roomChangeMetadata,
+	roomAddMetadata,
+	roomGetMetadata,
+	roomAddNewUser,
+	roomChangeUser,
+	roomDeleteUser,
 	userHistoryAdd,
 	internalNotificationsAdd
 } from "../../store/actions/index";
@@ -42,9 +52,10 @@ class Room extends React.Component {
 		return (
 			<Grid container className={classes.root} direction="column">
 				{this.props.redirect ? <Redirect to="/" /> : null}
+				{this.props.children}
 				<Grid container>
 					<Toolbar
-						disabled={this.props.graphManaged}
+						roomAddMetadataInit={this.props.roomAddMetadataInit}
 						leaveRoomIOInit={this.props.leaveRoomIOInit}
 					/>
 				</Grid>
@@ -63,17 +74,10 @@ class Room extends React.Component {
 							markerCurrentLocation={
 								this.props.markerCurrentLocation
 							}
+							markersMetadata={this.props.markersMetadata}
 						/>
 					</Grid>
-					<Statusbar
-						users={this.props.data.users || []}
-						master={this.props.room.master || false}
-						graphManaged={this.props.graphManaged}
-						graphOperation={this.props.graphOperation}
-						createdBy={
-							this.props.data.createdBy || "Exiting room.."
-						}
-					/>
+					<Statusbar users={this.props.data.users || []} />
 				</Grid>
 			</Grid>
 		);
@@ -81,18 +85,39 @@ class Room extends React.Component {
 }
 
 Room.propTypes = {
-	classes: PropTypes.object.isRequired,
 	children: PropTypes.oneOfType([
 		PropTypes.arrayOf(PropTypes.node),
 		PropTypes.node
 	]).isRequired,
-	username: PropTypes.string.isRequired,
-	data: PropTypes.object.isRequired,
-	room: PropTypes.object.isRequired,
-	error: PropTypes.string,
+	classes: PropTypes.object.isRequired,
+	username: PropTypes.string,
+	data: PropTypes.object,
+	room: PropTypes.object,
+	roomGetData: PropTypes.func.isRequired,
+	roomLeaveExisting: PropTypes.func.isRequired,
+	roomPushMetadata: PropTypes.func.isRequired,
+	roomChangeMetadata: PropTypes.func.isRequired,
+	roomAddMetadata: PropTypes.func.isRequired,
+	roomGetMetadata: PropTypes.func.isRequired,
+	roomAddNewUser: PropTypes.func.isRequired,
+	roomChangeUser: PropTypes.func.isRequired,
+	roomDeleteUser: PropTypes.func.isRequired,
+	userHistoryAdd: PropTypes.func.isRequired,
+	internalNotificationsAdd: PropTypes.func.isRequired,
+	io: PropTypes.func.isRequired,
+	initWebsocketIO: PropTypes.func.isRequired,
+	addMetadataIO: PropTypes.func.isRequired,
+	changeMetadataIO: PropTypes.func.isRequired,
+	joinRoomIO: PropTypes.func.isRequired,
+	joinLeaveRoomIO: PropTypes.func.isRequired,
+	leaveRoomIOInit: PropTypes.func.isRequired,
+	socket: PropTypes.object.isRequired,
+	redirect: PropTypes.bool.isRequired,
 	location: PropTypes.object.isRequired,
-	markersUsers: PropTypes.object,
-	markerCurrentLocation: PropTypes.object
+	markersUsers: PropTypes.arrayOf(PropTypes.object),
+	markersMetadata: PropTypes.arrayOf(PropTypes.object),
+	markerCurrentLocation: PropTypes.object,
+	roomAddMetadataInit: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -106,9 +131,20 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
+		roomGetData: id => dispatch(roomGetData(id)),
 		roomLeaveExisting: roomDeleted =>
 			dispatch(roomLeaveExisting(roomDeleted)),
-		roomGetData: name => dispatch(roomGetData(name)),
+		roomPushMetadata: (metaobject, pushNotification) =>
+			dispatch(roomPushMetadata(metaobject, pushNotification)),
+		roomChangeMetadata: metadata => dispatch(roomChangeMetadata(metadata)),
+		roomAddMetadata: (name, value, amenity, latitude, longitude) =>
+			dispatch(
+				roomAddMetadata(name, value, amenity, latitude, longitude)
+			),
+		roomGetMetadata: () => dispatch(roomGetMetadata()),
+		roomAddNewUser: user => dispatch(roomAddNewUser(user)),
+		roomChangeUser: user => dispatch(roomChangeUser(user)),
+		roomDeleteUser: username => dispatch(roomDeleteUser(username)),
 		userHistoryAdd: score => dispatch(userHistoryAdd(score)),
 		internalNotificationsAdd: (message, variant) =>
 			dispatch(internalNotificationsAdd(message, variant))
@@ -119,16 +155,37 @@ export const RoomPlaces = connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(
-	withGeolocation(
-		withMarkersUsers(withIO(withStyles(styles)(withErrorHandler(Room))))
+	withIO(
+		withGeolocation(
+			withMetadataPlaces(
+				withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+			)
+		)
 	)
 );
 
-export const RoomPolution = connect(
+export const RoomPollution = connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(
-	withGeolocation(
-		withMarkersUsers(withIO(withStyles(styles)(withErrorHandler(Room))))
+	withIO(
+		withGeolocation(
+			withMetadataPollution(
+				withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+			)
+		)
+	)
+);
+
+export const RoomTraffic = connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(
+	withIO(
+		withGeolocation(
+			withMetadataTraffic(
+				withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+			)
+		)
 	)
 );
