@@ -22,9 +22,14 @@ const RoomPlaces = React.lazy(() =>
 		default: module.RoomPlaces
 	}))
 );
-const RoomPolution = React.lazy(() =>
+const RoomPollution = React.lazy(() =>
 	import("./containers/room/room").then(module => ({
-		default: module.RoomPolution
+		default: module.RoomPollution
+	}))
+);
+const RoomTraffic = React.lazy(() =>
+	import("./containers/room/room").then(module => ({
+		default: module.RoomTraffic
 	}))
 );
 
@@ -62,8 +67,11 @@ class App extends React.Component {
 								<Route path="/room/places" exact>
 									<RoomPlaces />
 								</Route>
-								<Route path="/room/polution" exact>
-									<RoomPolution />
+								<Route path="/room/pollution" exact>
+									<RoomPollution />
+								</Route>
+								<Route path="/room/traffic" exact>
+									<RoomTraffic />
 								</Route>
 								<Route path="/" exact>
 									<Home />

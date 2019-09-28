@@ -12,13 +12,14 @@ import FaceIcon from "@material-ui/icons/Face";
 import ChevronRightIcon from "@material-ui/icons/ArrowForwardIos";
 import RoomBackground from "../../../../assets/images/room-background.jpg";
 import RoomBackgroundPolution from "../../../../assets/images/room-background-polution.jpg";
+import RoomBackgroundTraffic from "../../../../assets/images/room-background-traffic.jpg";
 import PropTypes from "prop-types";
 
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
-	ROOM_TYPE_POLUTION,
-	ROOM_TYPE_PLACES
+	ROOM_TYPE_POLLUTION,
+	ROOM_TYPE_TRAFFIC
 } from "../../../../utils/constants";
 
 const roomCard = props => {
@@ -26,12 +27,12 @@ const roomCard = props => {
 
 	const prettyDescription = type => {
 		switch (type) {
-			case ROOM_TYPE_POLUTION:
+			case ROOM_TYPE_POLLUTION:
 				return "This is room dedicated to sharing current Air polution metrics and insights.";
-			case ROOM_TYPE_PLACES:
-				return "This is room dedicated to sharing interesteing and intriguing places with others along with chatting.";
+			case ROOM_TYPE_TRAFFIC:
+				return "This is room dedicated to sharing traffic jam occurences in order to help others in avoiding them.";
 			default:
-				return "This is an empty room.";
+				return "This is room dedicated to sharing interesteing and intriguing places with others along with chatting.";
 		}
 	};
 
@@ -45,9 +46,14 @@ const roomCard = props => {
 	};
 
 	const imageByType = type => {
-		return type === ROOM_TYPE_PLACES
-			? RoomBackground
-			: RoomBackgroundPolution;
+		switch (type) {
+			case ROOM_TYPE_POLLUTION:
+				return RoomBackgroundPolution;
+			case ROOM_TYPE_TRAFFIC:
+				return RoomBackgroundTraffic;
+			default:
+				return RoomBackground;
+		}
 	};
 
 	return (

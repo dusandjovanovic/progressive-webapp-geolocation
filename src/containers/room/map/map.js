@@ -34,8 +34,8 @@ class MapContainer extends React.Component {
 MapContainer.propTypes = {
 	classes: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
-	markersUsers: PropTypes.object,
-	markerCurrentLocation: PropTypes.object
+	markersUsers: PropTypes.arrayOf(PropTypes.object),
+	markerCurrentLocation: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default withStyles(styles)(MapContainer);

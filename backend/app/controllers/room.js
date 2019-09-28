@@ -38,15 +38,7 @@ exports.validate = method => {
 					.isString(),
 				body("roomType")
 					.exists()
-					.isString(),
-				body("createdBy")
-					.exists()
 					.isString()
-					.custom(async value => {
-						return (await User.isUserByUsername(value))
-							? Promise.resolve()
-							: Promise.reject();
-					})
 			];
 		}
 		case "/api/room/join/post": {
@@ -241,12 +233,11 @@ exports.postCreate = function(request, response, next) {
 	const validation = validationResult(request);
 	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
 
-	const { name, createdBy, roomType } = request.body;
+	const { name, roomType } = request.body;
 
 	Room.create(
 		{
 			name: name,
-			users: [createdBy],
 			roomType: roomType,
 			roomData: []
 		},

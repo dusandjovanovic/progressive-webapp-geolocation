@@ -61,7 +61,9 @@ const withGeolocation = WrappedComponent => {
 					locationError: error
 				},
 				() => {
-					alert(this.state.locationError);
+					alert(
+						"Something went wrong and your location could not be determined."
+					);
 				}
 			);
 		};

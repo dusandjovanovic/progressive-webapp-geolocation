@@ -6,6 +6,7 @@ import {
 	roomGetDataRoute,
 	roomCreateNewRoute,
 	roomChangeMetadataRoute,
+	roomAddMetadataRoute,
 	roomGetMetadataRoute
 } from "../../utils/constantsAPI";
 
@@ -172,12 +173,11 @@ export const roomGetData = (id, overwriteMetadata = true) => {
 	};
 };
 
-export const roomCreateNew = (name, maxUsers, roomType) => {
+export const roomCreateNew = (name, roomType) => {
 	return async (dispatch, getState) => {
 		dispatch(roomInitiate());
 		const payload = {
 			name: name,
-			maxUsers: maxUsers,
 			roomType: roomType,
 			createdBy: getState().auth.username
 		};
@@ -304,7 +304,7 @@ export const roomChangeMetadata = metadata => {
 		try {
 			response = await axios
 				.getInstance()
-				.put(roomChangeMetadataRoute(id), payload, {
+				.post(roomChangeMetadataRoute(id), payload, {
 					"Content-Type": "application/x-www-form-urlencoded"
 				});
 
@@ -322,10 +322,41 @@ export const roomChangeMetadata = metadata => {
 	};
 };
 
-export const roomPushMetadata = metadataItem => {
+export const roomAddMetadata = metaobject => {
+	return async (dispatch, getState) => {
+		dispatch(roomPushMetadata(metaobject));
+		dispatch(roomInitiate());
+
+		const id = getState().room._id;
+		let response;
+		const payload = {
+			payload: metaobject
+		};
+
+		try {
+			response = await axios
+				.getInstance()
+				.post(roomAddMetadataRoute(id), payload, {
+					"Content-Type": "application/x-www-form-urlencoded"
+				});
+
+			if (response.data.success) {
+				dispatch(roomEnd());
+			} else {
+				dispatch(roomError(response.data.message));
+			}
+		} catch (error) {
+			dispatch(roomError(error.response.data.message));
+		}
+
+		return response;
+	};
+};
+
+export const roomPushMetadata = metaobject => {
 	return async dispatch => {
 		dispatch(roomInitiate());
-		dispatch(roomMetadataAdd(metadataItem));
+		dispatch(roomMetadataAdd(metaobject));
 		dispatch(roomEnd());
 	};
 };

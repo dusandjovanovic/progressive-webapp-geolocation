@@ -19,6 +19,7 @@ export const roomLeaveRoute = "/api/room/leave";
 export const roomGetAllRoute = mode => "/api/room/" + mode;
 export const roomGetDataRoute = id => "/api/room/get/" + id;
 export const roomGetMetadataRoute = id => "/api/room/metadata/" + id;
+export const roomAddMetadataRoute = id => "/api/room/metadata/" + id;
 export const roomChangeMetadataRoute = id => "/api/room/metadata/" + id;
 
 export const userGetDataRoute = username => "/api/user/" + username;

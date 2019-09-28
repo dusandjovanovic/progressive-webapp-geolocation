@@ -12,12 +12,16 @@ import withIO from "../../hoc/with-io/withIO";
 import withGeolocation from "../../hoc/with-geolocation/withGeolocation";
 import withMarkersUsers from "../../hoc/with-markers-users/withMarkersUsers";
 import withErrorHandler from "../../hoc/with-error-handler/withErrorHandler";
+import withMetadataPollution from "../../hoc/with-metadata-pollution/withMetadataPollution";
+import withMetadataPlaces from "../../hoc/with-metadata-places/withMetadataPlaces";
+import withMetadataTraffic from "../../hoc/with-metadata-traffic/withMetadataTraffic";
 
 import {
 	roomGetData,
 	roomLeaveExisting,
 	roomPushMetadata,
 	roomChangeMetadata,
+	roomAddMetadata,
 	roomGetMetadata,
 	roomAddNewUser,
 	roomChangeUser,
@@ -88,27 +92,33 @@ class Room extends React.Component {
 
 Room.propTypes = {
 	classes: PropTypes.object.isRequired,
-	children: PropTypes.oneOfType([
-		PropTypes.arrayOf(PropTypes.node),
-		PropTypes.node
-	]).isRequired,
-	username: PropTypes.string.isRequired,
-	data: PropTypes.object.isRequired,
-	room: PropTypes.object.isRequired,
-	error: PropTypes.string,
-	location: PropTypes.object.isRequired,
-	markersUsers: PropTypes.object,
-	markerCurrentLocation: PropTypes.object,
+	username: PropTypes.string,
+	data: PropTypes.object,
+	room: PropTypes.object,
 	roomGetData: PropTypes.func.isRequired,
 	roomLeaveExisting: PropTypes.func.isRequired,
 	roomPushMetadata: PropTypes.func.isRequired,
 	roomChangeMetadata: PropTypes.func.isRequired,
+	roomAddMetadata: PropTypes.func.isRequired,
 	roomGetMetadata: PropTypes.func.isRequired,
 	roomAddNewUser: PropTypes.func.isRequired,
 	roomChangeUser: PropTypes.func.isRequired,
 	roomDeleteUser: PropTypes.func.isRequired,
 	userHistoryAdd: PropTypes.func.isRequired,
-	internalNotificationsAdd: PropTypes.func.isRequired
+	internalNotificationsAdd: PropTypes.func.isRequired,
+	io: PropTypes.object.isRequired,
+	initWebsocketIO: PropTypes.func.isRequired,
+	addMetadataIO: PropTypes.func.isRequired,
+	changeMetadataIO: PropTypes.func.isRequired,
+	joinRoomIO: PropTypes.func.isRequired,
+	joinLeaveRoomIO: PropTypes.func.isRequired,
+	leaveRoomIOInit: PropTypes.func.isRequired,
+	socket: PropTypes.object.isRequired,
+	redirect: PropTypes.object.isRequired,
+	location: PropTypes.object.isRequired,
+	markersUsers: PropTypes.arrayOf(PropTypes.object),
+	markerCurrentLocation: PropTypes.arrayOf(PropTypes.object),
+	markersMetadata: PropTypes.arrayOf(PropTypes.object)
 };
 
 const mapStateToProps = state => {
@@ -128,6 +138,7 @@ const mapDispatchToProps = dispatch => {
 		roomPushMetadata: metadataItem =>
 			dispatch(roomPushMetadata(metadataItem)),
 		roomChangeMetadata: metadata => dispatch(roomChangeMetadata(metadata)),
+		roomAddMetadata: metaobject => dispatch(roomAddMetadata(metaobject)),
 		roomGetMetadata: () => dispatch(roomGetMetadata()),
 		roomAddNewUser: user => dispatch(roomAddNewUser(user)),
 		roomChangeUser: user => dispatch(roomChangeUser(user)),
@@ -144,18 +155,35 @@ export const RoomPlaces = connect(
 )(
 	withIO(
 		withGeolocation(
-			withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+			withMetadataPlaces(
+				withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+			)
 		)
 	)
 );
 
-export const RoomPolution = connect(
+export const RoomPollution = connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(
 	withIO(
 		withGeolocation(
-			withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+			withMetadataPollution(
+				withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+			)
+		)
+	)
+);
+
+export const RoomTraffic = connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(
+	withIO(
+		withGeolocation(
+			withMetadataTraffic(
+				withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+			)
 		)
 	)
 );
