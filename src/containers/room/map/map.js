@@ -25,6 +25,7 @@ class MapContainer extends React.Component {
 					<TileLayer url={MAP_LAYER} />
 					{this.props.markerCurrentLocation}
 					{this.props.markersUsers}
+					{this.props.markersMetadata}
 				</Map>
 			</Grid>
 		);
@@ -35,7 +36,8 @@ MapContainer.propTypes = {
 	classes: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	markersUsers: PropTypes.arrayOf(PropTypes.object),
-	markerCurrentLocation: PropTypes.arrayOf(PropTypes.object)
+	markersMetadata: PropTypes.arrayOf(PropTypes.object),
+	markerCurrentLocation: PropTypes.object
 };
 
 export default withStyles(styles)(MapContainer);

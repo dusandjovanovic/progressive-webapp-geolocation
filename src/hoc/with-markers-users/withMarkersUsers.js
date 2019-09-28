@@ -61,7 +61,7 @@ const withMarkersUsers = WrappedComponent => {
 						element.location.latitude,
 						element.location.longitude
 					]}
-					radius={10}
+					radius={8}
 					fillOpacity={
 						element.username === this.props.username ? 0.75 : 0.5
 					}

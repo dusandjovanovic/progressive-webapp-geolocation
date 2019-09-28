@@ -1,7 +1,7 @@
 import React from "react";
 import socketio from "socket.io-client";
 import PropTypes from "prop-types";
-import { backendIOGraph } from "../../utils/constantsAPI";
+import { backendIOMap } from "../../utils/constantsAPI";
 
 const withIO = WrappedComponent => {
 	class WIthIO extends React.Component {
@@ -10,7 +10,7 @@ const withIO = WrappedComponent => {
 
 		constructor(props) {
 			super(props);
-			this.socket = this.io(backendIOGraph);
+			this.socket = this.io(backendIOMap);
 			this.state = {
 				redirect: false
 			};

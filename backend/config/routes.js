@@ -90,7 +90,7 @@ module.exports = function(app, passport) {
 	app.get(
 		"/api/room/get/:id",
 		authenticated,
-		room.validate("/api/room/get/id/get"),
+		room.validate("/api/room/id/get"),
 		room.getRoomById
 	);
 
@@ -108,11 +108,11 @@ module.exports = function(app, passport) {
 		room.getMetdata
 	);
 
-	app.post(
+	app.put(
 		"/api/room/metadata/:id",
 		authenticated,
-		room.validate("/api/room/metadata/post"),
-		room.postMetadata
+		room.validate("/api/room/metadata/put"),
+		room.putMetadata
 	);
 
 	app.post(

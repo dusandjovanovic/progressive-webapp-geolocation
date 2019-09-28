@@ -52,9 +52,10 @@ class Room extends React.Component {
 		return (
 			<Grid container className={classes.root} direction="column">
 				{this.props.redirect ? <Redirect to="/" /> : null}
+				{this.props.children}
 				<Grid container>
 					<Toolbar
-						disabled={this.props.graphManaged}
+						roomAddMetadataInit={this.props.roomAddMetadataInit}
 						leaveRoomIOInit={this.props.leaveRoomIOInit}
 					/>
 				</Grid>
@@ -73,17 +74,10 @@ class Room extends React.Component {
 							markerCurrentLocation={
 								this.props.markerCurrentLocation
 							}
+							markersMetadata={this.props.markersMetadata}
 						/>
 					</Grid>
-					<Statusbar
-						users={this.props.data.users || []}
-						master={this.props.room.master || false}
-						graphManaged={this.props.graphManaged}
-						graphOperation={this.props.graphOperation}
-						createdBy={
-							this.props.data.createdBy || "Exiting room.."
-						}
-					/>
+					<Statusbar users={this.props.data.users || []} />
 				</Grid>
 			</Grid>
 		);
@@ -91,6 +85,10 @@ class Room extends React.Component {
 }
 
 Room.propTypes = {
+	children: PropTypes.oneOfType([
+		PropTypes.arrayOf(PropTypes.node),
+		PropTypes.node
+	]).isRequired,
 	classes: PropTypes.object.isRequired,
 	username: PropTypes.string,
 	data: PropTypes.object,
@@ -106,7 +104,7 @@ Room.propTypes = {
 	roomDeleteUser: PropTypes.func.isRequired,
 	userHistoryAdd: PropTypes.func.isRequired,
 	internalNotificationsAdd: PropTypes.func.isRequired,
-	io: PropTypes.object.isRequired,
+	io: PropTypes.func.isRequired,
 	initWebsocketIO: PropTypes.func.isRequired,
 	addMetadataIO: PropTypes.func.isRequired,
 	changeMetadataIO: PropTypes.func.isRequired,
@@ -114,11 +112,12 @@ Room.propTypes = {
 	joinLeaveRoomIO: PropTypes.func.isRequired,
 	leaveRoomIOInit: PropTypes.func.isRequired,
 	socket: PropTypes.object.isRequired,
-	redirect: PropTypes.object.isRequired,
+	redirect: PropTypes.bool.isRequired,
 	location: PropTypes.object.isRequired,
 	markersUsers: PropTypes.arrayOf(PropTypes.object),
-	markerCurrentLocation: PropTypes.arrayOf(PropTypes.object),
-	markersMetadata: PropTypes.arrayOf(PropTypes.object)
+	markersMetadata: PropTypes.arrayOf(PropTypes.object),
+	markerCurrentLocation: PropTypes.object,
+	roomAddMetadataInit: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -132,13 +131,16 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		roomGetData: name => dispatch(roomGetData(name)),
+		roomGetData: id => dispatch(roomGetData(id)),
 		roomLeaveExisting: roomDeleted =>
 			dispatch(roomLeaveExisting(roomDeleted)),
-		roomPushMetadata: metadataItem =>
-			dispatch(roomPushMetadata(metadataItem)),
+		roomPushMetadata: (metaobject, pushNotification) =>
+			dispatch(roomPushMetadata(metaobject, pushNotification)),
 		roomChangeMetadata: metadata => dispatch(roomChangeMetadata(metadata)),
-		roomAddMetadata: metaobject => dispatch(roomAddMetadata(metaobject)),
+		roomAddMetadata: (name, value, amenity, latitude, longitude) =>
+			dispatch(
+				roomAddMetadata(name, value, amenity, latitude, longitude)
+			),
 		roomGetMetadata: () => dispatch(roomGetMetadata()),
 		roomAddNewUser: user => dispatch(roomAddNewUser(user)),
 		roomChangeUser: user => dispatch(roomChangeUser(user)),

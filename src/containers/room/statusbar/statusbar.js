@@ -28,30 +28,13 @@ const statusbar = props => {
 					{user.username}
 				</Typography>
 			))}
-			{props.graphManaged ? (
-				<div className={classes.managed}>
-					<Typography
-						variant="caption"
-						className={classNames(
-							classes.element,
-							classes.elementHighlighted,
-							classes.elementManaged
-						)}
-					>
-						{props.graphOperation.toLowerCase()}
-					</Typography>
-				</div>
-			) : null}
 		</footer>
 	);
 };
 
 statusbar.propTypes = {
 	classes: PropTypes.object.isRequired,
-	graphOperation: PropTypes.string,
-	graphManaged: PropTypes.bool.isRequired,
-	users: PropTypes.arrayOf(PropTypes.string).isRequired,
-	createdBy: PropTypes.string.isRequired
+	users: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default withStyles(styles)(React.memo(statusbar));

@@ -26,6 +26,7 @@ import {
 	ROOM_USER_ENTERED,
 	ROOM_USER_LEFT
 } from "../actions.js";
+import { internalNotificationsAdd } from "./internal";
 
 const roomCreate = name => {
 	return {
@@ -68,10 +69,9 @@ const roomEnd = () => {
 	};
 };
 
-const roomData = (data, master, overwriteMetadata) => {
+const roomData = (data, overwriteMetadata) => {
 	return {
 		type: ROOM_DATA,
-		master: master,
 		data: data,
 		overwriteMetadata: overwriteMetadata
 	};
@@ -147,21 +147,14 @@ export const roomGetAll = (mode = "all") => {
 };
 
 export const roomGetData = (id, overwriteMetadata = true) => {
-	return async (dispatch, getState) => {
+	return async dispatch => {
 		let response;
 
 		try {
 			response = await axios.getInstance().get(roomGetDataRoute(id));
 
 			if (response.data.success) {
-				dispatch(
-					roomData(
-						response.data.data,
-						getState().auth.username ===
-							response.data.data.createdBy,
-						overwriteMetadata
-					)
-				);
+				dispatch(roomData(response.data.data, overwriteMetadata));
 			} else {
 				dispatch(roomError(response.data.message));
 			}
@@ -272,7 +265,7 @@ export const roomLeaveExisting = () => {
 export const roomGetMetadata = () => {
 	return async (dispatch, getState) => {
 		dispatch(roomInitiate());
-		const id = getState().room._id;
+		const id = getState().room.data._id;
 		let response;
 
 		try {
@@ -295,7 +288,7 @@ export const roomGetMetadata = () => {
 export const roomChangeMetadata = metadata => {
 	return async (dispatch, getState) => {
 		dispatch(roomInitiate());
-		const id = getState().room._id;
+		const id = getState().room.data._id;
 		let response;
 		const payload = {
 			roomData: metadata
@@ -304,7 +297,7 @@ export const roomChangeMetadata = metadata => {
 		try {
 			response = await axios
 				.getInstance()
-				.post(roomChangeMetadataRoute(id), payload, {
+				.put(roomChangeMetadataRoute(id), payload, {
 					"Content-Type": "application/x-www-form-urlencoded"
 				});
 
@@ -322,26 +315,51 @@ export const roomChangeMetadata = metadata => {
 	};
 };
 
-export const roomAddMetadata = metaobject => {
+export const roomAddMetadata = (
+	name,
+	value,
+	amenity,
+	latitude = 0.0,
+	longitude = 0.0
+) => {
 	return async (dispatch, getState) => {
+		const metaobject = {
+			properties: {
+				name,
+				value,
+				amenity,
+				time: new Date(),
+				author: getState().auth.username
+			},
+			geometry: {
+				type: "Point",
+				coordinates: [latitude, longitude]
+			}
+		};
 		dispatch(roomPushMetadata(metaobject));
 		dispatch(roomInitiate());
 
-		const id = getState().room._id;
+		const id = getState().room.data._id;
 		let response;
 		const payload = {
-			payload: metaobject
+			metaobject: metaobject
 		};
 
 		try {
 			response = await axios
 				.getInstance()
-				.post(roomAddMetadataRoute(id), payload, {
+				.put(roomAddMetadataRoute(id), payload, {
 					"Content-Type": "application/x-www-form-urlencoded"
 				});
 
 			if (response.data.success) {
 				dispatch(roomEnd());
+				dispatch(
+					internalNotificationsAdd(
+						"You just added a new insight. Others in the room will see it as well.",
+						"success"
+					)
+				);
 			} else {
 				dispatch(roomError(response.data.message));
 			}
@@ -349,15 +367,23 @@ export const roomAddMetadata = metaobject => {
 			dispatch(roomError(error.response.data.message));
 		}
 
-		return response;
+		return metaobject;
 	};
 };
 
-export const roomPushMetadata = metaobject => {
+export const roomPushMetadata = (metaobject, pushNotification = false) => {
 	return async dispatch => {
 		dispatch(roomInitiate());
 		dispatch(roomMetadataAdd(metaobject));
 		dispatch(roomEnd());
+		if (pushNotification)
+			dispatch(
+				internalNotificationsAdd(
+					metaobject.properties.author +
+						" just added a new insight. You can see it on the map now!",
+					"info"
+				)
+			);
 	};
 };
 

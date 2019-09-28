@@ -12,7 +12,7 @@ exports.validate = method => {
 					.isIn(["all", "learn", "practice", "compete"])
 			];
 		}
-		case "/api/room/get/id/get": {
+		case "/api/room/id/get": {
 			return [
 				param("id")
 					.exists()
@@ -20,15 +20,30 @@ exports.validate = method => {
 					.isMongoId()
 			];
 		}
-		case "/api/room/metadata/post": {
+		case "/api/room/id/put": {
 			return [
 				param("id")
 					.exists()
 					.isString()
 					.isMongoId(),
-				body("roomData")
+				body("roomData").exists()
+			];
+		}
+		case "/api/room/metadata/get": {
+			return [
+				param("id")
 					.exists()
 					.isString()
+					.isMongoId()
+			];
+		}
+		case "/api/room/metadata/put": {
+			return [
+				param("id")
+					.exists()
+					.isString()
+					.isMongoId(),
+				body("metaobject").exists()
 			];
 		}
 		case "/api/room/create/post": {
@@ -95,15 +110,6 @@ exports.validate = method => {
 					.isMongoId()
 			];
 		}
-		case "/api/room/id/put": {
-			return [
-				param("id")
-					.exists()
-					.isString()
-					.isMongoId(),
-				body("payload").exists()
-			];
-		}
 		default: {
 			return [];
 		}
@@ -155,18 +161,18 @@ exports.getRoomById = function(request, response, next) {
 	});
 };
 
-exports.putData = function(request, response, next) {
+exports.putMetadata = function(request, response, next) {
 	const validation = validationResult(request);
 	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
 
 	const { id } = request.params;
-	const { payload } = request.body;
+	const { metaobject } = request.body;
 
 	Room.findOneAndUpdate(
 		{ _id: id },
 		{
 			$push: {
-				roomData: payload
+				roomData: metaobject
 			}
 		},
 		{ new: true },
@@ -176,7 +182,7 @@ exports.putData = function(request, response, next) {
 				response.json({
 					success: true,
 					data: {
-						...room.toObject()
+						data: room.roomData
 					}
 				});
 			}
@@ -203,7 +209,7 @@ exports.getMetdata = function(request, response, next) {
 	});
 };
 
-exports.postMetadata = function(request, response, next) {
+exports.putData = function(request, response, next) {
 	const validation = validationResult(request);
 	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
 

@@ -1,7 +1,7 @@
 module.exports = function(io) {
-	const graph = io.of("/graph");
+	const map = io.of("/map");
 
-	graph.on("connection", socket => {
+	map.on("connection", socket => {
 		socket.on("initWebsocket", from => {
 			socket.join(from.room);
 			socket.broadcast.to(from.room).emit("initMember");
