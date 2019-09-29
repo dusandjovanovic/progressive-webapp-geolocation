@@ -38,13 +38,6 @@ module.exports = function(app, passport) {
 		user.getHistory
 	);
 
-	app.put(
-		"/api/user/:username/history",
-		authenticated,
-		user.validate("/api/user/username/history/post"),
-		user.putHistory
-	);
-
 	app.get(
 		"/api/friend-request/:username",
 		authenticated,

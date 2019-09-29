@@ -48,6 +48,16 @@ const withIO = WrappedComponent => {
 			}
 		};
 
+		addLocationChangeIO = location => {
+			if (location) {
+				this.socket.emit("addLocationChange", {
+					room: this.props.room.name,
+					sender: this.props.username,
+					location: location
+				});
+			}
+		};
+
 		joinRoomIO = (username, master) => {
 			this.socket.emit("joinRoom", {
 				username: username,
@@ -66,10 +76,7 @@ const withIO = WrappedComponent => {
 			try {
 				const roomName = this.props.room.name;
 				const response = await this.props.roomLeaveExisting(false);
-				if (response.data.newMaster)
-					this.masterChangedIO(roomName, response.data.newMaster);
-				else this.joinLeaveRoomIO(roomName, response.data.message);
-
+				this.joinLeaveRoomIO(roomName, response.data.message);
 				this.setState({
 					redirect: true
 				});
@@ -85,6 +92,7 @@ const withIO = WrappedComponent => {
 					initWebsocketIO={this.initWebsocketIO}
 					addMetadataIO={this.addMetadataIO}
 					changeMetadataIO={this.changeMetadataIO}
+					addLocationChangeIO={this.addLocationChangeIO}
 					joinRoomIO={this.joinRoomIO}
 					joinLeaveRoomIO={this.joinLeaveRoomIO}
 					leaveRoomIOInit={this.leaveRoomIOInit}

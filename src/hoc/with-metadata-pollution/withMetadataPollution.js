@@ -1,10 +1,7 @@
 import React from "react";
-import Typography from "@material-ui/core/Typography";
 import MetadataPollution from "../../containers/room/metadata/metadataPollution";
-import { CircleMarker, Tooltip } from "react-leaflet";
+import MarkerPollution from "../../containers/room/markers/marker-pollution/markerPollution";
 import PropTypes from "prop-types";
-
-import { IMPACT_COLORS, IMPACT_STRING_POLLUTION } from "../../utils/constants";
 
 const withMetadataPollution = WrappedComponent => {
 	class withMetadataPollution extends React.Component {
@@ -31,6 +28,13 @@ const withMetadataPollution = WrappedComponent => {
 				this.props.roomPushMetadata(received.metadata, true);
 			});
 
+			this.props.socket.on("addLocationChange", received => {
+				this.props.roomChangeUser({
+					username: received.sender,
+					location: received.location
+				});
+			});
+
 			this.props.joinRoomIO(
 				this.props.username,
 				this.props.data.createdBy
@@ -52,52 +56,16 @@ const withMetadataPollution = WrappedComponent => {
 			if (this.props.data && this.props.data.roomData) {
 				this.setState({
 					markersMetadata: this.props.data.roomData.map(
-						(element, index) => this.renderMarker(element, index)
+						(element, index) => (
+							<MarkerPollution
+								key={index}
+								element={element}
+								index={index}
+							/>
+						)
 					)
 				});
 			}
-		};
-
-		renderMarker = (element, index) => {
-			return (
-				<CircleMarker
-					key={index}
-					center={[
-						element.geometry.coordinates[0],
-						element.geometry.coordinates[1]
-					]}
-					radius={element.properties.value * 2.5}
-					fillOpacity={0.5}
-					stroke={false}
-					color={IMPACT_COLORS[element.properties.value - 1]}
-				>
-					<Tooltip direction="bottom">
-						<div>
-							<Typography
-								variant="caption"
-								color="secondary"
-								gutterBottom
-							>
-								{IMPACT_STRING_POLLUTION(
-									element.properties.value
-								)}
-							</Typography>
-						</div>
-
-						<div>
-							<Typography variant="caption">
-								Shared by: {element.properties.author}
-							</Typography>
-						</div>
-
-						<div>
-							<Typography variant="body1">
-								{element.properties.amenity}
-							</Typography>
-						</div>
-					</Tooltip>
-				</CircleMarker>
-			);
 		};
 
 		handleNewMetadataOpen = () => {
@@ -170,6 +138,7 @@ const withMetadataPollution = WrappedComponent => {
 		initWebsocketIO: PropTypes.func.isRequired,
 		addMetadataIO: PropTypes.func.isRequired,
 		changeMetadataIO: PropTypes.func.isRequired,
+		addLocationChangeIO: PropTypes.func.isRequired,
 		joinRoomIO: PropTypes.func.isRequired,
 		joinLeaveRoomIO: PropTypes.func.isRequired,
 		leaveRoomIOInit: PropTypes.func.isRequired,

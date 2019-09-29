@@ -20,6 +20,13 @@ module.exports = function(io) {
 			});
 		});
 
+		socket.on("addLocationChange", from => {
+			socket.broadcast.to(from.room).emit("addLocationChange", {
+				sender: from.sender,
+				location: from.location
+			});
+		});
+
 		socket.on("joinRoom", from => {
 			socket.broadcast
 				.to(from.room)

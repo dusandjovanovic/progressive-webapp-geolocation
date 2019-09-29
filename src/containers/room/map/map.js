@@ -23,9 +23,9 @@ class MapContainer extends React.Component {
 					]}
 				>
 					<TileLayer url={MAP_LAYER} />
-					{this.props.markerCurrentLocation}
-					{this.props.markersUsers}
 					{this.props.markersMetadata}
+					{this.props.markersUsers}
+					{this.props.markerCurrentLocation}
 				</Map>
 			</Grid>
 		);

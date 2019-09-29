@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Room = require("../models/room");
 const { validationResult, body, param } = require("express-validator");
 
 exports.validate = method => {
@@ -29,18 +30,6 @@ exports.validate = method => {
 							? Promise.resolve()
 							: Promise.reject();
 					})
-			];
-		}
-		case "/api/user/username/history/post": {
-			return [
-				param("username")
-					.exists()
-					.custom(async value => {
-						return (await User.isUserByUsername(value))
-							? Promise.resolve()
-							: Promise.reject();
-					}),
-				body("score").exists()
 			];
 		}
 		default: {
@@ -75,45 +64,24 @@ exports.getHistory = function(request, response, next) {
 
 	const { username } = request.params;
 
-	User.findOne({ username: username }, function(error, user) {
+	Room.find({ roomData: { "properties.author": username } }, function(
+		error,
+		data
+	) {
+		console.log(data);
 		if (error) return next(error);
-		else if (!user)
-			return next({
-				message: "User with username provided does not exist."
-			});
-		else
+		else {
+			let subMetaobjects = [];
+			for (let i = 0; i < data.length; i++)
+				for (let j = 0; j < data.roomData.length; j++)
+					if (data[i].roomData[j].properties.author === username)
+						subMetaobjects.push(data[i].roomData[j]);
 			response.json({
 				success: true,
-				data: user.history
+				data: subMetaobjects
 			});
-	});
-};
-
-exports.putHistory = function(request, response, next) {
-	const validation = validationResult(request);
-	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
-
-	const { username } = request.params;
-	const { score } = request.body;
-
-	User.update(
-		{ username: username },
-		{
-			$push: {
-				history: {
-					score: score
-				}
-			}
-		},
-		function(error) {
-			if (error) return next(error);
-			else
-				response.json({
-					success: true,
-					message: "Score successfully added to user history."
-				});
 		}
-	);
+	});
 };
 
 exports.register = function(request, response, next) {

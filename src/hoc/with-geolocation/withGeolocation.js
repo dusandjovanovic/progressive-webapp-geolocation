@@ -50,6 +50,7 @@ const withGeolocation = WrappedComponent => {
 							username: this.props.username,
 							location: this.state.location
 						});
+						this.props.addLocationChangeIO(this.state.location);
 					}
 				}
 			);
@@ -91,7 +92,18 @@ const withGeolocation = WrappedComponent => {
 		roomChangeUser: PropTypes.func,
 		roomDeleteUser: PropTypes.func,
 		userHistoryAdd: PropTypes.func,
-		internalNotificationsAdd: PropTypes.func
+		internalNotificationsAdd: PropTypes.func,
+		io: PropTypes.func,
+		initWebsocketIO: PropTypes.func,
+		addMetadataIO: PropTypes.func,
+		changeMetadataIO: PropTypes.func,
+		addLocationChangeIO: PropTypes.func,
+		joinRoomIO: PropTypes.func,
+		joinLeaveRoomIO: PropTypes.func,
+		leaveRoomIOInit: PropTypes.func,
+		socket: PropTypes.object,
+		redirect: PropTypes.bool,
+		location: PropTypes.object
 	};
 
 	return withGeolocation;
