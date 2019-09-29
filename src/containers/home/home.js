@@ -40,8 +40,8 @@ class Home extends React.Component {
 		clearInterval(this.interval);
 	}
 
-	enterRoom = (id, name) => {
-		this.props.roomJoinExisting(
+	enterRoom = async (id, name) => {
+		await this.props.roomJoinExisting(
 			id,
 			name,
 			this.props.location.latitude,

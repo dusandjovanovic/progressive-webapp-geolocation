@@ -21,11 +21,10 @@ const withIOMessaging = WrappedComponent => {
 			});
 		};
 
-		messageSendIO = (message, room, sender) => {
+		messageSendIO = (message, room) => {
 			this.socket.emit("newMessage", {
 				room: room,
-				sender: sender,
-				msg: message
+				message: message
 			});
 		};
 

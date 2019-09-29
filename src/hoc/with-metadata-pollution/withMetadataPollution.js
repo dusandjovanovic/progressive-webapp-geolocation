@@ -1,103 +1,65 @@
 import React from "react";
-import Typography from "@material-ui/core/Typography";
 import MetadataPollution from "../../containers/room/metadata/metadataPollution";
-import { CircleMarker, Tooltip } from "react-leaflet";
+import MarkerPollution from "../../containers/room/markers/marker-pollution/markerPollution";
 import PropTypes from "prop-types";
-
-import { IMPACT_COLORS, IMPACT_STRING_POLLUTION } from "../../utils/constants";
 
 const withMetadataPollution = WrappedComponent => {
 	class withMetadataPollution extends React.Component {
 		state = {
 			markersMetadata: null,
-			newMetadata: false,
-			error: {
-				hasError: false,
-				name: null,
-				description: null
-			}
+			newMetadata: false
 		};
 
 		componentDidMount() {
 			this.renderMarkers();
 			this.props.initWebsocketIO();
 
-			this.props.socket.on("joinLeaveRoom", received => {
+			this.props.socket.on("joinRoom", received => {
 				this.props.roomGetData(this.props.data._id, false);
-				this.props.internalNotificationsAdd(received.msg, "info");
+				this.props.internalNotificationsAdd(received.message, "info");
+			});
+
+			this.props.socket.on("leaveRoom", received => {
+				this.props.roomDeleteUser(received.username);
+				this.props.internalNotificationsAdd(received.message, "info");
 			});
 
 			this.props.socket.on("addMetadata", received => {
 				this.props.roomPushMetadata(received.metadata, true);
 			});
 
-			this.props.joinRoomIO(
-				this.props.username,
-				this.props.data.createdBy
-			);
+			this.props.socket.on("addLocationChange", received => {
+				this.props.roomChangeUser({
+					username: received.sender,
+					location: received.location
+				});
+			});
 
-			this.props.joinLeaveRoomIO(
+			this.props.joinRoomIO(
 				this.props.room.name,
+				this.props.username,
 				this.props.username + " has just joined the room."
 			);
 		}
 
 		componentDidUpdate(prevProps) {
-			if (this.props.data.roomData !== prevProps.data.roomData) {
+			if (this.props.data.roomData !== prevProps.data.roomData)
 				this.renderMarkers();
-			}
 		}
 
 		renderMarkers = () => {
-			if (this.props.data && this.props.data.roomData) {
+			if (this.props.data && this.props.data.roomData)
 				this.setState({
 					markersMetadata: this.props.data.roomData.map(
-						(element, index) => this.renderMarker(element, index)
+						(element, index) => (
+							<MarkerPollution
+								key={element._id}
+								element={element}
+								index={index}
+							/>
+						)
 					)
 				});
-			}
-		};
-
-		renderMarker = (element, index) => {
-			return (
-				<CircleMarker
-					key={index}
-					center={[
-						element.geometry.coordinates[0],
-						element.geometry.coordinates[1]
-					]}
-					radius={element.properties.value * 2.5}
-					fillOpacity={0.5}
-					stroke={false}
-					color={IMPACT_COLORS[element.properties.value - 1]}
-				>
-					<Tooltip direction="bottom">
-						<div>
-							<Typography
-								variant="caption"
-								color="secondary"
-								gutterBottom
-							>
-								{IMPACT_STRING_POLLUTION(
-									element.properties.value
-								)}
-							</Typography>
-						</div>
-
-						<div>
-							<Typography variant="caption">
-								Shared by: {element.properties.author}
-							</Typography>
-						</div>
-
-						<div>
-							<Typography variant="body1">
-								{element.properties.amenity}
-							</Typography>
-						</div>
-					</Tooltip>
-				</CircleMarker>
-			);
 		};
 
 		handleNewMetadataOpen = () => {
@@ -107,31 +69,21 @@ const withMetadataPollution = WrappedComponent => {
 		};
 
 		handleNewMetadataClose = () => {
-			if (!this.state.error.hasError) {
-				this.setState({
-					newMetadata: false
-				});
-			}
+			this.setState({
+				newMetadata: false
+			});
 		};
 
 		handleMetadata = async (name, value, amenity) => {
-			try {
-				const metaobject = await this.props.roomAddMetadata(
-					name,
-					value,
-					amenity,
-					this.props.location.latitude,
-					this.props.location.longitude
-				);
-				this.props.addMetadataIO(metaobject);
-			} catch (error) {
-				this.setState({
-					error: {
-						hasError: true,
-						name: error.toString()
-					}
-				});
-			}
+			const response = await this.props.roomAddMetadata(
+				name,
+				value,
+				amenity,
+				this.props.location.latitude,
+				this.props.location.longitude
+			);
+			if (response.data && response.data.data)
+				this.props.addMetadataIO(response.data.data);
 		};
 
 		render() {
@@ -165,13 +117,16 @@ const withMetadataPollution = WrappedComponent => {
 		roomChangeUser: PropTypes.func.isRequired,
 		roomDeleteUser: PropTypes.func.isRequired,
 		userHistoryAdd: PropTypes.func.isRequired,
+		roomAddMessage: PropTypes.func.isRequired,
+		roomPushMessage: PropTypes.func.isRequired,
 		internalNotificationsAdd: PropTypes.func.isRequired,
 		io: PropTypes.func.isRequired,
 		initWebsocketIO: PropTypes.func.isRequired,
 		addMetadataIO: PropTypes.func.isRequired,
 		changeMetadataIO: PropTypes.func.isRequired,
+		addLocationChangeIO: PropTypes.func.isRequired,
 		joinRoomIO: PropTypes.func.isRequired,
-		joinLeaveRoomIO: PropTypes.func.isRequired,
+		leaveRoomIO: PropTypes.func.isRequired,
 		leaveRoomIOInit: PropTypes.func.isRequired,
 		socket: PropTypes.object.isRequired,
 		redirect: PropTypes.bool.isRequired,

@@ -48,34 +48,43 @@ const withIO = WrappedComponent => {
 			}
 		};
 
-		joinRoomIO = (username, master) => {
-			this.socket.emit("joinRoom", {
-				username: username,
-				master: master
-			});
-		};
-
-		joinLeaveRoomIO = (roomName, message) => {
-			this.socket.emit("joinLeaveRoom", {
-				room: roomName,
-				msg: message
-			});
-		};
-
-		leaveRoomIOInit = async () => {
-			try {
-				const roomName = this.props.room.name;
-				const response = await this.props.roomLeaveExisting(false);
-				if (response.data.newMaster)
-					this.masterChangedIO(roomName, response.data.newMaster);
-				else this.joinLeaveRoomIO(roomName, response.data.message);
-
-				this.setState({
-					redirect: true
+		addLocationChangeIO = location => {
+			if (location) {
+				this.socket.emit("addLocationChange", {
+					room: this.props.room.name,
+					sender: this.props.username,
+					location: location
 				});
+			}
+		};
 
-				return "unloading";
-			} catch (error) {}
+		joinRoomIO = (room, username, message) => {
+			this.socket.emit("joinRoom", {
+				room: room,
+				username: username,
+				message: message
+			});
+		};
+
+		leaveRoomIO = (room, username, message) => {
+			this.socket.emit("leaveRoom", {
+				room: room,
+				username: username,
+				message: message
+			});
+		};
+
+		leaveRoomIOInit = () => {
+			this.leaveRoomIO(
+				this.props.room.name,
+				this.props.username,
+				this.props.username + " has just left the room."
+			);
+			this.props.roomLeaveExisting();
+			this.setState({
+				redirect: true
+			});
+			return "unloading";
 		};
 
 		render() {
@@ -85,8 +94,9 @@ const withIO = WrappedComponent => {
 					initWebsocketIO={this.initWebsocketIO}
 					addMetadataIO={this.addMetadataIO}
 					changeMetadataIO={this.changeMetadataIO}
+					addLocationChangeIO={this.addLocationChangeIO}
 					joinRoomIO={this.joinRoomIO}
-					joinLeaveRoomIO={this.joinLeaveRoomIO}
+					leaveRoomIO={this.leaveRoomIO}
 					leaveRoomIOInit={this.leaveRoomIOInit}
 					socket={this.socket}
 					redirect={this.state.redirect}
@@ -110,6 +120,8 @@ const withIO = WrappedComponent => {
 		roomChangeUser: PropTypes.func.isRequired,
 		roomDeleteUser: PropTypes.func.isRequired,
 		userHistoryAdd: PropTypes.func.isRequired,
+		roomAddMessage: PropTypes.func.isRequired,
+		roomPushMessage: PropTypes.func.isRequired,
 		internalNotificationsAdd: PropTypes.func.isRequired
 	};
 

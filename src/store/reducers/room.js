@@ -2,6 +2,7 @@ import {
 	ROOM_INIT,
 	ROOM_END,
 	ROOM_DATA,
+	ROOM_MESSAGE_ADD,
 	ROOM_METADATA_ADD,
 	ROOM_METADATA_CHANGE,
 	ROOM_USER_CHANGED,
@@ -25,7 +26,8 @@ const initialState = {
 	data: {
 		_id: null,
 		users: [],
-		roomData: []
+		roomData: [],
+		roomMessages: []
 	},
 	waiting: false,
 	error: null
@@ -77,6 +79,14 @@ const reducer = (state = initialState, action) => {
 					...state.room
 				}
 			};
+		case ROOM_MESSAGE_ADD:
+			return {
+				...state,
+				data: {
+					...state.data,
+					roomMessages: [...state.data.roomMessages, action.payload]
+				}
+			};
 		case ROOM_METADATA_ADD:
 			return {
 				...state,
@@ -85,7 +95,6 @@ const reducer = (state = initialState, action) => {
 					roomData: [...state.data.roomData, action.payload]
 				}
 			};
-
 		case ROOM_METADATA_CHANGE: {
 			return {
 				...state,
@@ -102,18 +111,17 @@ const reducer = (state = initialState, action) => {
 					users: [...state.data.users, action.user]
 				}
 			};
-
 		case ROOM_USER_LEFT:
 			return {
 				...state,
 				data: {
 					...state.data,
-					users: filter(state.data.users, {
-						username: !action.username
-					})
+					users: filter(
+						state.data.users,
+						element => element.username !== action.username
+					)
 				}
 			};
-
 		case ROOM_USER_CHANGED:
 			return {
 				...state,
@@ -141,8 +149,9 @@ const reducer = (state = initialState, action) => {
 				},
 				data: {
 					_id: null,
-					graph: null,
-					users: []
+					users: [],
+					roomData: [],
+					roomMessages: []
 				}
 			};
 		case ROOM_ERROR:
@@ -151,6 +160,7 @@ const reducer = (state = initialState, action) => {
 				waiting: false,
 				error: action.error
 			};
+
 		default:
 			return state;
 	}

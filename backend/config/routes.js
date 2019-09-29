@@ -38,13 +38,6 @@ module.exports = function(app, passport) {
 		user.getHistory
 	);
 
-	app.put(
-		"/api/user/:username/history",
-		authenticated,
-		user.validate("/api/user/username/history/post"),
-		user.putHistory
-	);
-
 	app.get(
 		"/api/friend-request/:username",
 		authenticated,
@@ -113,6 +106,13 @@ module.exports = function(app, passport) {
 		authenticated,
 		room.validate("/api/room/metadata/put"),
 		room.putMetadata
+	);
+
+	app.put(
+		"/api/room/messages/:id",
+		authenticated,
+		room.validate("/api/room/messages/put"),
+		room.putMessage
 	);
 
 	app.post(

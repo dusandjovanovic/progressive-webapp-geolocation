@@ -20,15 +20,24 @@ module.exports = function(io) {
 			});
 		});
 
-		socket.on("joinRoom", from => {
-			socket.broadcast
-				.to(from.room)
-				.emit(from.master, { username: from.username });
+		socket.on("addLocationChange", from => {
+			socket.broadcast.to(from.room).emit("addLocationChange", {
+				sender: from.sender,
+				location: from.location
+			});
 		});
 
-		socket.on("joinLeaveRoom", from => {
-			socket.broadcast.to(from.room).emit("joinLeaveRoom", {
-				msg: from.msg
+		socket.on("joinRoom", from => {
+			socket.broadcast.to(from.room).emit("joinRoom", {
+				message: from.message,
+				username: from.username
+			});
+		});
+
+		socket.on("leaveRoom", from => {
+			socket.broadcast.to(from.room).emit("leaveRoom", {
+				message: from.message,
+				username: from.username
 			});
 		});
 	});

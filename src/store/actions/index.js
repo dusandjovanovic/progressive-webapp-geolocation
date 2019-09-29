@@ -33,5 +33,7 @@ export {
 	roomGetMetadata,
 	roomAddNewUser,
 	roomChangeUser,
-	roomDeleteUser
+	roomDeleteUser,
+	roomAddMessage,
+	roomPushMessage
 } from "./room";

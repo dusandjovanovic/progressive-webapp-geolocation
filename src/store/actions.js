@@ -27,6 +27,7 @@ export const ROOM_JOIN = "ROOM_JOIN";
 export const ROOM_LEAVE = "ROOM_LEAVE";
 export const ROOM_ERROR = "ROOM_ERROR";
 export const ROOM_DATA = "ROOM_DATA";
+export const ROOM_MESSAGE_ADD = "ROOM_MESSAGE_ADD";
 export const ROOM_METADATA_ADD = "ROOM_METADATA_ADD";
 export const ROOM_METADATA_CHANGE = "ROOM_METADATA_CHANGE";
 export const ROOM_USER_CHANGED = "ROOM_USER_CHANGED";
