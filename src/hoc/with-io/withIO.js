@@ -42,7 +42,7 @@ const withIO = WrappedComponent => {
 		changeMetadataIO = metadata => {
 			if (metadata) {
 				this.socket.emit("changeMetadata", {
-					room: this.props.room.name,
+					room: this.props.data.name,
 					metadata: metadata
 				});
 			}
@@ -51,7 +51,7 @@ const withIO = WrappedComponent => {
 		addLocationChangeIO = location => {
 			if (location) {
 				this.socket.emit("addLocationChange", {
-					room: this.props.room.name,
+					room: this.props.data.name,
 					sender: this.props.username,
 					location: location
 				});
@@ -76,7 +76,7 @@ const withIO = WrappedComponent => {
 
 		leaveRoomIOInit = () => {
 			this.leaveRoomIO(
-				this.props.room.name,
+				this.props.data.name,
 				this.props.username,
 				this.props.username + " has just left the room."
 			);
@@ -109,7 +109,6 @@ const withIO = WrappedComponent => {
 	WIthIO.propTypes = {
 		username: PropTypes.string,
 		data: PropTypes.object,
-		room: PropTypes.object,
 		roomGetData: PropTypes.func.isRequired,
 		roomLeaveExisting: PropTypes.func.isRequired,
 		roomPushMetadata: PropTypes.func.isRequired,

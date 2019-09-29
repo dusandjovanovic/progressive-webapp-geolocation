@@ -66,8 +66,7 @@ const withMarkersUsers = WrappedComponent => {
 
 	withMarkersUsers.propTypes = {
 		username: PropTypes.string.isRequired,
-		data: PropTypes.object.isRequired,
-		room: PropTypes.object.isRequired
+		data: PropTypes.object.isRequired
 	};
 
 	return withMarkersUsers;

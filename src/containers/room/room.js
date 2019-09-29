@@ -45,7 +45,7 @@ class Room extends React.Component {
 	};
 
 	componentWillUnmount() {
-		if (this.props.room.name) this.props.leaveRoomIOInit();
+		if (this.props.data.name) this.props.leaveRoomIOInit();
 	}
 
 	render() {
@@ -64,7 +64,7 @@ class Room extends React.Component {
 				<Grid container>
 					<Grid item xs={3}>
 						<Messaging
-							room={this.props.room.name || ""}
+							room={this.props.data.name || ""}
 							username={this.props.username}
 							messages={this.props.data.roomMessages}
 							roomAddMessage={this.props.roomAddMessage}
@@ -97,7 +97,6 @@ Room.propTypes = {
 	classes: PropTypes.object.isRequired,
 	username: PropTypes.string,
 	data: PropTypes.object,
-	room: PropTypes.object,
 	roomGetData: PropTypes.func.isRequired,
 	roomLeaveExisting: PropTypes.func.isRequired,
 	roomPushMetadata: PropTypes.func.isRequired,
@@ -131,7 +130,6 @@ const mapStateToProps = state => {
 	return {
 		username: state.auth.username,
 		data: state.room.data,
-		room: state.room.room,
 		error: state.room.error
 	};
 };

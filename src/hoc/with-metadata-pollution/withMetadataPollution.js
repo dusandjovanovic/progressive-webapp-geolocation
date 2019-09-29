@@ -36,7 +36,7 @@ const withMetadataPollution = WrappedComponent => {
 			});
 
 			this.props.joinRoomIO(
-				this.props.room.name,
+				this.props.data.name,
 				this.props.username,
 				this.props.username + " has just joined the room."
 			);
@@ -106,7 +106,6 @@ const withMetadataPollution = WrappedComponent => {
 	withMetadataPollution.propTypes = {
 		username: PropTypes.string,
 		data: PropTypes.object,
-		room: PropTypes.object,
 		roomGetData: PropTypes.func.isRequired,
 		roomLeaveExisting: PropTypes.func.isRequired,
 		roomPushMetadata: PropTypes.func.isRequired,
