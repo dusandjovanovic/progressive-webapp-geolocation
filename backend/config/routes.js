@@ -108,6 +108,13 @@ module.exports = function(app, passport) {
 		room.putMetadata
 	);
 
+	app.put(
+		"/api/room/messages/:id",
+		authenticated,
+		room.validate("/api/room/messages/put"),
+		room.putMessage
+	);
+
 	app.post(
 		"/api/room/create",
 		authenticated,

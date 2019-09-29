@@ -7,7 +7,8 @@ import {
 	roomCreateNewRoute,
 	roomChangeMetadataRoute,
 	roomAddMetadataRoute,
-	roomGetMetadataRoute
+	roomGetMetadataRoute,
+	roomAddMessageRoute
 } from "../../utils/constantsAPI";
 
 import {
@@ -20,6 +21,7 @@ import {
 	ROOM_JOIN,
 	ROOM_LEAVE,
 	ROOM_ERROR,
+	ROOM_MESSAGE_ADD,
 	ROOM_METADATA_CHANGE,
 	ROOM_METADATA_ADD,
 	ROOM_USER_CHANGED,
@@ -109,6 +111,13 @@ const roomUserLeft = username => {
 	return {
 		type: ROOM_USER_LEFT,
 		username: username
+	};
+};
+
+const roomMessageAdd = payload => {
+	return {
+		type: ROOM_MESSAGE_ADD,
+		payload: payload
 	};
 };
 
@@ -351,8 +360,8 @@ export const roomAddMetadata = (
 				});
 
 			if (response.data.success) {
+				dispatch(roomMetadataAdd(response.data.data));
 				dispatch(roomEnd());
-				dispatch(roomPushMetadata(response.data.data));
 				dispatch(
 					internalNotificationsAdd(
 						"You just added a new insight. Others in the room will see it as well.",
@@ -383,6 +392,45 @@ export const roomPushMetadata = (metaobject, pushNotification = false) => {
 					"info"
 				)
 			);
+	};
+};
+
+export const roomAddMessage = message => {
+	return async (dispatch, getState) => {
+		dispatch(roomInitiate());
+
+		const id = getState().room.data._id;
+		let response;
+		const payload = {
+			sender: getState().auth.username,
+			message: message
+		};
+
+		try {
+			response = await axios
+				.getInstance()
+				.put(roomAddMessageRoute(id), payload, {
+					"Content-Type": "application/x-www-form-urlencoded"
+				});
+			if (response.data.success) {
+				dispatch(roomMessageAdd(response.data.data));
+				dispatch(roomEnd());
+			} else {
+				dispatch(roomError(response.data.message));
+			}
+		} catch (error) {
+			dispatch(roomError(error.response.data.message));
+		}
+
+		return response;
+	};
+};
+
+export const roomPushMessage = message => {
+	return async dispatch => {
+		dispatch(roomInitiate());
+		dispatch(roomMessageAdd(message));
+		dispatch(roomEnd());
 	};
 };
 

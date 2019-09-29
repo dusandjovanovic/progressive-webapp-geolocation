@@ -46,6 +46,20 @@ exports.validate = method => {
 				body("metaobject").exists()
 			];
 		}
+		case "/api/room/messages/put": {
+			return [
+				param("id")
+					.exists()
+					.isString()
+					.isMongoId(),
+				body("sender")
+					.exists()
+					.isString(),
+				body("message")
+					.exists()
+					.isString()
+			];
+		}
 		case "/api/room/create/post": {
 			return [
 				body("name")
@@ -159,6 +173,38 @@ exports.getRoomById = function(request, response, next) {
 			});
 		}
 	});
+};
+
+exports.putMessage = function(request, response, next) {
+	const validation = validationResult(request);
+	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
+
+	const { id } = request.params;
+	const { sender } = request.body;
+	const { message } = request.body;
+
+	Room.findOneAndUpdate(
+		{ _id: id },
+		{
+			$push: {
+				roomMessages: {
+					sender,
+					message
+				}
+			}
+		},
+		{ new: true },
+		function(error, room) {
+			if (error) return next(error);
+			else {
+				const roomMessages = room.roomMessages;
+				response.json({
+					success: true,
+					data: roomMessages[roomMessages.length - 1]
+				});
+			}
+		}
+	);
 };
 
 exports.putMetadata = function(request, response, next) {

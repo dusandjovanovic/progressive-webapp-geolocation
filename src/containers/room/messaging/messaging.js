@@ -11,20 +11,14 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 class Messaging extends React.PureComponent {
 	state = {
-		message: "",
-		messages: []
+		message: ""
 	};
-
-	constructor(props) {
-		super(props);
-		this.inputRef = React.createRef();
-	}
 
 	componentDidMount() {
 		this.props.initWebsocketIO(this.props.room);
-		this.props.socket.on("newMessage", message =>
-			this.messageReceived(message)
-		);
+		this.props.socket.on("newMessage", received => {
+			this.props.roomPushMessage(received.message);
+		});
 	}
 
 	messageChange = event => {
@@ -33,37 +27,11 @@ class Messaging extends React.PureComponent {
 		});
 	};
 
-	messageSend = () => {
-		this.props.messageSendIO(
-			this.state.message,
-			this.props.room,
-			this.props.username
-		);
-		this.messageReceived({
-			sender: this.props.username,
-			msg: this.state.message
-		});
+	messageSend = async () => {
+		const response = await this.props.roomAddMessage(this.state.message);
+		this.props.messageSendIO(response.data.data, this.props.room);
 		this.setState({
 			message: ""
-		});
-	};
-
-	messageReceived = message => {
-		let position = true;
-		let content;
-		if (message.sender !== this.props.username) {
-			position = false;
-			content = message.sender + ":  " + message.msg;
-		} else content = message.msg;
-
-		let updated = [...this.state.messages];
-		updated.push({
-			text: content,
-			position: position,
-			date: new Date()
-		});
-		this.setState({
-			messages: updated
 		});
 	};
 
@@ -90,18 +58,25 @@ class Messaging extends React.PureComponent {
 					</Button>
 				</div>
 				<div className={classes.messageView}>
-					{this.state.messages.map((message, index) => (
-						<div key={index} className={classes.messageHolder}>
+					{this.props.messages.map(message => (
+						<div
+							key={message._id}
+							className={classes.messageHolder}
+						>
 							<Grow in>
 								<div
 									className={classNames(
 										classes.message,
-										message.position
+										message.sender === this.props.username
 											? classes.messageRight
 											: classes.messageLeft
 									)}
 								>
-									{message.text}
+									{message.sender === this.props.username
+										? message.message
+										: message.sender +
+										  ": " +
+										  message.message}
 								</div>
 							</Grow>
 						</div>
@@ -114,8 +89,11 @@ class Messaging extends React.PureComponent {
 
 Messaging.propTypes = {
 	classes: PropTypes.object.isRequired,
-	username: PropTypes.string.isRequired,
 	room: PropTypes.string,
+	username: PropTypes.string.isRequired,
+	messages: PropTypes.arrayOf(PropTypes.object),
+	roomAddMessage: PropTypes.func.isRequired,
+	roomPushMessage: PropTypes.func.isRequired,
 	socket: PropTypes.object.isRequired,
 	initWebsocketIO: PropTypes.func.isRequired,
 	messageSendIO: PropTypes.func.isRequired

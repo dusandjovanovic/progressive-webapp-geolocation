@@ -7,9 +7,9 @@ module.exports = function(io) {
 		});
 
 		socket.on("newMessage", from => {
-			socket.broadcast
-				.to(from.room)
-				.emit("newMessage", { sender: from.sender, msg: from.msg });
+			socket.broadcast.to(from.room).emit("newMessage", {
+				message: from.message
+			});
 		});
 	});
 };

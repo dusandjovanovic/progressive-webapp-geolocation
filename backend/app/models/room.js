@@ -65,6 +65,23 @@ const RoomSchema = new mongoose.Schema({
 				coordinates: [Number]
 			}
 		}
+	],
+	roomMessages: [
+		{
+			message: {
+				type: String,
+				required: true
+			},
+			sender: {
+				type: String,
+				required: true
+			},
+			time: {
+				type: Date,
+				required: false,
+				default: Date.now
+			}
+		}
 	]
 });
 

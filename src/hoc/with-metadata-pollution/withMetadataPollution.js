@@ -14,8 +14,13 @@ const withMetadataPollution = WrappedComponent => {
 			this.renderMarkers();
 			this.props.initWebsocketIO();
 
-			this.props.socket.on("joinLeaveRoom", received => {
+			this.props.socket.on("joinRoom", received => {
 				this.props.roomGetData(this.props.data._id, false);
+				this.props.internalNotificationsAdd(received.message, "info");
+			});
+
+			this.props.socket.on("leaveRoom", received => {
+				this.props.roomDeleteUser(received.username);
 				this.props.internalNotificationsAdd(received.message, "info");
 			});
 
@@ -30,8 +35,9 @@ const withMetadataPollution = WrappedComponent => {
 				});
 			});
 
-			this.props.joinLeaveRoomIO(
+			this.props.joinRoomIO(
 				this.props.room.name,
+				this.props.username,
 				this.props.username + " has just joined the room."
 			);
 		}
@@ -111,13 +117,16 @@ const withMetadataPollution = WrappedComponent => {
 		roomChangeUser: PropTypes.func.isRequired,
 		roomDeleteUser: PropTypes.func.isRequired,
 		userHistoryAdd: PropTypes.func.isRequired,
+		roomAddMessage: PropTypes.func.isRequired,
+		roomPushMessage: PropTypes.func.isRequired,
 		internalNotificationsAdd: PropTypes.func.isRequired,
 		io: PropTypes.func.isRequired,
 		initWebsocketIO: PropTypes.func.isRequired,
 		addMetadataIO: PropTypes.func.isRequired,
 		changeMetadataIO: PropTypes.func.isRequired,
 		addLocationChangeIO: PropTypes.func.isRequired,
-		joinLeaveRoomIO: PropTypes.func.isRequired,
+		joinRoomIO: PropTypes.func.isRequired,
+		leaveRoomIO: PropTypes.func.isRequired,
 		leaveRoomIOInit: PropTypes.func.isRequired,
 		socket: PropTypes.object.isRequired,
 		redirect: PropTypes.bool.isRequired,

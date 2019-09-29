@@ -27,6 +27,8 @@ import {
 	roomChangeUser,
 	roomDeleteUser,
 	userHistoryAdd,
+	roomAddMessage,
+	roomPushMessage,
 	internalNotificationsAdd
 } from "../../store/actions/index";
 
@@ -64,6 +66,9 @@ class Room extends React.Component {
 						<Messaging
 							room={this.props.room.name || ""}
 							username={this.props.username}
+							messages={this.props.data.roomMessages}
+							roomAddMessage={this.props.roomAddMessage}
+							roomPushMessage={this.props.roomPushMessage}
 							io={this.props.io}
 						/>
 					</Grid>
@@ -103,12 +108,15 @@ Room.propTypes = {
 	roomChangeUser: PropTypes.func.isRequired,
 	roomDeleteUser: PropTypes.func.isRequired,
 	userHistoryAdd: PropTypes.func.isRequired,
+	roomAddMessage: PropTypes.func.isRequired,
+	roomPushMessage: PropTypes.func.isRequired,
 	internalNotificationsAdd: PropTypes.func.isRequired,
 	io: PropTypes.func.isRequired,
 	initWebsocketIO: PropTypes.func.isRequired,
 	addMetadataIO: PropTypes.func.isRequired,
 	changeMetadataIO: PropTypes.func.isRequired,
-	joinLeaveRoomIO: PropTypes.func.isRequired,
+	joinRoomIO: PropTypes.func.isRequired,
+	leaveRoomIO: PropTypes.func.isRequired,
 	leaveRoomIOInit: PropTypes.func.isRequired,
 	socket: PropTypes.object.isRequired,
 	redirect: PropTypes.bool.isRequired,
@@ -145,6 +153,8 @@ const mapDispatchToProps = dispatch => {
 		roomChangeUser: user => dispatch(roomChangeUser(user)),
 		roomDeleteUser: username => dispatch(roomDeleteUser(username)),
 		userHistoryAdd: score => dispatch(userHistoryAdd(score)),
+		roomAddMessage: message => dispatch(roomAddMessage(message)),
+		roomPushMessage: message => dispatch(roomPushMessage(message)),
 		internalNotificationsAdd: (message, variant) =>
 			dispatch(internalNotificationsAdd(message, variant))
 	};

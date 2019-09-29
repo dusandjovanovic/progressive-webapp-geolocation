@@ -58,17 +58,29 @@ const withIO = WrappedComponent => {
 			}
 		};
 
-		joinLeaveRoomIO = (roomName, message) => {
-			this.socket.emit("joinLeaveRoom", {
-				room: roomName,
+		joinRoomIO = (room, username, message) => {
+			this.socket.emit("joinRoom", {
+				room: room,
+				username: username,
 				message: message
 			});
 		};
 
-		leaveRoomIOInit = async () => {
-			const roomName = this.props.room.name;
-			const response = await this.props.roomLeaveExisting(false);
-			this.joinLeaveRoomIO(roomName, response.data.message);
+		leaveRoomIO = (room, username, message) => {
+			this.socket.emit("leaveRoom", {
+				room: room,
+				username: username,
+				message: message
+			});
+		};
+
+		leaveRoomIOInit = () => {
+			this.leaveRoomIO(
+				this.props.room.name,
+				this.props.username,
+				this.props.username + " has just left the room."
+			);
+			this.props.roomLeaveExisting();
 			this.setState({
 				redirect: true
 			});
@@ -83,7 +95,8 @@ const withIO = WrappedComponent => {
 					addMetadataIO={this.addMetadataIO}
 					changeMetadataIO={this.changeMetadataIO}
 					addLocationChangeIO={this.addLocationChangeIO}
-					joinLeaveRoomIO={this.joinLeaveRoomIO}
+					joinRoomIO={this.joinRoomIO}
+					leaveRoomIO={this.leaveRoomIO}
 					leaveRoomIOInit={this.leaveRoomIOInit}
 					socket={this.socket}
 					redirect={this.state.redirect}
@@ -107,6 +120,8 @@ const withIO = WrappedComponent => {
 		roomChangeUser: PropTypes.func.isRequired,
 		roomDeleteUser: PropTypes.func.isRequired,
 		userHistoryAdd: PropTypes.func.isRequired,
+		roomAddMessage: PropTypes.func.isRequired,
+		roomPushMessage: PropTypes.func.isRequired,
 		internalNotificationsAdd: PropTypes.func.isRequired
 	};
 
