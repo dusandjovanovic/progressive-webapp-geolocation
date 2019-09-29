@@ -5,7 +5,6 @@ import MyLocation from "@material-ui/icons/MyLocation";
 import { CircleMarker, Tooltip } from "react-leaflet";
 import PropTypes from "prop-types";
 
-import classNames from "classnames";
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
 
@@ -23,12 +22,7 @@ const markerUser = props => {
 		>
 			<Tooltip direction="bottom">
 				<div className={classes.root}>
-					<div
-						className={classNames(
-							classes.container,
-							classes.marginBottom
-						)}
-					>
+					<div className={classes.container}>
 						{props.current ? (
 							<MyLocation
 								className={classes.icon}
@@ -40,31 +34,31 @@ const markerUser = props => {
 								color="secondary"
 							/>
 						)}
-						<Typography variant="subtitle1" color="secondary">
+						<Typography
+							variant="h6"
+							className={classes.text}
+							color="secondary"
+							component="p"
+						>
 							{props.element.username}
 						</Typography>
 					</div>
-					<div className={classes.container}>
-						{props.current ? (
-							<Typography
-								variant="caption"
-								color="secondary"
-								gutterBottom
-							>
-								This is your current location
-							</Typography>
-						) : null}
-					</div>
-					<div className={classes.container}>
-						<Typography variant="caption">
-							Latitude: {props.element.location.latitude}
+					{props.current ? (
+						<Typography
+							variant="caption"
+							color="secondary"
+							component="p"
+							gutterBottom
+						>
+							This is your current location
 						</Typography>
-					</div>
-					<div className={classes.container}>
-						<Typography variant="caption">
-							Longitude: {props.element.location.longitude}
-						</Typography>
-					</div>
+					) : null}
+					<Typography variant="caption" component="p">
+						Latitude: {props.element.location.latitude}
+					</Typography>
+					<Typography variant="caption" component="p">
+						Longitude: {props.element.location.longitude}
+					</Typography>
 				</div>
 			</Tooltip>
 		</CircleMarker>

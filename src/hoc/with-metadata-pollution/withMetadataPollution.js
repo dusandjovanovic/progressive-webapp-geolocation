@@ -37,13 +37,12 @@ const withMetadataPollution = WrappedComponent => {
 		}
 
 		componentDidUpdate(prevProps) {
-			if (this.props.data.roomData !== prevProps.data.roomData) {
+			if (this.props.data.roomData !== prevProps.data.roomData)
 				this.renderMarkers();
-			}
 		}
 
 		renderMarkers = () => {
-			if (this.props.data && this.props.data.roomData) {
+			if (this.props.data && this.props.data.roomData)
 				this.setState({
 					markersMetadata: this.props.data.roomData.map(
 						(element, index) => (
@@ -55,7 +54,6 @@ const withMetadataPollution = WrappedComponent => {
 						)
 					)
 				});
-			}
 		};
 
 		handleNewMetadataOpen = () => {
