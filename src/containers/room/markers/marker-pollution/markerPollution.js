@@ -14,8 +14,6 @@ import PropTypes from "prop-types";
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import format from "date-fns/format";
-
 import {
 	IMPACT_COLORS,
 	IMPACT_STRING_POLLUTION
@@ -25,6 +23,17 @@ const markerPollution = props => {
 	const { classes } = props;
 	const color = IMPACT_COLORS[props.element.properties.value - 1];
 	const text = IMPACT_STRING_POLLUTION(props.element.properties.value);
+
+	const prettyDateFormat = time => {
+		return new Date(time).toLocaleDateString("en-US", {
+			weekday: "long",
+			year: "numeric",
+			month: "long",
+			day: "numeric"
+		});
+	};
+
+	const prettyAvatarHeadline = username => username.substring(0, 1);
 
 	return (
 		<CircleMarker
@@ -42,16 +51,14 @@ const markerPollution = props => {
 					<CardHeader
 						avatar={
 							<Avatar className={classes.avatar}>
-								{props.element.properties.author.substring(
-									0,
-									1
+								{prettyAvatarHeadline(
+									props.element.properties.author
 								)}
 							</Avatar>
 						}
 						title={props.element.properties.author}
-						subheader={format(
-							new Date(props.element.properties.time),
-							"MMMM iiii dd, yyyy"
+						subheader={prettyDateFormat(
+							props.element.properties.time
 						)}
 					/>
 					<CardContent style={{ color }}>
