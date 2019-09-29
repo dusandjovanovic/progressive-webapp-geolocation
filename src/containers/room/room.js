@@ -108,7 +108,6 @@ Room.propTypes = {
 	initWebsocketIO: PropTypes.func.isRequired,
 	addMetadataIO: PropTypes.func.isRequired,
 	changeMetadataIO: PropTypes.func.isRequired,
-	joinRoomIO: PropTypes.func.isRequired,
 	joinLeaveRoomIO: PropTypes.func.isRequired,
 	leaveRoomIOInit: PropTypes.func.isRequired,
 	socket: PropTypes.object.isRequired,

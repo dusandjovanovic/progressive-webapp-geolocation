@@ -58,31 +58,21 @@ const withIO = WrappedComponent => {
 			}
 		};
 
-		joinRoomIO = (username, master) => {
-			this.socket.emit("joinRoom", {
-				username: username,
-				master: master
-			});
-		};
-
 		joinLeaveRoomIO = (roomName, message) => {
 			this.socket.emit("joinLeaveRoom", {
 				room: roomName,
-				msg: message
+				message: message
 			});
 		};
 
 		leaveRoomIOInit = async () => {
-			try {
-				const roomName = this.props.room.name;
-				const response = await this.props.roomLeaveExisting(false);
-				this.joinLeaveRoomIO(roomName, response.data.message);
-				this.setState({
-					redirect: true
-				});
-
-				return "unloading";
-			} catch (error) {}
+			const roomName = this.props.room.name;
+			const response = await this.props.roomLeaveExisting(false);
+			this.joinLeaveRoomIO(roomName, response.data.message);
+			this.setState({
+				redirect: true
+			});
+			return "unloading";
 		};
 
 		render() {
@@ -93,7 +83,6 @@ const withIO = WrappedComponent => {
 					addMetadataIO={this.addMetadataIO}
 					changeMetadataIO={this.changeMetadataIO}
 					addLocationChangeIO={this.addLocationChangeIO}
-					joinRoomIO={this.joinRoomIO}
 					joinLeaveRoomIO={this.joinLeaveRoomIO}
 					leaveRoomIOInit={this.leaveRoomIOInit}
 					socket={this.socket}

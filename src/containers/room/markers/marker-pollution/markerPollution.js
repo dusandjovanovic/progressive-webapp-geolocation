@@ -20,7 +20,6 @@ const markerPollution = props => {
 
 	return (
 		<CircleMarker
-			key={props.index}
 			center={[
 				props.element.geometry.coordinates[0],
 				props.element.geometry.coordinates[1]

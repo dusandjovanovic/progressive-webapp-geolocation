@@ -179,11 +179,10 @@ exports.putMetadata = function(request, response, next) {
 		function(error, room) {
 			if (error) return next(error);
 			else {
+				const roomData = room.roomData;
 				response.json({
 					success: true,
-					data: {
-						data: room.roomData
-					}
+					data: roomData[roomData.length - 1]
 				});
 			}
 		}
@@ -201,9 +200,7 @@ exports.getMetdata = function(request, response, next) {
 		else {
 			response.json({
 				success: true,
-				data: {
-					data: room.roomData
-				}
+				data: room.roomData
 			});
 		}
 	});
@@ -291,7 +288,7 @@ exports.postJoin = function(request, response, next) {
 						else
 							response.json({
 								success: true,
-								message: username + " has joined the room."
+								message: username + " has just joined the room."
 							});
 					}
 				);

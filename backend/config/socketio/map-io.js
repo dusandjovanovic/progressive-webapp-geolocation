@@ -27,15 +27,9 @@ module.exports = function(io) {
 			});
 		});
 
-		socket.on("joinRoom", from => {
-			socket.broadcast
-				.to(from.room)
-				.emit(from.master, { username: from.username });
-		});
-
 		socket.on("joinLeaveRoom", from => {
 			socket.broadcast.to(from.room).emit("joinLeaveRoom", {
-				msg: from.msg
+				message: from.message
 			});
 		});
 	});

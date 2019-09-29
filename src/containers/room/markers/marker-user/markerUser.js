@@ -13,7 +13,6 @@ const markerUser = props => {
 	const { classes } = props;
 	return (
 		<CircleMarker
-			key={props.element.username}
 			center={[
 				props.element.location.latitude,
 				props.element.location.longitude

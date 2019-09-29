@@ -323,26 +323,24 @@ export const roomAddMetadata = (
 	longitude = 0.0
 ) => {
 	return async (dispatch, getState) => {
-		const metaobject = {
-			properties: {
-				name,
-				value,
-				amenity,
-				time: new Date(),
-				author: getState().auth.username
-			},
-			geometry: {
-				type: "Point",
-				coordinates: [latitude, longitude]
-			}
-		};
-		dispatch(roomPushMetadata(metaobject));
 		dispatch(roomInitiate());
 
 		const id = getState().room.data._id;
 		let response;
 		const payload = {
-			metaobject: metaobject
+			metaobject: {
+				properties: {
+					name,
+					value,
+					amenity,
+					time: new Date(),
+					author: getState().auth.username
+				},
+				geometry: {
+					type: "Point",
+					coordinates: [latitude, longitude]
+				}
+			}
 		};
 
 		try {
@@ -354,6 +352,7 @@ export const roomAddMetadata = (
 
 			if (response.data.success) {
 				dispatch(roomEnd());
+				dispatch(roomPushMetadata(response.data.data));
 				dispatch(
 					internalNotificationsAdd(
 						"You just added a new insight. Others in the room will see it as well.",
@@ -367,7 +366,7 @@ export const roomAddMetadata = (
 			dispatch(roomError(error.response.data.message));
 		}
 
-		return metaobject;
+		return response;
 	};
 };
 

@@ -7,12 +7,7 @@ const withMetadataPollution = WrappedComponent => {
 	class withMetadataPollution extends React.Component {
 		state = {
 			markersMetadata: null,
-			newMetadata: false,
-			error: {
-				hasError: false,
-				name: null,
-				description: null
-			}
+			newMetadata: false
 		};
 
 		componentDidMount() {
@@ -21,7 +16,7 @@ const withMetadataPollution = WrappedComponent => {
 
 			this.props.socket.on("joinLeaveRoom", received => {
 				this.props.roomGetData(this.props.data._id, false);
-				this.props.internalNotificationsAdd(received.msg, "info");
+				this.props.internalNotificationsAdd(received.message, "info");
 			});
 
 			this.props.socket.on("addMetadata", received => {
@@ -34,11 +29,6 @@ const withMetadataPollution = WrappedComponent => {
 					location: received.location
 				});
 			});
-
-			this.props.joinRoomIO(
-				this.props.username,
-				this.props.data.createdBy
-			);
 
 			this.props.joinLeaveRoomIO(
 				this.props.room.name,
@@ -58,7 +48,7 @@ const withMetadataPollution = WrappedComponent => {
 					markersMetadata: this.props.data.roomData.map(
 						(element, index) => (
 							<MarkerPollution
-								key={index}
+								key={element._id}
 								element={element}
 								index={index}
 							/>
@@ -75,31 +65,21 @@ const withMetadataPollution = WrappedComponent => {
 		};
 
 		handleNewMetadataClose = () => {
-			if (!this.state.error.hasError) {
-				this.setState({
-					newMetadata: false
-				});
-			}
+			this.setState({
+				newMetadata: false
+			});
 		};
 
 		handleMetadata = async (name, value, amenity) => {
-			try {
-				const metaobject = await this.props.roomAddMetadata(
-					name,
-					value,
-					amenity,
-					this.props.location.latitude,
-					this.props.location.longitude
-				);
-				this.props.addMetadataIO(metaobject);
-			} catch (error) {
-				this.setState({
-					error: {
-						hasError: true,
-						name: error.toString()
-					}
-				});
-			}
+			const response = await this.props.roomAddMetadata(
+				name,
+				value,
+				amenity,
+				this.props.location.latitude,
+				this.props.location.longitude
+			);
+			if (response.data && response.data.data)
+				this.props.addMetadataIO(response.data.data);
 		};
 
 		render() {
@@ -139,7 +119,6 @@ const withMetadataPollution = WrappedComponent => {
 		addMetadataIO: PropTypes.func.isRequired,
 		changeMetadataIO: PropTypes.func.isRequired,
 		addLocationChangeIO: PropTypes.func.isRequired,
-		joinRoomIO: PropTypes.func.isRequired,
 		joinLeaveRoomIO: PropTypes.func.isRequired,
 		leaveRoomIOInit: PropTypes.func.isRequired,
 		socket: PropTypes.object.isRequired,

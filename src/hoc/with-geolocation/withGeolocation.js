@@ -98,7 +98,6 @@ const withGeolocation = WrappedComponent => {
 		addMetadataIO: PropTypes.func,
 		changeMetadataIO: PropTypes.func,
 		addLocationChangeIO: PropTypes.func,
-		joinRoomIO: PropTypes.func,
 		joinLeaveRoomIO: PropTypes.func,
 		leaveRoomIOInit: PropTypes.func,
 		socket: PropTypes.object,
