@@ -57,6 +57,9 @@ class Room extends React.Component {
 				{this.props.children}
 				<Grid container>
 					<Toolbar
+						filterNearby={this.props.filterNearby}
+						filterRecent={this.props.filterRecent}
+						filterHeatMap={this.props.filterHeatMap}
 						roomAddMetadataInit={this.props.roomAddMetadataInit}
 						leaveRoomIOInit={this.props.leaveRoomIOInit}
 					/>
@@ -80,9 +83,16 @@ class Room extends React.Component {
 								this.props.markerCurrentLocation
 							}
 							markersMetadata={this.props.markersMetadata}
+							metadata={this.props.metadata}
+							heatMap={this.props.filterHeatMapManaged}
 						/>
 					</Grid>
-					<Statusbar users={this.props.data.users || []} />
+					<Statusbar
+						users={this.props.data.users || []}
+						filterNearbyManaged={this.props.filterNearbyManaged}
+						filterRecentManaged={this.props.filterRecentManaged}
+						filterHeatMapManaged={this.props.filterHeatMapManaged}
+					/>
 				</Grid>
 			</Grid>
 		);
@@ -122,8 +132,15 @@ Room.propTypes = {
 	location: PropTypes.object.isRequired,
 	markersUsers: PropTypes.arrayOf(PropTypes.object),
 	markersMetadata: PropTypes.arrayOf(PropTypes.object),
+	metadata: PropTypes.arrayOf(PropTypes.object),
 	markerCurrentLocation: PropTypes.object,
-	roomAddMetadataInit: PropTypes.func.isRequired
+	roomAddMetadataInit: PropTypes.func.isRequired,
+	filterNearby: PropTypes.func.isRequired,
+	filterRecent: PropTypes.func.isRequired,
+	filterHeatMap: PropTypes.func.isRequired,
+	filterNearbyManaged: PropTypes.bool.isRequired,
+	filterRecentManaged: PropTypes.bool.isRequired,
+	filterHeatMapManaged: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => {

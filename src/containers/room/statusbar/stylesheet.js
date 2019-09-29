@@ -5,7 +5,7 @@ export const styles = theme => ({
 		width: "100%",
 		height: "34px",
 		lineHeight: "34px",
-		backgroundColor: theme.palette.primary.dark,
+		backgroundColor: theme.palette.primary.main,
 		zIndex: 1001
 	},
 	element: {
@@ -24,10 +24,11 @@ export const styles = theme => ({
 	},
 	managed: {
 		float: "right",
-		marginRight: theme.spacing(0.5)
+		marginRight: theme.spacing(1)
 	},
 	elementManaged: {
-		textTransform: "uppercase",
-		fontWeight: "bold"
+		fontWeight: "normal",
+		fontSize: "0.8rem",
+		padding: theme.spacing(0.25, 1)
 	}
 });
