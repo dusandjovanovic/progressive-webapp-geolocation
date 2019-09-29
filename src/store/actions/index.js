@@ -24,7 +24,6 @@ export {
 export {
 	roomGetAll,
 	roomGetData,
-	roomCreateNew,
 	roomJoinExisting,
 	roomLeaveExisting,
 	roomPushMetadata,

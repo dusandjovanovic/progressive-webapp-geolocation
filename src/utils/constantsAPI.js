@@ -13,7 +13,6 @@ export const authLoginRoute = "/api/login";
 export const authRegisterRoute = "/api/register";
 export const authLogoutRoute = "/api/logout";
 
-export const roomCreateNewRoute = "/api/room/create";
 export const roomJoinRoute = "/api/room/join";
 export const roomLeaveRoute = "/api/room/leave";
 export const roomGetAllRoute = mode => "/api/room/" + mode;

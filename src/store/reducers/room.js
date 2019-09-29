@@ -9,22 +9,15 @@ import {
 	ROOM_USER_ENTERED,
 	ROOM_USER_LEFT,
 	ROOM_ALL,
-	ROOM_CREATE,
-	ROOM_ADD,
-	ROOM_JOIN,
 	ROOM_LEAVE,
 	ROOM_ERROR
 } from "../actions.js";
 
-import filter from "lodash/filter";
-
 const initialState = {
 	rooms: [],
-	room: {
-		name: null
-	},
 	data: {
 		_id: null,
+		name: null,
 		users: [],
 		roomData: [],
 		roomMessages: []
@@ -52,19 +45,6 @@ const reducer = (state = initialState, action) => {
 				...state,
 				rooms: [...action.rooms]
 			};
-		case ROOM_CREATE:
-			return {
-				...state,
-				room: {
-					name: action.name
-				}
-			};
-		case ROOM_ADD:
-			return {
-				...state,
-				rooms: [...state.rooms, action.room]
-			};
-
 		case ROOM_DATA:
 			return {
 				...state,
@@ -74,9 +54,6 @@ const reducer = (state = initialState, action) => {
 					roomData: action.overwriteMetadata
 						? action.data.roomData
 						: state.data.roomData
-				},
-				room: {
-					...state.room
 				}
 			};
 		case ROOM_MESSAGE_ADD:
@@ -92,14 +69,15 @@ const reducer = (state = initialState, action) => {
 				...state,
 				data: {
 					...state.data,
-					roomData: [...state.data.roomData, action.payload]
+					roomData: [...state.data.roomData, action.metaobject]
 				}
 			};
 		case ROOM_METADATA_CHANGE: {
 			return {
 				...state,
 				data: {
-					...action.data
+					...state.data,
+					roomData: [...action.metadata]
 				}
 			};
 		}
@@ -116,8 +94,7 @@ const reducer = (state = initialState, action) => {
 				...state,
 				data: {
 					...state.data,
-					users: filter(
-						state.data.users,
+					users: state.data.users.filter(
 						element => element.username !== action.username
 					)
 				}
@@ -134,19 +111,9 @@ const reducer = (state = initialState, action) => {
 					)
 				}
 			};
-		case ROOM_JOIN:
-			return {
-				...state,
-				room: {
-					name: action.name
-				}
-			};
 		case ROOM_LEAVE:
 			return {
 				...state,
-				room: {
-					name: null
-				},
 				data: {
 					_id: null,
 					users: [],

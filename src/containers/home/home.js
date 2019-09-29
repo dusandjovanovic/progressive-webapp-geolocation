@@ -98,7 +98,6 @@ class Home extends React.Component {
 const mapStateToProps = state => {
 	return {
 		username: state.auth.username,
-		room: state.room.room,
 		rooms: state.room.rooms,
 		data: state.room.data,
 		waiting: state.room.waiting,
@@ -118,7 +117,6 @@ Home.propTypes = {
 	classes: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	username: PropTypes.string.isRequired,
-	room: PropTypes.object.isRequired,
 	rooms: PropTypes.arrayOf(PropTypes.object).isRequired,
 	data: PropTypes.object.isRequired,
 	waiting: PropTypes.bool.isRequired,

@@ -45,7 +45,7 @@ class Room extends React.Component {
 	};
 
 	componentWillUnmount() {
-		if (this.props.room.name) this.props.leaveRoomIOInit();
+		if (this.props.data.name) this.props.leaveRoomIOInit();
 	}
 
 	render() {
@@ -57,6 +57,9 @@ class Room extends React.Component {
 				{this.props.children}
 				<Grid container>
 					<Toolbar
+						filterNearby={this.props.filterNearby}
+						filterRecent={this.props.filterRecent}
+						filterHeatMap={this.props.filterHeatMap}
 						roomAddMetadataInit={this.props.roomAddMetadataInit}
 						leaveRoomIOInit={this.props.leaveRoomIOInit}
 					/>
@@ -64,7 +67,7 @@ class Room extends React.Component {
 				<Grid container>
 					<Grid item xs={3}>
 						<Messaging
-							room={this.props.room.name || ""}
+							room={this.props.data.name || ""}
 							username={this.props.username}
 							messages={this.props.data.roomMessages}
 							roomAddMessage={this.props.roomAddMessage}
@@ -80,9 +83,16 @@ class Room extends React.Component {
 								this.props.markerCurrentLocation
 							}
 							markersMetadata={this.props.markersMetadata}
+							metadata={this.props.metadata}
+							heatMap={this.props.filterHeatMapManaged}
 						/>
 					</Grid>
-					<Statusbar users={this.props.data.users || []} />
+					<Statusbar
+						users={this.props.data.users || []}
+						filterNearbyManaged={this.props.filterNearbyManaged}
+						filterRecentManaged={this.props.filterRecentManaged}
+						filterHeatMapManaged={this.props.filterHeatMapManaged}
+					/>
 				</Grid>
 			</Grid>
 		);
@@ -97,7 +107,6 @@ Room.propTypes = {
 	classes: PropTypes.object.isRequired,
 	username: PropTypes.string,
 	data: PropTypes.object,
-	room: PropTypes.object,
 	roomGetData: PropTypes.func.isRequired,
 	roomLeaveExisting: PropTypes.func.isRequired,
 	roomPushMetadata: PropTypes.func.isRequired,
@@ -123,15 +132,21 @@ Room.propTypes = {
 	location: PropTypes.object.isRequired,
 	markersUsers: PropTypes.arrayOf(PropTypes.object),
 	markersMetadata: PropTypes.arrayOf(PropTypes.object),
+	metadata: PropTypes.arrayOf(PropTypes.object),
 	markerCurrentLocation: PropTypes.object,
-	roomAddMetadataInit: PropTypes.func.isRequired
+	roomAddMetadataInit: PropTypes.func.isRequired,
+	filterNearby: PropTypes.func.isRequired,
+	filterRecent: PropTypes.func.isRequired,
+	filterHeatMap: PropTypes.func.isRequired,
+	filterNearbyManaged: PropTypes.bool.isRequired,
+	filterRecentManaged: PropTypes.bool.isRequired,
+	filterHeatMapManaged: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => {
 	return {
 		username: state.auth.username,
 		data: state.room.data,
-		room: state.room.room,
 		error: state.room.error
 	};
 };

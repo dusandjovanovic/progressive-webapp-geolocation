@@ -3,11 +3,20 @@ import MetadataPollution from "../../containers/room/metadata/metadataPollution"
 import MarkerPollution from "../../containers/room/markers/marker-pollution/markerPollution";
 import PropTypes from "prop-types";
 
+import {
+	filterMetadataByTime,
+	filterMetadataByDistance
+} from "../../utils/functions/filteringFunctions";
+
 const withMetadataPollution = WrappedComponent => {
 	class withMetadataPollution extends React.Component {
 		state = {
+			metadata: [],
 			markersMetadata: null,
-			newMetadata: false
+			newMetadata: false,
+			filterNearby: false,
+			filterRecent: false,
+			filterHeatMap: false
 		};
 
 		componentDidMount() {
@@ -36,7 +45,7 @@ const withMetadataPollution = WrappedComponent => {
 			});
 
 			this.props.joinRoomIO(
-				this.props.room.name,
+				this.props.data.name,
 				this.props.username,
 				this.props.username + " has just joined the room."
 			);
@@ -47,19 +56,60 @@ const withMetadataPollution = WrappedComponent => {
 				this.renderMarkers();
 		}
 
+		filterNearby = () => {
+			this.setState(
+				{
+					filterNearby: !this.state.filterNearby
+				},
+				() => {
+					this.renderMarkers();
+				}
+			);
+		};
+
+		filterRecent = () => {
+			this.setState(
+				{
+					filterRecent: !this.state.filterRecent
+				},
+				() => {
+					this.renderMarkers();
+				}
+			);
+		};
+
+		filterHeatmap = () => {
+			this.setState({
+				filterHeatMap: !this.state.filterHeatMap
+			});
+		};
+
+		filter = () => {
+			let markers = this.props.data.roomData;
+			if (this.state.filterNearby)
+				markers = filterMetadataByDistance(
+					markers,
+					this.props.location
+				);
+			if (this.state.filterRecent)
+				markers = filterMetadataByTime(markers);
+			return markers;
+		};
+
 		renderMarkers = () => {
-			if (this.props.data && this.props.data.roomData)
+			if (this.props.data && this.props.data.roomData) {
+				const metadata = this.filter();
 				this.setState({
-					markersMetadata: this.props.data.roomData.map(
-						(element, index) => (
-							<MarkerPollution
-								key={element._id}
-								element={element}
-								index={index}
-							/>
-						)
-					)
+					metadata: metadata,
+					markersMetadata: metadata.map((element, index) => (
+						<MarkerPollution
+							key={element._id}
+							element={element}
+							index={index}
+						/>
+					))
 				});
+			}
 		};
 
 		handleNewMetadataOpen = () => {
@@ -89,6 +139,13 @@ const withMetadataPollution = WrappedComponent => {
 		render() {
 			return (
 				<WrappedComponent
+					filterNearby={this.filterNearby}
+					filterRecent={this.filterRecent}
+					filterHeatMap={this.filterHeatmap}
+					filterNearbyManaged={this.state.filterNearby}
+					filterRecentManaged={this.state.filterRecent}
+					filterHeatMapManaged={this.state.filterHeatMap}
+					metadata={this.state.metadata}
 					markersMetadata={this.state.markersMetadata}
 					roomAddMetadataInit={this.handleNewMetadataOpen}
 					{...this.props}
@@ -106,7 +163,6 @@ const withMetadataPollution = WrappedComponent => {
 	withMetadataPollution.propTypes = {
 		username: PropTypes.string,
 		data: PropTypes.object,
-		room: PropTypes.object,
 		roomGetData: PropTypes.func.isRequired,
 		roomLeaveExisting: PropTypes.func.isRequired,
 		roomPushMetadata: PropTypes.func.isRequired,

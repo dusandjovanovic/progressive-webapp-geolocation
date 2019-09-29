@@ -21,9 +21,6 @@ export const FRIENDS_DENY_REQUEST = "FRIENDS_DENY_REQUEST";
 export const FRIENDS_CONFIRM_REQUEST = "FRIENDS_CONFIRM_REQUEST";
 
 export const ROOM_ALL = "ROOM_ALL";
-export const ROOM_CREATE = "ROOM_CREATE";
-export const ROOM_ADD = "ROOM_ADD";
-export const ROOM_JOIN = "ROOM_JOIN";
 export const ROOM_LEAVE = "ROOM_LEAVE";
 export const ROOM_ERROR = "ROOM_ERROR";
 export const ROOM_DATA = "ROOM_DATA";
