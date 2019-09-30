@@ -54,6 +54,10 @@ Application is sustainable online with this configuration. Runs in multiple inst
     ...
 ```
 
+## Overview
+
+This is a web application made for sharing insights between users in realtime. Upon signing-in, a user can choose of three room types to join. In the screenshots bellow, user joined "Air pollution insights" room where metadata and insights about pollution are being shared. Each insight includes user's current location and his provided input. Messaging and insights data is persisted accross sessions, realtime synchronization and state management is built upon a separata socket domain for each room.
+
 ![alt text][screenshot_intro]
 
 [screenshot_intro]: documents/images/screenshot-intro.png
