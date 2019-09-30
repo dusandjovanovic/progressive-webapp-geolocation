@@ -1,7 +1,7 @@
 ## Progressive web application with Geolocation
 
 Prototypical _Location-based crowdsourcing progressive application_. Web application for realtime collaborative **geolocation and metadata sharing**. Made possible with MERN, this stack consists of MongoDB, Express, **React w/ Redux, and Node.js**.<br><br>
-This repository is technically a fork of [/structured](https://github.com/dusandjovanovic/structured) since an integral part of code-base is being shared.
+This repository is technically a fork of [/structured](https://github.com/dusandjovanovic/structured) since an integral part of it's code base is being shared.
 
 ### `npm start`
 
@@ -53,3 +53,23 @@ Application is sustainable online with this configuration. Runs in multiple inst
     test/
     ...
 ```
+
+![alt text][screenshot_intro]
+
+[screenshot_intro]: documents/images/screenshot-intro.png
+
+![alt text][screenshot_home]
+
+[screenshot_home]: documents/images/screenshot-home.png
+
+![alt text][screenshot_room]
+
+[screenshot_room]: documents/images/screenshot-room.png
+
+![alt text][screenshot_insight]
+
+[screenshot_insight]: documents/images/screenshot-insight.png
+
+![alt text][screenshot_dashboard]
+
+[screenshot_dashboard]: documents/images/screenshot-dashboard.png
