@@ -30,7 +30,7 @@ const chartPie = props => (
 				data={props.data}
 				labelLine={false}
 				fill="#8884d8"
-				dataKey="percentage"
+				dataKey="amount"
 				nameKey="title"
 			>
 				{props.data.map((entry, index) => (

@@ -4,6 +4,7 @@ import Map from "./map/map";
 import Messaging from "./messaging/messaging";
 import Toolbar from "./toolbar/toolbar";
 import Statusbar from "./statusbar/statusbar";
+import Drawer from "../../components/interface/drawer/drawer";
 import PropTypes from "prop-types";
 
 import { Redirect } from "react-router-dom";
@@ -41,12 +42,21 @@ class Room extends React.Component {
 			hasError: false,
 			name: null,
 			description: null
-		}
+		},
+		drawer: true
 	};
 
 	componentWillUnmount() {
 		if (this.props.data.name) this.props.leaveRoomIOInit();
 	}
+
+	handleDrawerOpen = () => {
+		this.setState({ drawer: true });
+	};
+
+	handleDrawerClose = () => {
+		this.setState({ drawer: false });
+	};
 
 	render() {
 		const { classes } = this.props;
@@ -65,17 +75,29 @@ class Room extends React.Component {
 					/>
 				</Grid>
 				<Grid container>
-					<Grid item xs={3}>
-						<Messaging
-							room={this.props.data.name || ""}
-							username={this.props.username}
-							messages={this.props.data.roomMessages}
-							roomAddMessage={this.props.roomAddMessage}
-							roomPushMessage={this.props.roomPushMessage}
-							io={this.props.io}
-						/>
-					</Grid>
-					<Grid item xs={9} className={classes.whiteboard}>
+					<Grid
+						item
+						xs={12}
+						className={
+							this.state.drawer
+								? `${classes.root} ${classes.content} ${classes.contentShift}`
+								: `${classes.root}`
+						}
+					>
+						<Drawer
+							open={this.state.drawer}
+							handleDrawerOpen={this.handleDrawerOpen}
+							handleDrawerClose={this.handleDrawerClose}
+						>
+							<Messaging
+								room={this.props.data.name || ""}
+								username={this.props.username}
+								messages={this.props.data.roomMessages}
+								roomAddMessage={this.props.roomAddMessage}
+								roomPushMessage={this.props.roomPushMessage}
+								io={this.props.io}
+							/>
+						</Drawer>
 						<Map
 							location={this.props.location}
 							markersUsers={this.props.markersUsers}

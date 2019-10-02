@@ -10,7 +10,6 @@ import {
 
 const initialState = {
 	authenticated: false,
-	token: null,
 	username: null,
 	waiting: false,
 	error: null,
@@ -40,7 +39,6 @@ const reducer = (state = initialState, action) => {
 		case AUTH_CLEAR_CREDENTIALS:
 			return {
 				...state,
-				token: null,
 				username: null
 			};
 		case AUTH_ERROR:

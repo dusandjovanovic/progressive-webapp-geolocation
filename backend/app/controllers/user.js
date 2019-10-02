@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const Room = require("../models/room");
 const { validationResult, body, param } = require("express-validator");
+const roomTypes = require("../../config/constants");
 
 exports.validate = method => {
 	switch (method) {
@@ -64,23 +65,55 @@ exports.getHistory = function(request, response, next) {
 
 	const { username } = request.params;
 
-	Room.find({ roomData: { "properties.author": username } }, function(
-		error,
-		data
-	) {
-		console.log(data);
+	User.findOne({ username: username }, function(error, user) {
 		if (error) return next(error);
-		else {
-			let subMetaobjects = [];
-			for (let i = 0; i < data.length; i++)
-				for (let j = 0; j < data.roomData.length; j++)
-					if (data[i].roomData[j].properties.author === username)
-						subMetaobjects.push(data[i].roomData[j]);
+		const userHistory = [];
+		const friendHistory = [];
+		const statistics = [
+			{
+				title: roomTypes.ROOM_NAME_PLACES,
+				amount: 0
+			},
+			{
+				title: roomTypes.ROOM_NAME_PLACES,
+				amount: 0
+			},
+			{
+				title: roomTypes.ROOM_NAME_TRAFFIC,
+				amount: 0
+			}
+		];
+
+		Room.find({}, function(error, data) {
+			if (error) return next(error);
+			for (let i = 0; i < data.length; i++) {
+				for (let j = 0; j < data[i].roomData.length; j++) {
+					const metaobject = data[i].roomData[j];
+					if (metaobject.properties.author === username)
+						userHistory.push(metaobject);
+					else if (
+						user.friends &&
+						user.friends.length &&
+						user.friends.includes(metaobject.properties.author)
+					)
+						friendHistory.push(metaobject);
+					if (data[i].roomType === roomTypes.ROOM_TYPE_POLLUTION)
+						statistics[0].amount += 1;
+					else if (data[i].roomType === roomTypes.ROOM_TYPE_PLACES)
+						statistics[1].amount += 1;
+					else if (data[i].roomType === roomTypes.ROOM_TYPE_TRAFFIC)
+						statistics[2].amount += 1;
+				}
+			}
 			response.json({
 				success: true,
-				data: subMetaobjects
+				data: {
+					userHistory,
+					friendHistory,
+					statistics
+				}
 			});
-		}
+		});
 	});
 };
 

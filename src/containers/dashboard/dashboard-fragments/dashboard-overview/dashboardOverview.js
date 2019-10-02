@@ -41,8 +41,8 @@ class DashboardOverview extends React.PureComponent {
 					<Grid item xs={12} md={6} lg={3}>
 						<CardSimple
 							type="timelapse"
-							title="Compete sessions"
-							content={this.props.competeCount}
+							title="Shared insights"
+							content={this.props.insightsCount}
 							details="Number of times you shared isnights since registration"
 						/>
 					</Grid>
@@ -63,63 +63,12 @@ class DashboardOverview extends React.PureComponent {
 				>
 					<Grid item xs={12} lg={6}>
 						<Card title="Your most recent insights">
-							<ChartLine
-								data={[
-									{
-										date: "2019-09-23",
-										value: 4
-									},
-									{
-										date: "2019-09-24",
-										value: 11
-									},
-									{
-										date: "2019-09-25",
-										value: 12
-									},
-									{
-										date: "2019-09-26",
-										value: 16
-									},
-									{
-										date: "2019-09-27",
-										value: 21
-									},
-									{
-										date: "2019-09-28",
-										value: 22
-									},
-									{
-										date: "2019-09-29",
-										value: 22
-									},
-									{
-										date: "2019-09-30",
-										value: 26
-									}
-								]}
-							/>
+							<ChartLine data={this.props.history.userHistory} />
 						</Card>
 					</Grid>
 					<Grid item xs={12} lg={6}>
 						<Card title="Statistics of shared insights by everyone">
-							<ChartPie
-								data={[
-									{
-										title: "Air pollution insights",
-										percentage: 45
-									},
-									{
-										title:
-											"Places and locations sightseeing",
-										percentage: 22
-									},
-									{
-										title: "Traffic and roadblock insights",
-										percentage: 33
-									}
-								]}
-							/>
+							<ChartPie data={this.props.history.statistics} />
 						</Card>
 					</Grid>
 				</Grid>
@@ -131,9 +80,16 @@ class DashboardOverview extends React.PureComponent {
 				>
 					<Grid item xs={12}>
 						<Table
-							title="Your most recent insights"
+							title="Your recent insights"
 							tableRows={5}
-							tableData={this.props.history}
+							tableData={this.props.history.userHistory}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Table
+							title="Your friend's recent insights"
+							tableRows={5}
+							tableData={this.props.history.friendHistory}
 						/>
 					</Grid>
 				</Grid>
@@ -144,10 +100,10 @@ class DashboardOverview extends React.PureComponent {
 
 DashboardOverview.propTypes = {
 	classes: PropTypes.object.isRequired,
-	history: PropTypes.arrayOf(PropTypes.object).isRequired,
+	history: PropTypes.object.isRequired,
 	friendsCount: PropTypes.number.isRequired,
 	requestsCount: PropTypes.number.isRequired,
-	competeCount: PropTypes.number.isRequired
+	insightsCount: PropTypes.number.isRequired
 };
 
 export default withStyles(styles)(DashboardOverview);

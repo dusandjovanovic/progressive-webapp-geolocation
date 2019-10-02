@@ -246,11 +246,9 @@ export const friendConfirm = requestId => {
 		};
 
 		try {
-			await axios
-				.getInstance()
-				.post(userFriendConfirmRoute, payload, {
-					"Content-Type": "application/x-www-form-urlencoded"
-				});
+			await axios.getInstance().post(userFriendConfirmRoute, payload, {
+				"Content-Type": "application/x-www-form-urlencoded"
+			});
 
 			dispatch(friendsConfirmRequest(requestId));
 			dispatch(userEnd());

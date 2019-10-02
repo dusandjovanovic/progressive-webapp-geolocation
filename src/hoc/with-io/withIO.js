@@ -17,6 +17,35 @@ const withIO = WrappedComponent => {
 		}
 
 		componentDidMount() {
+			this.initWebsocketIO();
+
+			this.socket.on("joinRoom", received => {
+				this.props.roomGetData(this.props.data._id, false);
+				this.props.internalNotificationsAdd(received.message, "info");
+			});
+
+			this.socket.on("leaveRoom", received => {
+				this.props.roomDeleteUser(received.username);
+				this.props.internalNotificationsAdd(received.message, "info");
+			});
+
+			this.socket.on("addMetadata", received => {
+				this.props.roomPushMetadata(received.metadata, true);
+			});
+
+			this.socket.on("addLocationChange", received => {
+				this.props.roomChangeUser({
+					username: received.sender,
+					location: received.location
+				});
+			});
+
+			this.joinRoomIO(
+				this.props.data.name,
+				this.props.username,
+				this.props.username + " has just joined the room."
+			);
+
 			window.addEventListener("beforeunload", this.leaveRoomIOInit);
 		}
 

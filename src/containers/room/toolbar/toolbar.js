@@ -5,10 +5,11 @@ import Hidden from "@material-ui/core/Hidden";
 import Toolbar from "../../../components/interface/toolbar/toolbar";
 import PropTypes from "prop-types";
 
-import Add from "@material-ui/icons/Add";
+import Navigation from "@material-ui/icons/Navigation";
 import AccessTime from "@material-ui/icons/AccessTime";
 import MyLocation from "@material-ui/icons/MyLocation";
 import Layers from "@material-ui/icons/Layers";
+import Close from "@material-ui/icons/Close";
 
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -25,7 +26,7 @@ class ToolbarContainer extends React.PureComponent {
 						color="secondary"
 						onClick={this.props.roomAddMetadataInit}
 					>
-						<Add
+						<Navigation
 							fontSize="small"
 							color="secondary"
 							className={classes.icon}
@@ -73,7 +74,12 @@ class ToolbarContainer extends React.PureComponent {
 						color="primary"
 						onClick={this.props.leaveRoomIOInit}
 					>
-						Leave room
+						<Close
+							fontSize="small"
+							color="primary"
+							className={classes.icon}
+						/>
+						<Hidden smDown> Leave room</Hidden>
 					</Button>
 				</Grid>
 			</Toolbar>

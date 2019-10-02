@@ -7,7 +7,7 @@ export const styles = theme => ({
 			padding: theme.spacing(4, 8)
 		},
 		[theme.breakpoints.down("sm")]: {
-			padding: theme.spacing(4, 4)
+			padding: theme.spacing(4, 1)
 		}
 	}
 });

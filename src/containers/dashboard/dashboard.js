@@ -55,7 +55,7 @@ export class Dashboard extends React.Component {
 						history={this.props.history}
 						friendsCount={this.props.friends.length}
 						requestsCount={this.props.requests.length}
-						competeCount={this.props.history.length}
+						insightsCount={this.props.history.userHistory.length}
 					/>
 				);
 		}
@@ -98,7 +98,7 @@ Dashboard.propTypes = {
 	username: PropTypes.string.isRequired,
 	friends: PropTypes.arrayOf(PropTypes.string).isRequired,
 	requests: PropTypes.arrayOf(PropTypes.object).isRequired,
-	history: PropTypes.arrayOf(PropTypes.object).isRequired,
+	history: PropTypes.object.isRequired,
 	waiting: PropTypes.bool.isRequired,
 	error: PropTypes.string,
 	userData: PropTypes.func.isRequired,
