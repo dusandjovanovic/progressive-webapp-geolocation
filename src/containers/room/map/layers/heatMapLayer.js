@@ -333,7 +333,7 @@ export default withLeaflet(
 						grid[y] = grid[y] || [];
 						const cell = grid[y][x];
 
-						const alt = getIntensity(point) * 2048;
+						const alt = getIntensity(point) * 10;
 						const k = alt * v;
 
 						if (!cell) {

@@ -16,7 +16,7 @@ class MapContainer extends React.Component {
 		return (
 			<Grid container className={classes.root}>
 				<Map
-					style={{ height: "80vh", width: "100%" }}
+					style={{ height: "calc(100vh - 152px)", width: "100%" }}
 					zoom={MAP_ZOOM_LEVEL}
 					zoomControl={false}
 					attributionControl={false}

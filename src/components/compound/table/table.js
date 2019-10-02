@@ -15,10 +15,10 @@ import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 const rows = [
-	{ id: "_id", disablePadding: true, label: "id" },
-	{ id: "time", disablePadding: true, label: "Date added" },
-	{ id: "author", disablePadding: true, label: "Author" },
-	{ id: "value", disablePadding: false, label: "Insight factored value" }
+	{ id: "_id", disablePadding: false, label: "id" },
+	{ id: "time", disablePadding: false, label: "Date added" },
+	{ id: "author", disablePadding: false, label: "Author" },
+	{ id: "value", disablePadding: false, label: "Insight's significant value" }
 ];
 
 class table extends React.Component {
@@ -202,12 +202,6 @@ class table extends React.Component {
 					count={data.length}
 					rowsPerPage={rowsPerPage}
 					page={page}
-					backIconButtonProps={{
-						"aria-label": "Previous Page"
-					}}
-					nextIconButtonProps={{
-						"aria-label": "Next Page"
-					}}
 					onChangePage={this.handleChangePage}
 					onChangeRowsPerPage={this.handleChangeRowsPerPage}
 				/>

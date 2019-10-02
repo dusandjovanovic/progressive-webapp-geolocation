@@ -29,7 +29,7 @@ export const styles = theme => ({
 		width: "auto",
 		height: "auto",
 		wordWrap: "break-word",
-		padding: theme.spacing(1.25),
+		padding: theme.spacing(1.25, 1.5),
 		margin: theme.spacing(0.5, 0)
 	},
 	messageLeft: {
