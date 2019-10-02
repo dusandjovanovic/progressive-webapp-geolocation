@@ -1,6 +1,6 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-import { Map, TileLayer, LayersControl } from "react-leaflet";
+import { Map, TileLayer, LayersControl, LayerGroup } from "react-leaflet";
 import HeatmapLayer from "./layers/heatMapLayer";
 import PropTypes from "prop-types";
 
@@ -31,22 +31,24 @@ class MapContainer extends React.Component {
 							name="Metadata"
 							checked={!this.props.heatMap}
 						>
-							{this.props.markersMetadata}
+							<LayerGroup>
+								{this.props.markersMetadata}
+							</LayerGroup>
 						</LayersControl.Overlay>
 						<LayersControl.Overlay
 							name="Users"
 							checked={!this.props.heatMap}
 						>
-							{this.props.markersUsers}
-							{this.props.markerCurrentLocation}
+							<LayerGroup>
+								{this.props.markersUsers}
+								{this.props.markerCurrentLocation}
+							</LayerGroup>
 						</LayersControl.Overlay>
 						<LayersControl.Overlay
 							name="Heatmap"
 							checked={this.props.heatMap}
 						>
 							<HeatmapLayer
-								fitBoundsOnLoad
-								fitBoundsOnUpdate
 								points={this.props.metadata}
 								longitudeExtractor={element =>
 									element.geometry.coordinates[1]
@@ -55,7 +57,7 @@ class MapContainer extends React.Component {
 									element.geometry.coordinates[0]
 								}
 								intensityExtractor={element =>
-									parseFloat(element.properties.value * 1000)
+									parseFloat(element.properties.value)
 								}
 							/>
 						</LayersControl.Overlay>

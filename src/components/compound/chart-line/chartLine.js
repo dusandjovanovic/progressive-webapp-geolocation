@@ -22,12 +22,15 @@ const chartLine = props => (
 				</linearGradient>
 			</defs>
 			<CartesianGrid strokeDasharray="3 3" />
-			<XAxis dataKey="date" padding={{ left: 25, right: 25 }} />
+			<XAxis
+				dataKey="properties.time"
+				padding={{ left: 25, right: 25 }}
+			/>
 			<YAxis />
 			<Tooltip />
 			<Area
 				type="monotone"
-				dataKey="value"
+				dataKey="properties.value"
 				stroke="#9a9a9a"
 				fill="url(#colorUv)"
 			/>

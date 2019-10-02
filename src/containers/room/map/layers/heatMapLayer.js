@@ -101,6 +101,41 @@ export default withLeaflet(
 			this.updateHeatmapProps(this.getHeatmapProps(this.props));
 		}
 
+		componentDidUpdate(prevProps) {
+			this.props.leaflet.map.invalidateSize();
+			if (this.props.fitBoundsOnUpdate) {
+				this.fitBounds();
+			}
+			this.reset();
+
+			const currentProps = prevProps;
+			const nextHeatmapProps = this.getHeatmapProps(this.props);
+
+			this.updateHeatmapGradient(nextHeatmapProps.gradient);
+
+			const hasRadiusUpdated =
+				nextHeatmapProps.radius !== currentProps.radius;
+			const hasBlurUpdated = nextHeatmapProps.blur !== currentProps.blur;
+
+			if (hasRadiusUpdated || hasBlurUpdated) {
+				this.updateHeatmapRadius(
+					nextHeatmapProps.radius,
+					nextHeatmapProps.blur
+				);
+			}
+
+			if (nextHeatmapProps.max !== currentProps.max) {
+				this.updateHeatmapMax(nextHeatmapProps.max);
+			}
+		}
+
+		componentWillUnmount() {
+			safeRemoveLayer(this.props.leaflet.map, this._el);
+			const leafletMap = this.props.leaflet.map;
+			leafletMap.on("viewreset", null);
+			leafletMap.on("moveend", null);
+		}
+
 		getMax(props) {
 			return props.max || 3.0;
 		}
@@ -132,28 +167,6 @@ export default withLeaflet(
 			};
 		}
 
-		componentWillReceiveProps(nextProps) {
-			const currentProps = this.props;
-			const nextHeatmapProps = this.getHeatmapProps(nextProps);
-
-			this.updateHeatmapGradient(nextHeatmapProps.gradient);
-
-			const hasRadiusUpdated =
-				nextHeatmapProps.radius !== currentProps.radius;
-			const hasBlurUpdated = nextHeatmapProps.blur !== currentProps.blur;
-
-			if (hasRadiusUpdated || hasBlurUpdated) {
-				this.updateHeatmapRadius(
-					nextHeatmapProps.radius,
-					nextHeatmapProps.blur
-				);
-			}
-
-			if (nextHeatmapProps.max !== currentProps.max) {
-				this.updateHeatmapMax(nextHeatmapProps.max);
-			}
-		}
-
 		updateHeatmapProps(props) {
 			this.updateHeatmapRadius(props.radius, props.blur);
 			this.updateHeatmapGradient(props.gradient);
@@ -178,10 +191,6 @@ export default withLeaflet(
 			}
 		}
 
-		componentWillUnmount() {
-			safeRemoveLayer(this.props.leaflet.map, this._el);
-		}
-
 		fitBounds() {
 			const points = this.props.points;
 			const lngs = map(points, this.props.longitudeExtractor);
@@ -196,18 +205,6 @@ export default withLeaflet(
 			this.props.leaflet.map.fitBounds(
 				L.latLngBounds(L.latLng(sw), L.latLng(ne))
 			);
-		}
-
-		componentDidUpdate() {
-			this.props.leaflet.map.invalidateSize();
-			if (this.props.fitBoundsOnUpdate) {
-				this.fitBounds();
-			}
-			this.reset();
-		}
-
-		shouldComponentUpdate() {
-			return true;
 		}
 
 		attachEvents() {
@@ -263,6 +260,12 @@ export default withLeaflet(
 		}
 
 		redraw() {
+			try {
+				this.props.leaflet.map._getMapPanePos();
+			} catch (error) {
+				return null;
+			}
+
 			const r = this._heatmap._r;
 			const size = this.props.leaflet.map.getSize();
 
@@ -330,7 +333,7 @@ export default withLeaflet(
 						grid[y] = grid[y] || [];
 						const cell = grid[y][x];
 
-						const alt = getIntensity(point);
+						const alt = getIntensity(point) * 2048;
 						const k = alt * v;
 
 						if (!cell) {
