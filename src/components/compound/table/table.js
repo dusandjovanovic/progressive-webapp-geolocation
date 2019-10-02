@@ -92,15 +92,6 @@ class table extends React.Component {
 
 	isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-	dateFormat = date => {
-		return new Date(date).toLocaleDateString("en-US", {
-			weekday: "long",
-			year: "numeric",
-			month: "long",
-			day: "numeric"
-		});
-	};
-
 	render() {
 		const { classes, title } = this.props;
 		const {
@@ -169,9 +160,7 @@ class table extends React.Component {
 											</TableCell>
 											<TableCell>{n["_id"]}</TableCell>
 											<TableCell>
-												{this.dateFormat(
-													n.properties.time
-												)}
+												{n.properties.time}
 											</TableCell>
 											<TableCell>
 												{n.properties.author}

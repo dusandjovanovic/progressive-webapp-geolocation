@@ -48,7 +48,35 @@ const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				history: {
-					...action.history
+					userHistory: action.history.userHistory.map(element => ({
+						...element,
+						properties: {
+							...element.properties,
+							time: new Date(
+								element.properties.time
+							).toLocaleDateString("en-US", {
+								year: "numeric",
+								month: "numeric",
+								day: "numeric"
+							})
+						}
+					})),
+					friendHistory: action.history.friendHistory.map(
+						element => ({
+							...element,
+							properties: {
+								...element.properties,
+								time: new Date(
+									element.properties.time
+								).toLocaleDateString("en-US", {
+									year: "numeric",
+									month: "numeric",
+									day: "numeric"
+								})
+							}
+						})
+					),
+					statistics: [...action.history.statistics]
 				}
 			};
 
