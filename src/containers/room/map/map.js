@@ -18,17 +18,20 @@ class MapContainer extends React.Component {
 				<Map
 					style={{ height: "80vh", width: "100%" }}
 					zoom={MAP_ZOOM_LEVEL}
+					zoomControl={false}
+					attributionControl={false}
+					layerToggleControl={false}
 					center={[
 						this.props.location.latitude,
 						this.props.location.longitude
 					]}
 				>
-					<LayersControl>
-						<LayersControl.BaseLayer name="Base" checked>
+					<LayersControl position="bottomright">
+						<LayersControl.BaseLayer name="BaseLayer" checked>
 							<TileLayer url={MAP_LAYER} />
 						</LayersControl.BaseLayer>
 						<LayersControl.Overlay
-							name="Metadata"
+							name="MetadataLayer"
 							checked={!this.props.heatMap}
 						>
 							<LayerGroup>
@@ -36,7 +39,7 @@ class MapContainer extends React.Component {
 							</LayerGroup>
 						</LayersControl.Overlay>
 						<LayersControl.Overlay
-							name="Users"
+							name="UserLocationsLayer"
 							checked={!this.props.heatMap}
 						>
 							<LayerGroup>
@@ -45,7 +48,7 @@ class MapContainer extends React.Component {
 							</LayerGroup>
 						</LayersControl.Overlay>
 						<LayersControl.Overlay
-							name="Heatmap"
+							name="HeatmapLayer"
 							checked={this.props.heatMap}
 						>
 							<HeatmapLayer

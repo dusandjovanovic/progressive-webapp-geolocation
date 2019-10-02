@@ -1,11 +1,28 @@
-export const styles = () => ({
+export const styles = theme => ({
 	root: {
-		marginTop: "118px",
-		height: "calc(100% - 34px)",
+		marginTop: "54px",
+		height: "100%",
+		width: "100%",
 		padding: "0",
-		width: "100%"
-	},
-	whiteboard: {
 		backgroundColor: "white"
+	},
+	content: {
+		flexGrow: 1,
+		transition: theme.transitions.create("margin", {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.leavingScreen
+		}),
+		marginLeft: "30rem",
+		width: `calc(100% - 30rem)`,
+		[theme.breakpoints.down("sm")]: {
+			width: 0,
+			marginLeft: 0
+		}
+	},
+	contentShift: {
+		transition: theme.transitions.create("margin", {
+			easing: theme.transitions.easing.easeOut,
+			duration: theme.transitions.duration.enteringScreen
+		})
 	}
 });

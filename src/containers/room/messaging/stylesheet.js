@@ -2,8 +2,8 @@ export const styles = theme => ({
 	root: {
 		padding: theme.spacing(1),
 		backgroundColor: "#ffffff",
-		height: "100%",
-		overflow: "hidden"
+		overflow: "hidden",
+		width: "100%"
 	},
 	messageContainer: {
 		padding: theme.spacing(0.5),
@@ -17,7 +17,7 @@ export const styles = theme => ({
 	messageView: {
 		padding: theme.spacing(2, 0.5),
 		width: "100%",
-		maxHeight: "calc(100vh - 220px)",
+		maxHeight: "calc(100vh - 222px)",
 		overflowY: "auto",
 		display: "flex",
 		flexDirection: "column"
@@ -36,15 +36,16 @@ export const styles = theme => ({
 		color: "white",
 		float: "left",
 		background: theme.palette.secondary.main,
-		borderRadius: "12px"
+		borderRadius: "14px"
 	},
 	messageRight: {
 		float: "right",
 		background: "#e6e5eb",
-		borderRadius: "12px"
+		borderRadius: "14px"
 	},
 	textField: {
-		width: "80%"
+		width: "80%",
+		paddingRight: theme.spacing(2)
 	},
 	button: {
 		width: "20%"
