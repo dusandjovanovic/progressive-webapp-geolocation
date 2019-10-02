@@ -88,9 +88,7 @@ class table extends React.Component {
 		this.setState({ rowsPerPage: event.target.value });
 	};
 
-	handleAction = () => {
-		this.props.action(this.state.selected.map(element => ({ ...element })));
-	};
+	handleAction = () => {};
 
 	isSelected = id => this.state.selected.indexOf(id) !== -1;
 
