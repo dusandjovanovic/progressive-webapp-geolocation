@@ -21,34 +21,6 @@ const withMetadataPollution = WrappedComponent => {
 
 		componentDidMount() {
 			this.renderMarkers();
-			this.props.initWebsocketIO();
-
-			this.props.socket.on("joinRoom", received => {
-				this.props.roomGetData(this.props.data._id, false);
-				this.props.internalNotificationsAdd(received.message, "info");
-			});
-
-			this.props.socket.on("leaveRoom", received => {
-				this.props.roomDeleteUser(received.username);
-				this.props.internalNotificationsAdd(received.message, "info");
-			});
-
-			this.props.socket.on("addMetadata", received => {
-				this.props.roomPushMetadata(received.metadata, true);
-			});
-
-			this.props.socket.on("addLocationChange", received => {
-				this.props.roomChangeUser({
-					username: received.sender,
-					location: received.location
-				});
-			});
-
-			this.props.joinRoomIO(
-				this.props.data.name,
-				this.props.username,
-				this.props.username + " has just joined the room."
-			);
 		}
 
 		componentDidUpdate(prevProps) {
