@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 
 import withMapElements from "../../../hoc/with-map-elements/withMapElements";
 
-import "leaflet/dist/leaflet.css";
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
 

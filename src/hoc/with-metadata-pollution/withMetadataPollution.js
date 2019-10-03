@@ -1,5 +1,5 @@
 import React from "react";
-import MetadataPollution from "../../containers/room/metadata/metadataPollution";
+import MetadataPollution from "../../containers/room/metadata/metadata-pollution/metadataPollution";
 import MarkerPollution from "../../containers/room/markers/marker-pollution/markerPollution";
 import PropTypes from "prop-types";
 

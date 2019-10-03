@@ -1,25 +1,27 @@
 import React from "react";
-import FormContainer from "../../../components/logic/form-container/formContainer";
-import Annotation from "../../../components/interface/annotation/annotation";
-import { formElements } from "../../../assets/constants/containers/room/metadataPollution";
+import FormContainer from "../../../../components/logic/form-container/formContainer";
+import Annotation from "../../../../components/interface/annotation/annotation";
+import { formElements } from "../../../../assets/constants/containers/room/metadataPollution";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import Slider from "@material-ui/core/Slider";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 
-import withModal from "../../../hoc/with-modal/withModal";
-import withErrorHandler from "../../../hoc/with-error-handler/withErrorHandler";
+import withModal from "../../../../hoc/with-modal/withModal";
+import withErrorHandler from "../../../../hoc/with-error-handler/withErrorHandler";
 
 import classNames from "classnames";
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { IMPACT_COLORS } from "../../../utils/constants";
 
-class MetadataPollution extends React.Component {
+class MetadataTraffic extends React.Component {
 	state = {
-		value: 1,
+		value: "Roadblock",
 		error: {
 			hasError: false,
 			name: null,
@@ -43,8 +45,8 @@ class MetadataPollution extends React.Component {
 		}));
 	};
 
-	handleValueChange = (event, value) => {
-		this.setState({ value: Number(value) });
+	handleValueChange = event => {
+		this.setState({ value: event.target.value });
 	};
 
 	render() {
@@ -114,52 +116,41 @@ class MetadataPollution extends React.Component {
 									className={classes.text}
 									gutterBottom
 								>
-									How polluted is the area you are in?
+									Is there anything wrong with current traffic
+									conditions?
 								</Typography>
 
 								<Grid container>
-									<Grid container>
-										<Slider
-											className={classes.inputsGroup}
-											defaultValue={this.state.value}
-											getAriaValueText={value => value}
-											valueLabelDisplay="on"
-											step={1}
-											marks
-											min={1}
-											max={10}
-											onChange={this.handleValueChange}
-											style={{
-												color:
-													IMPACT_COLORS[
-														this.state.value - 1
-													]
-											}}
-										/>
-									</Grid>
-									<Grid
-										container
-										direction="row"
-										justify="space-between"
-										alignItems="center"
+									<FormControl
+										component="fieldset"
+										className={classes.radioContainer}
 									>
-										<Grid item>
-											<Typography
-												variant="button"
-												color="secondary"
-											>
-												Not polluted
-											</Typography>
-										</Grid>
-										<Grid item>
-											<Typography
-												variant="button"
-												color="primary"
-											>
-												Highly polluted
-											</Typography>
-										</Grid>
-									</Grid>
+										<RadioGroup
+											aria-label="traffic"
+											name="traffic"
+											value={this.state.value}
+											onChange={this.handleValueChange}
+											classes={{
+												root: classes.radioGroup
+											}}
+										>
+											<FormControlLabel
+												value="Roadblock"
+												control={<Radio />}
+												label="Roadblock"
+											/>
+											<FormControlLabel
+												value="Accident"
+												control={<Radio />}
+												label="Accident"
+											/>
+											<FormControlLabel
+												value="Bad road"
+												control={<Radio />}
+												label="Bad road"
+											/>
+										</RadioGroup>
+									</FormControl>
 								</Grid>
 
 								<Annotation message="Your current location will be shared along with this insight. You should have given a permission previously." />
@@ -202,12 +193,10 @@ class MetadataPollution extends React.Component {
 	}
 }
 
-MetadataPollution.propTypes = {
+MetadataTraffic.propTypes = {
 	classes: PropTypes.object.isRequired,
 	handleMetadata: PropTypes.func.isRequired,
 	handleModalClose: PropTypes.func.isRequired
 };
 
-export default withModal(
-	withStyles(styles)(withErrorHandler(MetadataPollution))
-);
+export default withModal(withStyles(styles)(withErrorHandler(MetadataTraffic)));

@@ -45,7 +45,7 @@ const RoomSchema = new mongoose.Schema({
 					required: true
 				},
 				value: {
-					type: Number,
+					type: String,
 					required: false
 				},
 				amenity: {
