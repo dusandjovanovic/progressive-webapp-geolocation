@@ -16,8 +16,8 @@ import {
 export const styles = theme => ({
 	root: {
 		position: "relative",
-		padding: theme.spacing(2),
 		margin: theme.spacing(2.5),
+		padding: theme.spacing(2),
 		lineHeight: "2rem",
 		fontSize: "1rem",
 		borderRadius: "2px",

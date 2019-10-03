@@ -3,7 +3,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
-import Chat from "@material-ui/icons/Chat";
+import People from "@material-ui/icons/People";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import PropTypes from "prop-types";
 
@@ -21,7 +21,7 @@ const drawer = props => {
 					onClick={props.handleDrawerOpen}
 					className={!props.open ? classes.menuButton : classes.hide}
 				>
-					<Chat color="inherit" />
+					<People color="inherit" />
 				</IconButton>
 			</Tooltip>
 

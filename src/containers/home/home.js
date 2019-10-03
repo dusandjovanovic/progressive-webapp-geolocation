@@ -27,17 +27,20 @@ class Home extends React.Component {
 			hasError: false,
 			name: null,
 			description: null
-		}
+		},
+		interval: null
 	};
 	interval;
 
 	componentDidMount() {
 		this.props.roomGetAll("all");
-		this.interval = setInterval(() => this.props.roomGetAll("all"), 10000);
+		this.setState({
+			interval: setInterval(() => this.props.roomGetAll("all"), 10000)
+		});
 	}
 
 	componentWillUnmount() {
-		clearInterval(this.interval);
+		clearInterval(this.state.interval);
 	}
 
 	enterRoom = async (id, name) => {

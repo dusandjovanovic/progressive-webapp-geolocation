@@ -34,33 +34,31 @@ const notification = props => {
 	}
 
 	return (
-		<div className={classes.holder}>
-			<Grow in>
-				<SnackbarContent
-					aria-describedby="notification"
-					message={
-						<div>
-							{snackIcon}
-							{message}
-						</div>
-					}
-					action={
-						<IconButton
-							onClick={() => onClose(props.id)}
-							key="close"
-							aria-label="close"
-							color="inherit"
-						>
-							<Close className={classes.close} />
-						</IconButton>
-					}
-					classes={{
-						root: classes.root + " " + classes[variant],
-						message: classes.container + " " + classes.message
-					}}
-				/>
-			</Grow>
-		</div>
+		<Grow in>
+			<SnackbarContent
+				aria-describedby="notification"
+				message={
+					<div>
+						{snackIcon}
+						{message}
+					</div>
+				}
+				action={
+					<IconButton
+						onClick={() => onClose(props.id)}
+						key="close"
+						aria-label="close"
+						color="inherit"
+					>
+						<Close className={classes.close} />
+					</IconButton>
+				}
+				classes={{
+					root: `${classes.root} ${classes[variant]}`,
+					message: `${classes.container} ${classes.message}`
+				}}
+			/>
+		</Grow>
 	);
 };
 
