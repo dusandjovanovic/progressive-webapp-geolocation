@@ -4,10 +4,12 @@ import PropTypes from "prop-types";
 
 import forEach from "lodash/forEach";
 
-const withMarkersUsers = WrappedComponent => {
-	class withMarkersUsers extends React.Component {
+const withUsers = WrappedComponent => {
+	class withUsers extends React.Component {
 		state = {
+			users: [],
 			markersUsers: null,
+			currentLocation: null,
 			markerCurrentLocation: null
 		};
 
@@ -26,6 +28,7 @@ const withMarkersUsers = WrappedComponent => {
 		renderMarkersUsers = () => {
 			if (this.props.data && this.props.data.users) {
 				this.setState({
+					users: this.props.data.users,
 					markersUsers: this.props.data.users.map(element =>
 						element.username !== this.props.username ? (
 							<MarkerUser
@@ -42,21 +45,28 @@ const withMarkersUsers = WrappedComponent => {
 		renderMarkerCurrentLocation = () => {
 			if (this.props.data && this.props.data.users) {
 				let markerCurrentLocation = null;
+				let currentLocation = null;
 				forEach(this.props.data.users, element => {
 					if (element.username === this.props.username) {
+						currentLocation = element;
 						markerCurrentLocation = (
 							<MarkerUser element={element} current />
 						);
 					}
 				});
-				this.setState({ markerCurrentLocation: markerCurrentLocation });
+				this.setState({
+					currentLocation: currentLocation,
+					markerCurrentLocation: markerCurrentLocation
+				});
 			}
 		};
 
 		render() {
 			return (
 				<WrappedComponent
+					users={this.state.users}
 					markersUsers={this.state.markersUsers}
+					currentLocation={this.state.currentLocation}
 					markerCurrentLocation={this.state.markerCurrentLocation}
 					{...this.props}
 				/>
@@ -64,12 +74,12 @@ const withMarkersUsers = WrappedComponent => {
 		}
 	}
 
-	withMarkersUsers.propTypes = {
+	withUsers.propTypes = {
 		username: PropTypes.string.isRequired,
 		data: PropTypes.object.isRequired
 	};
 
-	return withMarkersUsers;
+	return withUsers;
 };
 
-export default withMarkersUsers;
+export default withUsers;

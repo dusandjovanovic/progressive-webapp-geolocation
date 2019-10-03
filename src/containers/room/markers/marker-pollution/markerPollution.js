@@ -1,6 +1,5 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
@@ -47,7 +46,7 @@ const markerPollution = props => {
 			color={color}
 		>
 			<Tooltip direction="bottom">
-				<Card className={classes.root}>
+				<div className={classes.root}>
 					<CardHeader
 						avatar={
 							<Avatar className={classes.avatar}>
@@ -96,7 +95,7 @@ const markerPollution = props => {
 							<ShareIcon />
 						</IconButton>
 					</CardActions>
-				</Card>
+				</div>
 			</Tooltip>
 		</CircleMarker>
 	);
