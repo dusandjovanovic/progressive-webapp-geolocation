@@ -43,7 +43,7 @@ class Room extends React.Component {
 			name: null,
 			description: null
 		},
-		drawer: true
+		drawer: window.innerWidth > 600
 	};
 
 	componentWillUnmount() {

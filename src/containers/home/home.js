@@ -50,34 +50,38 @@ class Home extends React.Component {
 			this.props.location.latitude,
 			this.props.location.longitude
 		);
-		this.setState({
-			redirect: true
-		});
+		if (this.props.data._id)
+			this.setState({
+				redirect: true
+			});
 	};
 
 	render() {
 		const { classes } = this.props;
-
 		let redirection = null;
-
 		if (
 			this.state.redirect &&
 			!this.props.waiting &&
 			!this.props.error &&
 			this.props.data._id
-		) {
-			if (this.props.data.roomType === ROOM_TYPE_PLACES)
-				redirection = <Redirect to="/room/places" />;
-			else if (this.props.data.roomType === ROOM_TYPE_POLLUTION)
-				redirection = <Redirect to="/room/pollution" />;
-			else if (this.props.data.roomType === ROOM_TYPE_TRAFFIC)
-				redirection = <Redirect to="/room/traffic" />;
-		}
+		)
+			switch (this.props.data.roomType) {
+				case ROOM_TYPE_PLACES:
+					redirection = <Redirect to="/room/places" />;
+					break;
+				case ROOM_TYPE_POLLUTION:
+					redirection = <Redirect to="/room/pollution" />;
+					break;
+				case ROOM_TYPE_TRAFFIC:
+					redirection = <Redirect to="/room/traffic" />;
+					break;
+				default:
+					redirection = null;
+			}
 
 		return (
 			<Grid container className={classes.root}>
 				{redirection}
-
 				<Grid container justify="center" alignItems="center">
 					<Grid item md={8} xs={10}>
 						<RoomNew username={this.props.username} />
