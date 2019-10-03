@@ -11,7 +11,7 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import withIO from "../../hoc/with-io/withIO";
 import withGeolocation from "../../hoc/with-geolocation/withGeolocation";
-import withMarkersUsers from "../../hoc/with-markers-users/withMarkersUsers";
+import withUsers from "../../hoc/with-users/withUsers";
 import withErrorHandler from "../../hoc/with-error-handler/withErrorHandler";
 import withMetadataPollution from "../../hoc/with-metadata-pollution/withMetadataPollution";
 import withMetadataPlaces from "../../hoc/with-metadata-places/withMetadataPlaces";
@@ -43,7 +43,7 @@ class Room extends React.Component {
 			name: null,
 			description: null
 		},
-		drawer: true
+		drawer: window.innerWidth > 600
 	};
 
 	componentWillUnmount() {
@@ -202,7 +202,7 @@ export const RoomPlaces = connect(
 	withIO(
 		withGeolocation(
 			withMetadataPlaces(
-				withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+				withUsers(withStyles(styles)(withErrorHandler(Room)))
 			)
 		)
 	)
@@ -215,7 +215,7 @@ export const RoomPollution = connect(
 	withIO(
 		withGeolocation(
 			withMetadataPollution(
-				withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+				withUsers(withStyles(styles)(withErrorHandler(Room)))
 			)
 		)
 	)
@@ -228,7 +228,7 @@ export const RoomTraffic = connect(
 	withIO(
 		withGeolocation(
 			withMetadataTraffic(
-				withMarkersUsers(withStyles(styles)(withErrorHandler(Room)))
+				withUsers(withStyles(styles)(withErrorHandler(Room)))
 			)
 		)
 	)

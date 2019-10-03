@@ -12,28 +12,22 @@ const roomView = props => {
 
 	return (
 		<Grid container justify="center" className={classes.root} spacing={4}>
-			{props.rooms.length > 0
-				? props.rooms.map((room, index) => {
-						return (
-							<Grow
-								key={room["_id"]}
-								in
-								timeout={500 + index * 500}
-							>
-								<Grid item lg={4} md={6} xs={12}>
-									<RoomCard
-										type={room.roomType}
-										id={room._id}
-										name={room.name}
-										time={room.time}
-										users={room.users}
-										enterRoom={props.enterRoom}
-									/>
-								</Grid>
-							</Grow>
-						);
-				  })
-				: null}
+			{props.rooms.map((room, index) => {
+				return (
+					<Grow key={room["_id"]} in timeout={500 + index * 500}>
+						<Grid item lg={4} md={6} xs={12}>
+							<RoomCard
+								type={room.roomType}
+								id={room._id}
+								name={room.name}
+								time={room.time}
+								users={room.users}
+								enterRoom={props.enterRoom}
+							/>
+						</Grid>
+					</Grow>
+				);
+			})}
 		</Grid>
 	);
 };
