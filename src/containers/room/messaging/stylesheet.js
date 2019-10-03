@@ -3,12 +3,14 @@ export const styles = theme => ({
 		padding: theme.spacing(1),
 		backgroundColor: "#ffffff",
 		overflow: "hidden",
-		width: "100%"
+		width: "100%",
+		height: "100%",
+		display: "flex",
+		flexDirection: "column"
 	},
 	messageContainer: {
 		padding: theme.spacing(0.5),
 		width: "100%",
-		height: "auto",
 		display: "flex",
 		flexDirection: "row",
 		alignItems: "flex-end",
@@ -17,7 +19,6 @@ export const styles = theme => ({
 	messageView: {
 		padding: theme.spacing(2, 0.5),
 		width: "100%",
-		maxHeight: "calc(100vh - 222px)",
 		overflowY: "auto",
 		display: "flex",
 		flexDirection: "column"
@@ -29,7 +30,7 @@ export const styles = theme => ({
 		width: "auto",
 		height: "auto",
 		wordWrap: "break-word",
-		padding: theme.spacing(1.25),
+		padding: theme.spacing(1.25, 1.5),
 		margin: theme.spacing(0.5, 0)
 	},
 	messageLeft: {

@@ -9,6 +9,6 @@ export const styles = theme => ({
 		flexDirection: "row",
 		justifyContent: "left",
 		alignItems: "center",
-		zIndex: 999
+		zIndex: 1002
 	}
 });

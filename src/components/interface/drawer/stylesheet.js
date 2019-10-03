@@ -28,7 +28,7 @@ export const styles = theme => ({
 		width: "30rem",
 		height: "calc(100vh - 152px)",
 		marginTop: "118px",
-		zIndex: 998,
+		zIndex: 1001,
 		[theme.breakpoints.down("sm")]: {
 			width: "100%"
 		},

@@ -15,10 +15,10 @@ import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 const rows = [
-	{ id: "_id", disablePadding: true, label: "id" },
-	{ id: "time", disablePadding: true, label: "Date added" },
-	{ id: "author", disablePadding: true, label: "Author" },
-	{ id: "value", disablePadding: false, label: "Insight factored value" }
+	{ id: "_id", disablePadding: false, label: "id" },
+	{ id: "time", disablePadding: false, label: "Date added" },
+	{ id: "author", disablePadding: false, label: "Author" },
+	{ id: "value", disablePadding: false, label: "Insight's significant value" }
 ];
 
 class table extends React.Component {
@@ -88,20 +88,9 @@ class table extends React.Component {
 		this.setState({ rowsPerPage: event.target.value });
 	};
 
-	handleAction = () => {
-		this.props.action(this.state.selected.map(element => ({ ...element })));
-	};
+	handleAction = () => {};
 
 	isSelected = id => this.state.selected.indexOf(id) !== -1;
-
-	dateFormat = date => {
-		return new Date(date).toLocaleDateString("en-US", {
-			weekday: "long",
-			year: "numeric",
-			month: "long",
-			day: "numeric"
-		});
-	};
 
 	render() {
 		const { classes, title } = this.props;
@@ -171,9 +160,7 @@ class table extends React.Component {
 											</TableCell>
 											<TableCell>{n["_id"]}</TableCell>
 											<TableCell>
-												{this.dateFormat(
-													n.properties.time
-												)}
+												{n.properties.time}
 											</TableCell>
 											<TableCell>
 												{n.properties.author}
@@ -202,12 +189,6 @@ class table extends React.Component {
 					count={data.length}
 					rowsPerPage={rowsPerPage}
 					page={page}
-					backIconButtonProps={{
-						"aria-label": "Previous Page"
-					}}
-					nextIconButtonProps={{
-						"aria-label": "Next Page"
-					}}
 					onChangePage={this.handleChangePage}
 					onChangeRowsPerPage={this.handleChangeRowsPerPage}
 				/>

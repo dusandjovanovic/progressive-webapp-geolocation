@@ -65,23 +65,21 @@ class Room extends React.Component {
 			<Grid container className={classes.root} direction="column">
 				{this.props.redirect ? <Redirect to="/" /> : null}
 				{this.props.children}
-				<Grid container>
-					<Toolbar
-						filterNearby={this.props.filterNearby}
-						filterRecent={this.props.filterRecent}
-						filterHeatMap={this.props.filterHeatMap}
-						roomAddMetadataInit={this.props.roomAddMetadataInit}
-						leaveRoomIOInit={this.props.leaveRoomIOInit}
-					/>
-				</Grid>
+				<Toolbar
+					filterNearby={this.props.filterNearby}
+					filterRecent={this.props.filterRecent}
+					filterHeatMap={this.props.filterHeatMap}
+					roomAddMetadataInit={this.props.roomAddMetadataInit}
+					leaveRoomIOInit={this.props.leaveRoomIOInit}
+				/>
 				<Grid container>
 					<Grid
 						item
 						xs={12}
 						className={
 							this.state.drawer
-								? `${classes.root} ${classes.content} ${classes.contentShift}`
-								: `${classes.root}`
+								? `${classes.base} ${classes.content} ${classes.contentShift}`
+								: `${classes.base}`
 						}
 					>
 						<Drawer

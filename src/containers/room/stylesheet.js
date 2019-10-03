@@ -1,10 +1,13 @@
 export const styles = theme => ({
 	root: {
-		marginTop: "54px",
+		marginTop: "64px",
 		height: "100%",
 		width: "100%",
 		padding: "0",
 		backgroundColor: "white"
+	},
+	base: {
+		marginTop: "54px"
 	},
 	content: {
 		flexGrow: 1,
