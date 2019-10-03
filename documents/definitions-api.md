@@ -160,8 +160,6 @@ Svaki zahtev odgovara teretom u obliku:
 
 ### Auth
 
--   **URI**: /api/auth
-
 | Call          | Type | Params | Body                               | Data       |
 | ------------- | ---- | ------ | ---------------------------------- | ---------- |
 | /api/register | POST | /      | username: String, password: String | data: User |
@@ -170,16 +168,12 @@ Svaki zahtev odgovara teretom u obliku:
 
 ### User
 
--   **URI**: /api/user
-
 | Call                        | Type | Params           | Body | Data         |
 | --------------------------- | ---- | ---------------- | ---- | ------------ |
 | /api/user/:username         | GET  | username: String | /    | data: User   |
 | /api/user/:username/history | GET  | username: String | /    | data: Object |
 
 ### Friend request
-
--   **URI**: /api/friend-request
 
 | Call                          | Type   | Params           | Body                             | Data                  |
 | ----------------------------- | ------ | ---------------- | -------------------------------- | --------------------- |
@@ -190,8 +184,6 @@ Svaki zahtev odgovara teretom u obliku:
 | /api/friend-request/:id       | DELETE | id: String       | /                                | data: none            |
 
 ### Room
-
--   **URI**: /api/room
 
 | Call                   | Type   | Params       | Body                                                                    | Data         |
 | ---------------------- | ------ | ------------ | ----------------------------------------------------------------------- | ------------ |

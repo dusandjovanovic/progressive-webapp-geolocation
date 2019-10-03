@@ -20,7 +20,7 @@ Možemo razlikovati dve vrste poruka koje se prosleđuju, na osnovu toga čemu t
 
 ```javascript
 {
-	room: String;
+  room: String
 }
 ```
 
@@ -43,7 +43,7 @@ Prosleđuje se kada korisnik pošalje chat poruku ostalim korisnicima.
 
 ```javascript
 {
-	room: String;
+  room: String
 }
 ```
 
