@@ -15,8 +15,9 @@ import {
 	authLoginRoute,
 	authRegisterRoute
 } from "../../utils/constantsAPI";
+import { connectionFilter } from "../../utils/functions/filteringFunctions.js";
 
-const authUpdateCredentials = (username) => {
+const authUpdateCredentials = username => {
 	return {
 		type: AUTH_UPDATE_CREDENTIALS,
 		payload: {
@@ -54,7 +55,7 @@ const authError = error => {
 	return {
 		type: AUTH_ERROR,
 		payload: {
-			error: error
+			error: connectionFilter(error)
 		}
 	};
 };
@@ -99,7 +100,7 @@ export const authenticateLogin = (username, password, remember) => {
 			dispatch(authSuccess());
 			dispatch(userData(true));
 		} catch (error) {
-			dispatch(authError(error.response.data.message));
+			dispatch(authError(error));
 		}
 	};
 };
@@ -124,7 +125,7 @@ export const authenticateRegister = (username, password, remember) => {
 			dispatch(authSuccess());
 			dispatch(userData(true));
 		} catch (error) {
-			dispatch(authError(error.response.data.message));
+			dispatch(authError(error));
 		}
 	};
 };

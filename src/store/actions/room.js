@@ -26,6 +26,7 @@ import {
 	ROOM_USER_LEFT
 } from "../actions.js";
 import { internalNotificationsAdd } from "./internal";
+import { connectionFilter } from "../../utils/functions/filteringFunctions";
 
 const roomInitiate = () => {
 	return {
@@ -119,7 +120,7 @@ export const roomGetAll = (mode = "all") => {
 			if (response.data.success) dispatch(roomAll(response.data.data));
 			else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -136,7 +137,7 @@ export const roomGetData = (id, overwriteMetadata = true) => {
 				dispatch(roomData(response.data.data, overwriteMetadata));
 			else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -163,7 +164,7 @@ export const roomJoinExisting = (id, name, latitude = 0.0, longitude = 0.0) => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -189,7 +190,7 @@ export const roomLeaveExisting = () => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -210,7 +211,7 @@ export const roomGetMetadata = () => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -241,7 +242,7 @@ export const roomChangeMetadata = metadata => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -292,7 +293,7 @@ export const roomAddMetadata = (
 				);
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -319,7 +320,7 @@ export const roomAddMessage = message => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -355,7 +356,7 @@ export const roomAddLocation = (latitude = 0, longitude = 0) => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;

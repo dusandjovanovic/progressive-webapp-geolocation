@@ -1,5 +1,6 @@
 const Room = require("../models/room");
 const User = require("../models/user");
+const UserController = require("../controllers/user");
 const { validationResult, body, param } = require("express-validator");
 
 exports.validate = method => {
@@ -308,15 +309,26 @@ exports.putLocation = function(request, response, next) {
 				function(error, room) {
 					if (error) return next(error);
 					else {
-						response.json({
-							success: true,
-							data: room.toObject().users,
-							delta: room
-								.toObject()
-								.users.find(
-									element => element.username === username
-								)
-						});
+						UserController.changeLocation(
+							username,
+							latitude,
+							longitude,
+							function(error) {
+								if (error) return next(error);
+								else
+									response.json({
+										success: true,
+										data: room.toObject().users,
+										delta: room
+											.toObject()
+											.users.find(
+												element =>
+													element.username ===
+													username
+											)
+									});
+							}
+						);
 					}
 				}
 			);
@@ -402,11 +414,23 @@ exports.postJoin = function(request, response, next) {
 					},
 					function(error) {
 						if (error) return next(error);
-						else
-							response.json({
-								success: true,
-								message: username + " has just joined the room."
-							});
+						else {
+							UserController.changeLocation(
+								username,
+								latitude,
+								longitude,
+								function(error) {
+									if (error) return next(error);
+									else
+										response.json({
+											success: true,
+											message:
+												username +
+												" has just joined the room."
+										});
+								}
+							);
+						}
 					}
 				);
 			} else
