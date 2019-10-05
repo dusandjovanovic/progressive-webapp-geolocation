@@ -109,6 +109,13 @@ module.exports = function(app, passport) {
 	);
 
 	app.put(
+		"/api/room/location/:id",
+		authenticated,
+		room.validate("/api/room/location/put"),
+		room.putLocation
+	);
+
+	app.put(
 		"/api/room/messages/:id",
 		authenticated,
 		room.validate("/api/room/messages/put"),

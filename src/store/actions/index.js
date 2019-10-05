@@ -34,5 +34,6 @@ export {
 	roomChangeUser,
 	roomDeleteUser,
 	roomAddMessage,
-	roomPushMessage
+	roomPushMessage,
+	roomAddLocation
 } from "./room";

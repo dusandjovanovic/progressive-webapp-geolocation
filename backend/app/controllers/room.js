@@ -46,6 +46,28 @@ exports.validate = method => {
 				body("metaobject").exists()
 			];
 		}
+		case "/api/room/location/put": {
+			return [
+				param("id")
+					.exists()
+					.isString()
+					.isMongoId(),
+				body("username")
+					.exists()
+					.isString()
+					.custom(async value => {
+						return (await User.isUserByUsername(value))
+							? Promise.resolve()
+							: Promise.reject();
+					}),
+				body("latitude")
+					.exists()
+					.isNumeric(),
+				body("longitude")
+					.exists()
+					.isNumeric()
+			];
+		}
 		case "/api/room/messages/put": {
 			return [
 				param("id")
@@ -252,6 +274,56 @@ exports.getMetdata = function(request, response, next) {
 	});
 };
 
+exports.putLocation = function(request, response, next) {
+	const validation = validationResult(request);
+	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
+
+	const { id } = request.params;
+	const { username } = request.body;
+	const { latitude } = request.body;
+	const { longitude } = request.body;
+
+	Room.findOne({ _id: id }, function(error, room) {
+		if (error) return next(error);
+		else {
+			const usersUpdated = room.toObject().users.map(element =>
+				element.username === username
+					? {
+							...element,
+							location: {
+								type: "Point",
+								coordinates: [latitude, longitude]
+							}
+					  }
+					: element
+			);
+			Room.findOneAndUpdate(
+				{ _id: id },
+				{
+					$set: {
+						users: usersUpdated
+					}
+				},
+				{ new: true },
+				function(error, room) {
+					if (error) return next(error);
+					else {
+						response.json({
+							success: true,
+							data: room.toObject().users,
+							delta: room
+								.toObject()
+								.users.find(
+									element => element.username === username
+								)
+						});
+					}
+				}
+			);
+		}
+	});
+};
+
 exports.putData = function(request, response, next) {
 	const validation = validationResult(request);
 	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
@@ -266,7 +338,6 @@ exports.putData = function(request, response, next) {
 				roomData: roomData
 			}
 		},
-		{ new: true },
 		function(error) {
 			if (error) return next(error);
 			else {
@@ -315,7 +386,7 @@ exports.postJoin = function(request, response, next) {
 			});
 		else {
 			let usersInRoom = room.users.map(element => element.username);
-			if (!usersInRoom.includes(username))
+			if (!usersInRoom.includes(username)) {
 				Room.updateOne(
 					{ name: roomName },
 					{
@@ -323,8 +394,8 @@ exports.postJoin = function(request, response, next) {
 							users: {
 								username: username,
 								location: {
-									latitude,
-									longitude
+									type: "Point",
+									coordinates: [latitude, longitude]
 								}
 							}
 						}
@@ -338,7 +409,7 @@ exports.postJoin = function(request, response, next) {
 							});
 					}
 				);
-			else
+			} else
 				response.json({
 					success: true,
 					message: username + " has joined the room again."

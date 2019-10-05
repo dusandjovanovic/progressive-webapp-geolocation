@@ -30,6 +30,7 @@ import {
 	userHistoryAdd,
 	roomAddMessage,
 	roomPushMessage,
+	roomAddLocation,
 	internalNotificationsAdd
 } from "../../store/actions/index";
 
@@ -139,6 +140,7 @@ Room.propTypes = {
 	userHistoryAdd: PropTypes.func.isRequired,
 	roomAddMessage: PropTypes.func.isRequired,
 	roomPushMessage: PropTypes.func.isRequired,
+	roomAddLocation: PropTypes.func.isRequired,
 	internalNotificationsAdd: PropTypes.func.isRequired,
 	io: PropTypes.func.isRequired,
 	initWebsocketIO: PropTypes.func.isRequired,
@@ -190,6 +192,8 @@ const mapDispatchToProps = dispatch => {
 		userHistoryAdd: score => dispatch(userHistoryAdd(score)),
 		roomAddMessage: message => dispatch(roomAddMessage(message)),
 		roomPushMessage: message => dispatch(roomPushMessage(message)),
+		roomAddLocation: (latitude, longitude) =>
+			dispatch(roomAddLocation(latitude, longitude)),
 		internalNotificationsAdd: (message, variant) =>
 			dispatch(internalNotificationsAdd(message, variant))
 	};

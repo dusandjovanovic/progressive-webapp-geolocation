@@ -7,7 +7,8 @@ import {
 	roomChangeMetadataRoute,
 	roomAddMetadataRoute,
 	roomGetMetadataRoute,
-	roomAddMessageRoute
+	roomAddMessageRoute,
+	roomAddLocationRoute
 } from "../../utils/constantsAPI";
 
 import {
@@ -315,6 +316,42 @@ export const roomAddMessage = message => {
 				});
 			if (response.data.success) {
 				dispatch(roomMessageAdd(response.data.data));
+				dispatch(roomEnd());
+			} else dispatch(roomError(response.data.message));
+		} catch (error) {
+			dispatch(roomError(error.response.data.message));
+		}
+
+		return response;
+	};
+};
+
+export const roomAddLocation = (latitude = 0, longitude = 0) => {
+	return async (dispatch, getState) => {
+		dispatch(roomInitiate());
+		let response;
+		const payload = {
+			username: getState().auth.username,
+			latitude,
+			longitude
+		};
+
+		try {
+			response = await axios
+				.getInstance()
+				.put(roomAddLocationRoute(getState().room.data._id), payload, {
+					"Content-Type": "application/x-www-form-urlencoded"
+				});
+			if (response.data.success) {
+				dispatch(
+					roomChangeUser({
+						username: getState().auth.username,
+						location: {
+							type: "Point",
+							coordinates: [latitude, longitude]
+						}
+					})
+				);
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {

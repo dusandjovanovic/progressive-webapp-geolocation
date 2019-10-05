@@ -13,8 +13,8 @@ const markerUser = props => {
 	return (
 		<CircleMarker
 			center={[
-				props.element.location.latitude,
-				props.element.location.longitude
+				props.element.location.coordinates[0],
+				props.element.location.coordinates[1]
 			]}
 			radius={6}
 			fillOpacity={props.current ? 0.75 : 0.5}
@@ -54,10 +54,10 @@ const markerUser = props => {
 						</Typography>
 					) : null}
 					<Typography variant="caption" component="p">
-						Latitude: {props.element.location.latitude}
+						Latitude: {props.element.location.coordinates[0]}
 					</Typography>
 					<Typography variant="caption" component="p">
-						Longitude: {props.element.location.longitude}
+						Longitude: {props.element.location.coordinates[1]}
 					</Typography>
 				</div>
 			</Tooltip>

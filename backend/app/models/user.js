@@ -24,7 +24,14 @@ const UserSchema = new mongoose.Schema({
 		{
 			type: String
 		}
-	]
+	],
+	location: {
+		type: {
+			type: String,
+			required: true
+		},
+		coordinates: [Number]
+	}
 });
 
 UserSchema.statics = {

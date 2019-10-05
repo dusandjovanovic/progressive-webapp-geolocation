@@ -14,7 +14,7 @@ export const styles = theme => ({
 		...boxShadow
 	},
 	image: {
-		width: "50%",
+		width: "33%",
 		[theme.breakpoints.down("sm")]: {
 			width: "100%"
 		}

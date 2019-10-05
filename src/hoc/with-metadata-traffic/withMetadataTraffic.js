@@ -147,6 +147,7 @@ const withMetadataTraffic = WrappedComponent => {
 		userHistoryAdd: PropTypes.func.isRequired,
 		roomAddMessage: PropTypes.func.isRequired,
 		roomPushMessage: PropTypes.func.isRequired,
+		roomAddLocation: PropTypes.func.isRequired,
 		internalNotificationsAdd: PropTypes.func.isRequired,
 		io: PropTypes.func.isRequired,
 		initWebsocketIO: PropTypes.func.isRequired,

@@ -149,7 +149,8 @@ const withIO = WrappedComponent => {
 		roomDeleteUser: PropTypes.func.isRequired,
 		userHistoryAdd: PropTypes.func.isRequired,
 		roomAddMessage: PropTypes.func.isRequired,
-		roomPushMessage: PropTypes.func.isRequired,
+        roomPushMessage: PropTypes.func.isRequired,
+        roomAddLocation: PropTypes.func.isRequired,
 		internalNotificationsAdd: PropTypes.func.isRequired
 	};
 
