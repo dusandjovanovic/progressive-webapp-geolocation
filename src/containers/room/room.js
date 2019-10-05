@@ -23,6 +23,7 @@ import {
 	roomPushMetadata,
 	roomChangeMetadata,
 	roomAddMetadata,
+	roomAddMetadataMedia,
 	roomGetMetadata,
 	roomAddNewUser,
 	roomChangeUser,
@@ -133,6 +134,7 @@ Room.propTypes = {
 	roomPushMetadata: PropTypes.func.isRequired,
 	roomChangeMetadata: PropTypes.func.isRequired,
 	roomAddMetadata: PropTypes.func.isRequired,
+	roomAddMetadataMedia: PropTypes.func.isRequired,
 	roomGetMetadata: PropTypes.func.isRequired,
 	roomAddNewUser: PropTypes.func.isRequired,
 	roomChangeUser: PropTypes.func.isRequired,
@@ -184,6 +186,10 @@ const mapDispatchToProps = dispatch => {
 		roomAddMetadata: (name, value, amenity, latitude, longitude) =>
 			dispatch(
 				roomAddMetadata(name, value, amenity, latitude, longitude)
+			),
+		roomAddMetadataMedia: (name, value, media, latitude, longitude) =>
+			dispatch(
+				roomAddMetadataMedia(name, value, media, latitude, longitude)
 			),
 		roomGetMetadata: () => dispatch(roomGetMetadata()),
 		roomAddNewUser: user => dispatch(roomAddNewUser(user)),

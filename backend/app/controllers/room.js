@@ -52,24 +52,7 @@ exports.validate = method => {
 				param("id")
 					.exists()
 					.isString()
-					.isMongoId(),
-				body("name")
-					.exists()
-					.isString(),
-				body("value")
-					.exists()
-					.isNumeric(),
-				body("author")
-					.exists()
-					.isString(),
-				body("latitude")
-					.exists()
-					.isNumeric(),
-				body("longitude")
-					.exists()
-					.isNumeric(),
-				body("time").exists(),
-				body("media").exists()
+					.isMongoId()
 			];
 		}
 		case "/api/room/location/put": {
@@ -289,8 +272,7 @@ exports.putMetadataMedia = function(request, response, next) {
 
 	const { id } = request.params;
 	const { name, value, author, latitude, longitude, time } = request.body;
-	const amenity =
-		request.protocol + "://" + request.host + "/" + request.file.path;
+	const amenity = request.file.filename;
 
 	Room.findOneAndUpdate(
 		{ _id: id },

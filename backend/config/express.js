@@ -20,7 +20,8 @@ const env = process.env.NODE_ENV || "development";
 module.exports = function(app, passport, connection) {
 	app.use(helmet());
 	app.use(compression());
-	app.use(express.static(config.root + "/public"));
+	app.use("/public", express.static(config.root + "/public"));
+	app.use("/uploads", express.static(config.root + "/uploads"));
 
 	let log;
 	if (env !== "development") {

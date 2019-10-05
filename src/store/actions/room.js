@@ -318,9 +318,7 @@ export const roomAddMetadataMedia = (
 		payload.append("author", getState().auth.username);
 		payload.append("latitude", latitude);
 		payload.append("longitude", longitude);
-		media
-			? payload.append("media", media, media.name)
-			: payload.append("media", null);
+		payload.append("media", media, media.name);
 
 		try {
 			response = await axios

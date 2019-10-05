@@ -2,8 +2,8 @@ const path = require("path");
 const multer = require("multer");
 const crypto = require("crypto");
 
-multer.diskStorage({
-	destination: "public",
+const storage = multer.diskStorage({
+	destination: "./uploads",
 	filename: function(req, file, callback) {
 		crypto.pseudoRandomBytes(16, function(err, raw) {
 			if (err) return callback(err);
@@ -15,4 +15,4 @@ multer.diskStorage({
 	}
 });
 
-module.exports = multer();
+module.exports = multer({ storage: storage });

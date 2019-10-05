@@ -36,6 +36,8 @@ export const userFriendAddRoute = "/api/friend-request/add";
 export const userFriendConfirmRoute = "/api/friend-request/confirm";
 export const userFriendDeleteRoute = id => "/api/friend-request/" + id;
 
+export const roomUriMedia = fileName => backendRoot + "/uploads/" + fileName;
+
 export class axios {
 	static instance = null;
 

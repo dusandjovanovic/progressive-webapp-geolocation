@@ -29,6 +29,7 @@ export {
 	roomPushMetadata,
 	roomChangeMetadata,
 	roomAddMetadata,
+	roomAddMetadataMedia,
 	roomGetMetadata,
 	roomAddNewUser,
 	roomChangeUser,

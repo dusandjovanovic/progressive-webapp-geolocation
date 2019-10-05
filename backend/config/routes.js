@@ -106,7 +106,6 @@ module.exports = function(app, passport) {
 		"/api/room/metadata/:id",
 		authenticated,
 		room.validate("/api/room/metadata/put"),
-		storage.single("media"),
 		room.putMetadata
 	);
 
@@ -114,6 +113,7 @@ module.exports = function(app, passport) {
 		"/api/room/metadata-media/:id",
 		authenticated,
 		room.validate("/api/room/metadata-media/put"),
+		storage.single("media"),
 		room.putMetadataMedia
 	);
 
