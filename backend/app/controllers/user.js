@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const Room = require("../models/room");
 const { validationResult, body, param } = require("express-validator");
-const roomTypes = require("../../config/constants");
+const constants = require("../../config/constants");
 
 exports.validate = method => {
 	switch (method) {
@@ -39,6 +39,35 @@ exports.validate = method => {
 	}
 };
 
+exports.changeLocation = function(username, latitude, longitude, callback) {
+	User.findOneAndUpdate(
+		{ username: username },
+		{
+			$set: {
+				location: {
+					type: "Point",
+					coordinates: [latitude, longitude]
+				}
+			}
+		},
+		function(error, user) {
+			if (error) return callback(error);
+			else return callback(null, user.toObject().location);
+		}
+	);
+};
+
+exports.isNearLocation = function(username, latitude, longitude, callback) {
+	User.findOne({ username: username }, function(error, user) {
+		if (error) return callback(error);
+		else {
+			const latitude = user.toObject().location[0];
+			const longitude = user.toObject().location[1];
+			return callback(null, constants.DISTANCE(latitude, longitude) < 10);
+		}
+	});
+};
+
 exports.get = function(request, response, next) {
 	const validation = validationResult(request);
 	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
@@ -71,15 +100,15 @@ exports.getHistory = function(request, response, next) {
 		const friendHistory = [];
 		const statistics = [
 			{
-				title: roomTypes.ROOM_NAME_PLACES,
+				title: constants.ROOM_NAME_PLACES,
 				amount: 0
 			},
 			{
-				title: roomTypes.ROOM_NAME_PLACES,
+				title: constants.ROOM_NAME_PLACES,
 				amount: 0
 			},
 			{
-				title: roomTypes.ROOM_NAME_TRAFFIC,
+				title: constants.ROOM_NAME_TRAFFIC,
 				amount: 0
 			}
 		];
@@ -97,11 +126,11 @@ exports.getHistory = function(request, response, next) {
 						user.friends.includes(metaobject.properties.author)
 					)
 						friendHistory.push(metaobject);
-					if (data[i].roomType === roomTypes.ROOM_TYPE_POLLUTION)
+					if (data[i].roomType === constants.ROOM_TYPE_POLLUTION)
 						statistics[0].amount += 1;
-					else if (data[i].roomType === roomTypes.ROOM_TYPE_PLACES)
+					else if (data[i].roomType === constants.ROOM_TYPE_PLACES)
 						statistics[1].amount += 1;
-					else if (data[i].roomType === roomTypes.ROOM_TYPE_TRAFFIC)
+					else if (data[i].roomType === constants.ROOM_TYPE_TRAFFIC)
 						statistics[2].amount += 1;
 				}
 			}

@@ -1,4 +1,15 @@
 import {
+	USER_INIT,
+	USER_END,
+	USER_ERROR,
+	USER_FETCH_DATA,
+	USER_FETCH_HISTORY,
+	FRIENDS_FETCH_REQUESTS,
+	FRIENDS_CONFIRM_REQUEST,
+	FRIENDS_DENY_REQUEST
+} from "../actions.js";
+
+import {
 	axios,
 	userGetDataRoute,
 	userGetHistoryRoute,
@@ -11,17 +22,7 @@ import {
 } from "../../utils/constantsAPI";
 
 import { internalNotificationsAdd } from "./index";
-
-import {
-	USER_INIT,
-	USER_END,
-	USER_ERROR,
-	USER_FETCH_DATA,
-	USER_FETCH_HISTORY,
-	FRIENDS_FETCH_REQUESTS,
-	FRIENDS_CONFIRM_REQUEST,
-	FRIENDS_DENY_REQUEST
-} from "../actions.js";
+import { connectionFilter } from "../../utils/functions/filteringFunctions.js";
 
 const userInit = () => {
 	return {
@@ -94,7 +95,7 @@ export const userData = (requests = false) => {
 				dispatch(userError(response.data.error));
 			}
 		} catch (error) {
-			dispatch(userError(error.response.data.message));
+			dispatch(userError(connectionFilter(error)));
 		}
 	};
 };
@@ -115,7 +116,7 @@ export const userHistory = () => {
 				dispatch(userError(response.data.error));
 			}
 		} catch (error) {
-			dispatch(userError(error.response.data.message));
+			dispatch(userError(connectionFilter(error)));
 		}
 	};
 };
@@ -146,7 +147,7 @@ export const userHistoryAdd = score => {
 				dispatch(userError(response.data.error));
 			}
 		} catch (error) {
-			dispatch(userError(error.response.data.message));
+			dispatch(userError(connectionFilter(error)));
 		}
 	};
 };
@@ -176,7 +177,7 @@ export const friendRequests = push => {
 				dispatch(userError(response.data.message));
 			}
 		} catch (error) {
-			dispatch(userError(error.response.data.message));
+			dispatch(userError(connectionFilter(error)));
 		}
 	};
 };
@@ -229,11 +230,11 @@ export const friendAdd = friendUsername => {
 							)
 						);
 				} catch (error) {
-					dispatch(userError(error.response.data.message));
+					dispatch(userError(connectionFilter(error)));
 				}
 			}
 		} catch (error) {
-			dispatch(userError(error.response.data.message));
+			dispatch(userError(connectionFilter(error)));
 		}
 	};
 };
@@ -253,7 +254,7 @@ export const friendConfirm = requestId => {
 			dispatch(friendsConfirmRequest(requestId));
 			dispatch(userEnd());
 		} catch (error) {
-			dispatch(userError(error.response.data.message));
+			dispatch(userError(connectionFilter(error)));
 		}
 	};
 };
@@ -268,7 +269,7 @@ export const friendDelete = requestId => {
 			dispatch(friendsDenyRequest(requestId));
 			dispatch(userEnd());
 		} catch (error) {
-			dispatch(userError(error.response.data.message));
+			dispatch(userError(connectionFilter(error)));
 		}
 	};
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import FormContainer from "../../../../components/logic/form-container/formContainer";
 import Annotation from "../../../../components/interface/annotation/annotation";
-import { formElements } from "../../../../assets/constants/containers/room/metadataPollution";
+import { formElements } from "../../../../assets/constants/containers/room/metadataTraffic";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Radio from "@material-ui/core/Radio";

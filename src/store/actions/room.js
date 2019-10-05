@@ -7,7 +7,9 @@ import {
 	roomChangeMetadataRoute,
 	roomAddMetadataRoute,
 	roomGetMetadataRoute,
-	roomAddMessageRoute
+	roomAddMessageRoute,
+	roomAddLocationRoute,
+	roomAddMetadataMediaRoute
 } from "../../utils/constantsAPI";
 
 import {
@@ -25,6 +27,7 @@ import {
 	ROOM_USER_LEFT
 } from "../actions.js";
 import { internalNotificationsAdd } from "./internal";
+import { connectionFilter } from "../../utils/functions/filteringFunctions";
 
 const roomInitiate = () => {
 	return {
@@ -118,7 +121,7 @@ export const roomGetAll = (mode = "all") => {
 			if (response.data.success) dispatch(roomAll(response.data.data));
 			else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -135,7 +138,7 @@ export const roomGetData = (id, overwriteMetadata = true) => {
 				dispatch(roomData(response.data.data, overwriteMetadata));
 			else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -162,7 +165,7 @@ export const roomJoinExisting = (id, name, latitude = 0.0, longitude = 0.0) => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -188,7 +191,7 @@ export const roomLeaveExisting = () => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -209,7 +212,7 @@ export const roomGetMetadata = () => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -240,7 +243,7 @@ export const roomChangeMetadata = metadata => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -291,7 +294,55 @@ export const roomAddMetadata = (
 				);
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
+		}
+
+		return response;
+	};
+};
+
+export const roomAddMetadataMedia = (
+	name,
+	value,
+	media,
+	latitude = 0.0,
+	longitude = 0.0
+) => {
+	return async (dispatch, getState) => {
+		dispatch(roomInitiate());
+		let response;
+		const payload = new FormData();
+		payload.append("name", name);
+		payload.append("value", value);
+		payload.append("time", new Date());
+		payload.append("author", getState().auth.username);
+		payload.append("latitude", latitude);
+		payload.append("longitude", longitude);
+		payload.append("media", media, media.name);
+
+		try {
+			response = await axios
+				.getInstance()
+				.put(
+					roomAddMetadataMediaRoute(getState().room.data._id),
+					payload,
+					{
+						"Content-Type": "multipart/form-data"
+					}
+				);
+
+			if (response.data.success) {
+				dispatch(roomMetadataAdd(response.data.data));
+				dispatch(roomEnd());
+				dispatch(
+					internalNotificationsAdd(
+						"You just added a new insight. Others in the room will see it as well.",
+						"success"
+					)
+				);
+			} else dispatch(roomError(response.data.message));
+		} catch (error) {
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;
@@ -318,7 +369,43 @@ export const roomAddMessage = message => {
 				dispatch(roomEnd());
 			} else dispatch(roomError(response.data.message));
 		} catch (error) {
-			dispatch(roomError(error.response.data.message));
+			dispatch(roomError(connectionFilter(error)));
+		}
+
+		return response;
+	};
+};
+
+export const roomAddLocation = (latitude = 0, longitude = 0) => {
+	return async (dispatch, getState) => {
+		dispatch(roomInitiate());
+		let response;
+		const payload = {
+			username: getState().auth.username,
+			latitude,
+			longitude
+		};
+
+		try {
+			response = await axios
+				.getInstance()
+				.put(roomAddLocationRoute(getState().room.data._id), payload, {
+					"Content-Type": "application/x-www-form-urlencoded"
+				});
+			if (response.data.success) {
+				dispatch(
+					roomChangeUser({
+						username: getState().auth.username,
+						location: {
+							type: "Point",
+							coordinates: [latitude, longitude]
+						}
+					})
+				);
+				dispatch(roomEnd());
+			} else dispatch(roomError(response.data.message));
+		} catch (error) {
+			dispatch(roomError(connectionFilter(error)));
 		}
 
 		return response;

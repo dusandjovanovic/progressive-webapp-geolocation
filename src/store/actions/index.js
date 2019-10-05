@@ -29,10 +29,12 @@ export {
 	roomPushMetadata,
 	roomChangeMetadata,
 	roomAddMetadata,
+	roomAddMetadataMedia,
 	roomGetMetadata,
 	roomAddNewUser,
 	roomChangeUser,
 	roomDeleteUser,
 	roomAddMessage,
-	roomPushMessage
+	roomPushMessage,
+	roomAddLocation
 } from "./room";

@@ -36,7 +36,7 @@ const withGeolocation = WrappedComponent => {
 			navigator.geolocation.clearWatch(this.state.locationWatcher);
 		}
 
-		handleLocationChange = position => {
+		handleLocationChange = async position => {
 			this.setState(
 				{
 					location: {
@@ -44,13 +44,15 @@ const withGeolocation = WrappedComponent => {
 						longitude: position.coords.longitude
 					}
 				},
-				() => {
-					if (this.props.roomChangeUser) {
-						this.props.roomChangeUser({
-							username: this.props.username,
-							location: this.state.location
-						});
-						this.props.addLocationChangeIO(this.state.location);
+				async () => {
+					if (this.props.roomAddLocation) {
+						let response = await this.props.roomAddLocation(
+							this.state.location.latitude,
+							this.state.location.longitude
+						);
+						this.props.addLocationChangeIO(
+							response.data.delta.location
+						);
 					}
 				}
 			);
@@ -94,6 +96,7 @@ const withGeolocation = WrappedComponent => {
 		userHistoryAdd: PropTypes.func,
 		roomAddMessage: PropTypes.func,
 		roomPushMessage: PropTypes.func,
+		roomAddLocation: PropTypes.func,
 		internalNotificationsAdd: PropTypes.func,
 		io: PropTypes.func,
 		initWebsocketIO: PropTypes.func,

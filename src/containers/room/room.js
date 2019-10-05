@@ -23,6 +23,7 @@ import {
 	roomPushMetadata,
 	roomChangeMetadata,
 	roomAddMetadata,
+	roomAddMetadataMedia,
 	roomGetMetadata,
 	roomAddNewUser,
 	roomChangeUser,
@@ -30,6 +31,7 @@ import {
 	userHistoryAdd,
 	roomAddMessage,
 	roomPushMessage,
+	roomAddLocation,
 	internalNotificationsAdd
 } from "../../store/actions/index";
 
@@ -132,6 +134,7 @@ Room.propTypes = {
 	roomPushMetadata: PropTypes.func.isRequired,
 	roomChangeMetadata: PropTypes.func.isRequired,
 	roomAddMetadata: PropTypes.func.isRequired,
+	roomAddMetadataMedia: PropTypes.func.isRequired,
 	roomGetMetadata: PropTypes.func.isRequired,
 	roomAddNewUser: PropTypes.func.isRequired,
 	roomChangeUser: PropTypes.func.isRequired,
@@ -139,6 +142,7 @@ Room.propTypes = {
 	userHistoryAdd: PropTypes.func.isRequired,
 	roomAddMessage: PropTypes.func.isRequired,
 	roomPushMessage: PropTypes.func.isRequired,
+	roomAddLocation: PropTypes.func.isRequired,
 	internalNotificationsAdd: PropTypes.func.isRequired,
 	io: PropTypes.func.isRequired,
 	initWebsocketIO: PropTypes.func.isRequired,
@@ -183,6 +187,10 @@ const mapDispatchToProps = dispatch => {
 			dispatch(
 				roomAddMetadata(name, value, amenity, latitude, longitude)
 			),
+		roomAddMetadataMedia: (name, value, media, latitude, longitude) =>
+			dispatch(
+				roomAddMetadataMedia(name, value, media, latitude, longitude)
+			),
 		roomGetMetadata: () => dispatch(roomGetMetadata()),
 		roomAddNewUser: user => dispatch(roomAddNewUser(user)),
 		roomChangeUser: user => dispatch(roomChangeUser(user)),
@@ -190,6 +198,8 @@ const mapDispatchToProps = dispatch => {
 		userHistoryAdd: score => dispatch(userHistoryAdd(score)),
 		roomAddMessage: message => dispatch(roomAddMessage(message)),
 		roomPushMessage: message => dispatch(roomPushMessage(message)),
+		roomAddLocation: (latitude, longitude) =>
+			dispatch(roomAddLocation(latitude, longitude)),
 		internalNotificationsAdd: (message, variant) =>
 			dispatch(internalNotificationsAdd(message, variant))
 	};

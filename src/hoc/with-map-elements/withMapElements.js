@@ -43,7 +43,6 @@ const withMapElements = WrappedComponent => {
 			) {
 				return;
 			}
-			console.log(this.forwardedRef);
 
 			this.forwardedRef.current.fitBounds(
 				leaflet.latLngBounds(leaflet.latLng(sw), leaflet.latLng(ne))

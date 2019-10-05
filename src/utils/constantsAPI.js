@@ -19,6 +19,8 @@ export const roomGetAllRoute = mode => "/api/room/" + mode;
 export const roomGetDataRoute = id => "/api/room/get/" + id;
 export const roomGetMetadataRoute = id => "/api/room/metadata/" + id;
 export const roomAddMetadataRoute = id => "/api/room/metadata/" + id;
+export const roomAddMetadataMediaRoute = id => "/api/room/metadata-media/" + id;
+export const roomAddLocationRoute = id => "/api/room/location/" + id;
 export const roomAddMessageRoute = id => "/api/room/messages/" + id;
 export const roomChangeMetadataRoute = id => "/api/room/" + id;
 
@@ -33,6 +35,8 @@ export const userFriendCheckRoute = "/api/friend-request/check";
 export const userFriendAddRoute = "/api/friend-request/add";
 export const userFriendConfirmRoute = "/api/friend-request/confirm";
 export const userFriendDeleteRoute = id => "/api/friend-request/" + id;
+
+export const roomUriMedia = fileName => backendRoot + "/uploads/" + fileName;
 
 export class axios {
 	static instance = null;

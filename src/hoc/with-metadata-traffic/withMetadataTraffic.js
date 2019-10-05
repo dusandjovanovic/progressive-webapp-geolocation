@@ -104,7 +104,7 @@ const withMetadataTraffic = WrappedComponent => {
 				this.props.location.latitude,
 				this.props.location.longitude
 			);
-			if (response.data && response.data.data)
+			if (response && response.data && response.data.data)
 				this.props.addMetadataIO(response.data.data);
 		};
 
@@ -140,6 +140,7 @@ const withMetadataTraffic = WrappedComponent => {
 		roomPushMetadata: PropTypes.func.isRequired,
 		roomChangeMetadata: PropTypes.func.isRequired,
 		roomAddMetadata: PropTypes.func.isRequired,
+		roomAddMetadataMedia: PropTypes.func.isRequired,
 		roomGetMetadata: PropTypes.func.isRequired,
 		roomAddNewUser: PropTypes.func.isRequired,
 		roomChangeUser: PropTypes.func.isRequired,
@@ -147,6 +148,7 @@ const withMetadataTraffic = WrappedComponent => {
 		userHistoryAdd: PropTypes.func.isRequired,
 		roomAddMessage: PropTypes.func.isRequired,
 		roomPushMessage: PropTypes.func.isRequired,
+		roomAddLocation: PropTypes.func.isRequired,
 		internalNotificationsAdd: PropTypes.func.isRequired,
 		io: PropTypes.func.isRequired,
 		initWebsocketIO: PropTypes.func.isRequired,

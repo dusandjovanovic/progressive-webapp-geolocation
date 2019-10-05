@@ -13,14 +13,11 @@ const RoomSchema = new mongoose.Schema({
 				required: true
 			},
 			location: {
-				latitude: {
-					type: Number,
+				type: {
+					type: String,
 					required: true
 				},
-				longitude: {
-					type: Number,
-					required: true
-				}
+				coordinates: [Number]
 			}
 		}
 	],
