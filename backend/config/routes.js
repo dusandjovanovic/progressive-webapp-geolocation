@@ -4,6 +4,7 @@ const home = require("../app/controllers/home");
 const user = require("../app/controllers/user");
 const room = require("../app/controllers/room");
 const friendRequest = require("../app/controllers/friend-request");
+const storage = require("./storage");
 
 module.exports = function(app, passport) {
 	global.passport = passport;
@@ -105,7 +106,15 @@ module.exports = function(app, passport) {
 		"/api/room/metadata/:id",
 		authenticated,
 		room.validate("/api/room/metadata/put"),
+		storage.single("media"),
 		room.putMetadata
+	);
+
+	app.put(
+		"/api/room/metadata-media/:id",
+		authenticated,
+		room.validate("/api/room/metadata-media/put"),
+		room.putMetadataMedia
 	);
 
 	app.put(

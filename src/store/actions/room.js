@@ -8,7 +8,8 @@ import {
 	roomAddMetadataRoute,
 	roomGetMetadataRoute,
 	roomAddMessageRoute,
-	roomAddLocationRoute
+	roomAddLocationRoute,
+	roomAddMetadataMediaRoute
 } from "../../utils/constantsAPI";
 
 import {
@@ -281,6 +282,56 @@ export const roomAddMetadata = (
 				.put(roomAddMetadataRoute(getState().room.data._id), payload, {
 					"Content-Type": "application/x-www-form-urlencoded"
 				});
+
+			if (response.data.success) {
+				dispatch(roomMetadataAdd(response.data.data));
+				dispatch(roomEnd());
+				dispatch(
+					internalNotificationsAdd(
+						"You just added a new insight. Others in the room will see it as well.",
+						"success"
+					)
+				);
+			} else dispatch(roomError(response.data.message));
+		} catch (error) {
+			dispatch(roomError(connectionFilter(error)));
+		}
+
+		return response;
+	};
+};
+
+export const roomAddMetadataMedia = (
+	name,
+	value,
+	media,
+	latitude = 0.0,
+	longitude = 0.0
+) => {
+	return async (dispatch, getState) => {
+		dispatch(roomInitiate());
+		let response;
+		const payload = new FormData();
+		payload.append("name", name);
+		payload.append("value", value);
+		payload.append("time", new Date());
+		payload.append("author", getState().auth.username);
+		payload.append("latitude", latitude);
+		payload.append("longitude", longitude);
+		media
+			? payload.append("media", media, media.name)
+			: payload.append("media", null);
+
+		try {
+			response = await axios
+				.getInstance()
+				.put(
+					roomAddMetadataMediaRoute(getState().room.data._id),
+					payload,
+					{
+						"Content-Type": "multipart/form-data"
+					}
+				);
 
 			if (response.data.success) {
 				dispatch(roomMetadataAdd(response.data.data));

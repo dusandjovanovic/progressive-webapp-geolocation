@@ -47,6 +47,31 @@ exports.validate = method => {
 				body("metaobject").exists()
 			];
 		}
+		case "/api/room/metadata-media/put": {
+			return [
+				param("id")
+					.exists()
+					.isString()
+					.isMongoId(),
+				body("name")
+					.exists()
+					.isString(),
+				body("value")
+					.exists()
+					.isNumeric(),
+				body("author")
+					.exists()
+					.isString(),
+				body("latitude")
+					.exists()
+					.isNumeric(),
+				body("longitude")
+					.exists()
+					.isNumeric(),
+				body("time").exists(),
+				body("media").exists()
+			];
+		}
 		case "/api/room/location/put": {
 			return [
 				param("id")
@@ -242,6 +267,48 @@ exports.putMetadata = function(request, response, next) {
 		{
 			$push: {
 				roomData: metaobject
+			}
+		},
+		{ new: true },
+		function(error, room) {
+			if (error) return next(error);
+			else {
+				const roomData = room.roomData;
+				response.json({
+					success: true,
+					data: roomData[roomData.length - 1]
+				});
+			}
+		}
+	);
+};
+
+exports.putMetadataMedia = function(request, response, next) {
+	const validation = validationResult(request);
+	if (!validation.isEmpty()) return next({ validation: validation.mapped() });
+
+	const { id } = request.params;
+	const { name, value, author, latitude, longitude, time } = request.body;
+	const amenity =
+		request.protocol + "://" + request.host + "/" + request.file.path;
+
+	Room.findOneAndUpdate(
+		{ _id: id },
+		{
+			$push: {
+				roomData: {
+					properties: {
+						name,
+						value,
+						amenity,
+						author,
+						time
+					},
+					geometry: {
+						type: "Point",
+						coordinates: [latitude, longitude]
+					}
+				}
 			}
 		},
 		{ new: true },
