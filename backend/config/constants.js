@@ -5,6 +5,9 @@ const ROOM_TYPE_TRAFFIC = "ROOM_TRAFFIC";
 const ROOM_NAME_POLLUTION = "Air pollution insights";
 const ROOM_NAME_PLACES = "Places and locations sightseeing";
 const ROOM_NAME_TRAFFIC = "Traffic and roadblock insights";
+const ROOM_NAME_POLLUTION_SHORT = "Air pollution";
+const ROOM_NAME_PLACES_SHORT = "Places sightseeing";
+const ROOM_NAME_TRAFFIC_SHORT = "Traffic";
 
 const DIR_UPLOAD_LOCATION = "/uploads";
 
@@ -37,6 +40,9 @@ module.exports = Object.freeze({
 	ROOM_NAME_POLLUTION,
 	ROOM_NAME_PLACES,
 	ROOM_NAME_TRAFFIC,
+	ROOM_NAME_PLACES_SHORT,
+	ROOM_NAME_POLLUTION_SHORT,
+	ROOM_NAME_TRAFFIC_SHORT,
 	DIR_UPLOAD_LOCATION,
 	DISTANCE
 });

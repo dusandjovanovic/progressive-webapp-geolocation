@@ -17,10 +17,10 @@ export const styles = theme => ({
 	inputs: {
 		padding: theme.spacing(4),
 		[theme.breakpoints.down("md")]: {
-			padding: theme.spacing(0, 4)
+			padding: theme.spacing(2, 4)
 		},
 		[theme.breakpoints.down("sm")]: {
-			padding: theme.spacing(0, 2)
+			padding: theme.spacing(2)
 		}
 	},
 	highlighted: {

@@ -512,7 +512,7 @@ exports.postLeave = function(request, response, next) {
 				Room.updateOne(
 					{ name: roomName },
 					{
-						users: users
+						$set: { users: users }
 					},
 					function(error) {
 						if (error) return next(error);
