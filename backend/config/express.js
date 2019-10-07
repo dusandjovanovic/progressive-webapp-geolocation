@@ -68,8 +68,8 @@ module.exports = function(app, passport, connection) {
 	app.use(
 		session({
 			secret: pkg.name,
-			resave: false,
-			saveUninitialized: false,
+			resave: true,
+			saveUninitialized: true,
 			store: new mongoStore({
 				mongooseConnection: connection
 			}),
