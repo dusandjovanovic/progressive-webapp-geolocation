@@ -6,8 +6,11 @@ env: flex
 # consistently with multiple users. To work across multiple instances, an
 # extra-instance messaging system or data store would be needed.
 manual_scaling:
-  instances: 1
+    instances: 1
 
 network:
-  session_affinity: true
+    session_affinity: true
+    forwarded_ports:
+        - 65080/tcp
+    instance_tag: websocket
 # [END appengine_websockets_yaml]

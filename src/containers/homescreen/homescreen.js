@@ -20,7 +20,10 @@ class Homescreen extends React.Component {
 							gutterBottom
 							className={classes.headingText}
 						>
-							mapped
+							<span className={classes.headingHighlight}>
+								map
+							</span>
+							ped
 						</Typography>
 					</Grow>
 					<Grow in timeout={1500}>

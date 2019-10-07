@@ -19,6 +19,19 @@ export const IMPACT_COLORS = [
 	"#FF2300"
 ];
 
+export const IMPACT_COLORS_TRAFFIC = [
+	"#A8A8A8",
+	"#A0A0A0",
+	"#989898",
+	"#909090",
+	"#888888",
+	"#808080",
+	"#787878",
+	"#707070",
+	"#686868",
+	"#585858"
+];
+
 export const IMPACT_STRING_POLLUTION = value => {
 	if (value <= 3) return "Low pollution";
 	else if (value <= 6) return "Medium pollution";
@@ -32,6 +45,6 @@ export const IMPACT_STRING_TRAFFIC = value => {
 		case 5:
 			return "Accident";
 		default:
-			return "Roadblock";
+			return "Traffic jam";
 	}
 };

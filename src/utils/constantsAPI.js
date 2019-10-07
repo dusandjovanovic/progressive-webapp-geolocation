@@ -4,11 +4,9 @@ export const backendRoot = "http://localhost:8080";
 export const backendIOMap = "http://localhost:65080/map";
 export const backendIOMessaging = "http://localhost:65080/chat";
 
-// production server configuration
 // export const backendRoot = "https://mapped-backend.appspot.com";
-// export const backendIOMap = "https://mapped-backend.appspot.com:65080/map";
-// export const backendIOMessaging =
-// 	"https://mapped-backend.appspot.com:65080/chat";
+// export const backendIOMap = "https://104.155.43.19:65080/map";
+// export const backendIOMessaging = "https://104.155.43.19:65080/chat";
 
 export const authLoginRoute = "/api/login";
 export const authRegisterRoute = "/api/register";

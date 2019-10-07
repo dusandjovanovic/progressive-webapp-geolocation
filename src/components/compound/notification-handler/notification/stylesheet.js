@@ -16,11 +16,11 @@ import {
 export const styles = theme => ({
 	root: {
 		position: "relative",
-		margin: theme.spacing(2.5),
-		padding: theme.spacing(2),
-		lineHeight: "2rem",
-		fontSize: "1rem",
-		borderRadius: "2px",
+		margin: "20px !important",
+		padding: "16px !important",
+		lineHeight: "2rem !important",
+		fontSize: "1rem !important",
+		borderRadius: "2px !important",
 		...boxShadow
 	},
 	info: {

@@ -18,6 +18,7 @@ import withErrorHandler from "../../../../hoc/with-error-handler/withErrorHandle
 import classNames from "classnames";
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { IMPACT_STRING_TRAFFIC } from "../../../../utils/constants";
 
 class MetadataTraffic extends React.Component {
 	state = {
@@ -137,17 +138,19 @@ class MetadataTraffic extends React.Component {
 											<FormControlLabel
 												value={1}
 												control={<Radio />}
-												label="Bad road"
+												label={IMPACT_STRING_TRAFFIC(1)}
 											/>
 											<FormControlLabel
 												value={5}
 												control={<Radio />}
-												label="Accident"
+												label={IMPACT_STRING_TRAFFIC(5)}
 											/>
 											<FormControlLabel
 												value={10}
 												control={<Radio />}
-												label="Roadblock"
+												label={IMPACT_STRING_TRAFFIC(
+													10
+												)}
 											/>
 										</RadioGroup>
 									</FormControl>
