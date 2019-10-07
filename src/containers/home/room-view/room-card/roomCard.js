@@ -89,8 +89,8 @@ const roomCard = props => {
 							label={user.username}
 							className={classes.chip}
 							avatar={
-								<Avatar>
-									<FaceIcon />
+								<Avatar classes={{ root: classes.avatar }}>
+									<FaceIcon fontSize="small" />
 								</Avatar>
 							}
 						/>

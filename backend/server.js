@@ -13,7 +13,6 @@ const models = join(__dirname, "app/models");
 const port = process.env.PORT || 8080;
 
 const app = express();
-const server = require("http").createServer(app);
 const connection = connect();
 
 module.exports = {
@@ -28,7 +27,7 @@ fs.readdirSync(models)
 require("./config/passport")(passport);
 require("./config/express")(app, passport, connection);
 require("./config/routes")(app, passport);
-require("./config/socketio")(server);
+require("./config/socketio");
 
 connection
 	.on("error", console.log)
@@ -37,7 +36,7 @@ connection
 
 function listen() {
 	if (app.get("env") === "test") return;
-	server.listen(port);
+	app.listen(port);
 	console.info("Running on port " + port);
 }
 

@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { IMPACT_STRING_TRAFFIC } from "../../../../utils/constants";
 
 const markerTraffic = props => {
 	const { classes } = props;
@@ -50,7 +51,9 @@ const markerTraffic = props => {
 					/>
 					<CardContent>
 						<Typography color="inherit" variant="button">
-							{props.element.properties.value}
+							{IMPACT_STRING_TRAFFIC(
+								props.element.properties.value
+							)}
 						</Typography>
 						<Typography variant="body1" component="p">
 							{props.element.properties.name}

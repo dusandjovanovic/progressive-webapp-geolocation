@@ -21,7 +21,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 class MetadataTraffic extends React.Component {
 	state = {
-		value: "Roadblock",
+		value: 1,
 		error: {
 			hasError: false,
 			name: null,
@@ -46,7 +46,7 @@ class MetadataTraffic extends React.Component {
 	};
 
 	handleValueChange = event => {
-		this.setState({ value: event.target.value });
+		this.setState({ value: Number(event.target.value) });
 	};
 
 	render() {
@@ -135,19 +135,19 @@ class MetadataTraffic extends React.Component {
 											}}
 										>
 											<FormControlLabel
-												value="Roadblock"
+												value={1}
 												control={<Radio />}
-												label="Roadblock"
+												label="Bad road"
 											/>
 											<FormControlLabel
-												value="Accident"
+												value={5}
 												control={<Radio />}
 												label="Accident"
 											/>
 											<FormControlLabel
-												value="Bad road"
+												value={10}
 												control={<Radio />}
-												label="Bad road"
+												label="Roadblock"
 											/>
 										</RadioGroup>
 									</FormControl>

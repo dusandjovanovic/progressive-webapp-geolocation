@@ -24,3 +24,14 @@ export const IMPACT_STRING_POLLUTION = value => {
 	else if (value <= 6) return "Medium pollution";
 	else return "Very high pollution";
 };
+
+export const IMPACT_STRING_TRAFFIC = value => {
+	switch (value) {
+		case 1:
+			return "Bad road";
+		case 5:
+			return "Accident";
+		default:
+			return "Roadblock";
+	}
+};

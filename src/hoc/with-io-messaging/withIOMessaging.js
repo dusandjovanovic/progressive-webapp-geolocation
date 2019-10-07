@@ -8,7 +8,9 @@ const withIOMessaging = WrappedComponent => {
 
 		constructor(props) {
 			super(props);
-			this.socket = this.props.io(backendIOMessaging);
+			this.socket = this.props.io(backendIOMessaging, {
+				transports: ["websocket"]
+			});
 		}
 
 		componentWillUnmount() {
