@@ -10,7 +10,7 @@ const withIO = WrappedComponent => {
 
 		constructor(props) {
 			super(props);
-			this.socket = this.io(backendIOMap);
+			this.socket = this.io(backendIOMap, { transports: ["websocket"] });
 			this.state = {
 				redirect: false
 			};
@@ -103,13 +103,13 @@ const withIO = WrappedComponent => {
 			});
 		};
 
-		leaveRoomIOInit = () => {
+		leaveRoomIOInit = async () => {
 			this.leaveRoomIO(
 				this.props.data.name,
 				this.props.username,
 				this.props.username + " has just left the room."
 			);
-			this.props.roomLeaveExisting();
+			await this.props.roomLeaveExisting();
 			this.setState({
 				redirect: true
 			});

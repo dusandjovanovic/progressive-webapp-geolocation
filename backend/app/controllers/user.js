@@ -100,15 +100,15 @@ exports.getHistory = function(request, response, next) {
 		const friendHistory = [];
 		const statistics = [
 			{
-				title: constants.ROOM_NAME_PLACES,
+				title: constants.ROOM_NAME_POLLUTION_SHORT,
 				amount: 0
 			},
 			{
-				title: constants.ROOM_NAME_PLACES,
+				title: constants.ROOM_NAME_PLACES_SHORT,
 				amount: 0
 			},
 			{
-				title: constants.ROOM_NAME_TRAFFIC,
+				title: constants.ROOM_NAME_TRAFFIC_SHORT,
 				amount: 0
 			}
 		];

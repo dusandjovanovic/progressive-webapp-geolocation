@@ -178,8 +178,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		roomGetData: id => dispatch(roomGetData(id)),
-		roomLeaveExisting: roomDeleted =>
-			dispatch(roomLeaveExisting(roomDeleted)),
+		roomLeaveExisting: () => dispatch(roomLeaveExisting()),
 		roomPushMetadata: (metaobject, pushNotification) =>
 			dispatch(roomPushMetadata(metaobject, pushNotification)),
 		roomChangeMetadata: metadata => dispatch(roomChangeMetadata(metadata)),

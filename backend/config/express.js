@@ -89,6 +89,7 @@ module.exports = function(app, passport, connection) {
 			origin: function(origin, callback) {
 				return callback(null, true);
 			},
+			// origin: "https://mapped-frontend.appspot.com",
 			optionsSuccessStatus: 200,
 			credentials: true
 		})
