@@ -9,7 +9,7 @@ export const styles = theme => ({
 		backgroundColor: "rgba(255,255,255,0.9)",
 		width: "40rem",
 		padding: theme.spacing(2),
-		border: "1px solid " + theme.palette.secondary.main,
+		border: "1px solid " + theme.palette.primary.light,
 		borderRadius: theme.spacing(0.5),
 		[theme.breakpoints.down("sm")]: {
 			width: "calc(100% - 32px)"
