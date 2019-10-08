@@ -1,5 +1,6 @@
 import React from "react";
 import MetadataTraffic from "../../containers/room/metadata/metadata-traffic/metadataTraffic";
+import MetadataFilter from "../../containers/room/metadata/metadata-filter/metadataFilter";
 import MarkerTraffic from "../../containers/room/markers/marker-traffic/markerTraffic";
 import PropTypes from "prop-types";
 
@@ -15,7 +16,9 @@ const withMetadataTraffic = WrappedComponent => {
 			markersMetadata: null,
 			newMetadata: false,
 			filterNearby: false,
+			filterNearbyRadius: 100,
 			filterRecent: false,
+			filterRecentTimeframe: 7,
 			filterHeatMap: false
 		};
 
@@ -27,7 +30,6 @@ const withMetadataTraffic = WrappedComponent => {
 			if (this.props.data.roomData !== prevProps.data.roomData)
 				this.renderMarkers();
 		}
-
 		filterNearby = () => {
 			this.setState(
 				{
@@ -56,15 +58,31 @@ const withMetadataTraffic = WrappedComponent => {
 			});
 		};
 
+		filterChangeNearby = (event, value) => {
+			this.setState({ filterNearbyRadius: Number(value) }, () => {
+				this.renderMarkers();
+			});
+		};
+
+		filterChangeRecent = (event, value) => {
+			this.setState({ filterRecentTimeframe: Number(value) }, () => {
+				this.renderMarkers();
+			});
+		};
+
 		filter = () => {
 			let markers = this.props.data.roomData;
 			if (this.state.filterNearby)
 				markers = filterMetadataByDistance(
 					markers,
-					this.props.location
+					this.props.location,
+					this.state.filterNearbyRadius
 				);
 			if (this.state.filterRecent)
-				markers = filterMetadataByTime(markers);
+				markers = filterMetadataByTime(
+					markers,
+					this.state.filterRecentTimeframe
+				);
 			return markers;
 		};
 
@@ -82,6 +100,21 @@ const withMetadataTraffic = WrappedComponent => {
 					))
 				});
 			}
+		};
+
+		renderFilter = () => {
+			if (this.state.filterNearby || this.state.filterRecent)
+				return (
+					<MetadataFilter
+						filterNearby={this.state.filterNearby}
+						filterRecent={this.state.filterRecent}
+						filterNearbyRadius={this.state.filterNearbyRadius}
+						filterRecentTimeframe={this.state.filterRecentTimeframe}
+						filterChangeNearby={this.filterChangeNearby}
+						filterChangeRecent={this.filterChangeRecent}
+					/>
+				);
+			else return null;
 		};
 
 		handleNewMetadataOpen = () => {
@@ -111,6 +144,7 @@ const withMetadataTraffic = WrappedComponent => {
 		render() {
 			return (
 				<WrappedComponent
+					filter={this.renderFilter}
 					filterNearby={this.filterNearby}
 					filterRecent={this.filterRecent}
 					filterHeatMap={this.filterHeatmap}

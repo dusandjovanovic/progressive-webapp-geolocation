@@ -42,6 +42,11 @@ export const styles = theme => ({
 	icon: {
 		marginLeft: theme.spacing(0.5)
 	},
+	avatar: {
+		width: "24px",
+		height: "24px",
+		backgroundColor: theme.palette.primary.dark
+	},
 	normalizedText: {
 		fontWeight: "normal"
 	},

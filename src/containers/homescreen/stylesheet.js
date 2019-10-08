@@ -1,4 +1,4 @@
-export const styles = () => ({
+export const styles = theme => ({
 	root: {
 		marginTop: "64px",
 		padding: 0,
@@ -34,5 +34,9 @@ export const styles = () => ({
 		userSelect: "none",
 		fontFamily:
 			"source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace"
+	},
+	headingHighlight: {
+		color: theme.palette.secondary.main,
+		fontWeight: "bold"
 	}
 });

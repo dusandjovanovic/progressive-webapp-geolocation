@@ -47,9 +47,9 @@
 		"babel-eslint": "^10.0.3",
 		"babel-tape-runner": "^3.0.0",
 		"eslint": "^6.5.1",
-		"eslint-config-prettier": "^6.3.0",
+		"eslint-config-prettier": "^6.4.0",
 		"nodemon": "^1.19.3",
-		"npm-check-updates": "^3.1.23",
+		"npm-check-updates": "^3.1.24",
 		"prettier": "^1.18.2",
 		"supertest": "^4.0.2",
 		"tape": "^4.11.0"

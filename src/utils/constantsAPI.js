@@ -1,13 +1,12 @@
 import base from "axios";
 
-// export const backendRoot = "http://localhost:8080";
-// export const backendIOMap = "http://localhost:8080/map";
-// export const backendIOMessaging = "http://localhost:8080/chat";
+export const backendRoot = "http://localhost:8080";
+export const backendIOMap = "ws://localhost:8080/map";
+export const backendIOMessaging = "ws://localhost:8080/chat";
 
-// production server configuration
-export const backendRoot = "https://mapped-backend.appspot.com/";
-export const backendIOMap = "https://mapped-backend.appspot.com/map";
-export const backendIOMessaging = "https://mapped-backend.appspot.com/chat";
+// export const backendRoot = "https://mapped-backend.appspot.com";
+// export const backendIOMap = "wss://mapped-backend.appspot.com/map";
+// export const backendIOMessaging = "wss://mapped-backend.appspot.com/chat";
 
 export const authLoginRoute = "/api/login";
 export const authRegisterRoute = "/api/register";

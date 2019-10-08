@@ -36,18 +36,16 @@ const notification = props => {
 	return (
 		<Grow in>
 			<SnackbarContent
-				aria-describedby="notification"
 				message={
-					<div>
+					<React.Fragment>
 						{snackIcon}
 						{message}
-					</div>
+					</React.Fragment>
 				}
 				action={
 					<IconButton
 						onClick={() => onClose(props.id)}
 						key="close"
-						aria-label="close"
 						color="inherit"
 					>
 						<Close className={classes.close} />

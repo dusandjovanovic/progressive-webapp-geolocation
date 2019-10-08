@@ -35,7 +35,7 @@ const statusbar = props => {
 				<div className={classes.managed}>
 					<Chip
 						size="small"
-						label={"Heat map layer"}
+						label={"Heat map"}
 						className={classes.elementManaged}
 					/>
 				</div>
@@ -45,7 +45,7 @@ const statusbar = props => {
 					<Chip
 						color="secondary"
 						size="small"
-						label={"Insights this week"}
+						label={"Insights recently"}
 						deleteIcon={<Timelapse />}
 						onDelete={() => {}}
 						className={classes.elementManaged}

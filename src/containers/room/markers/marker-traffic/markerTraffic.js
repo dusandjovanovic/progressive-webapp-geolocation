@@ -4,16 +4,24 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Avatar from "@material-ui/core/Avatar";
+import Badge from "@material-ui/core/Badge";
 import IconButton from "@material-ui/core/IconButton";
 import ShareIcon from "@material-ui/icons/Share";
-import { Marker, Tooltip } from "react-leaflet";
+import { CircleMarker, Tooltip } from "react-leaflet";
 import PropTypes from "prop-types";
 
 import { styles } from "./stylesheet";
 import withStyles from "@material-ui/core/styles/withStyles";
 
+import {
+	IMPACT_COLORS_TRAFFIC,
+	IMPACT_STRING_TRAFFIC
+} from "../../../../utils/constants";
+
 const markerTraffic = props => {
 	const { classes } = props;
+	const color = IMPACT_COLORS_TRAFFIC[props.element.properties.value - 1];
+	const text = IMPACT_STRING_TRAFFIC(props.element.properties.value);
 
 	const prettyDateFormat = time => {
 		return new Date(time).toLocaleDateString("en-US", {
@@ -27,11 +35,15 @@ const markerTraffic = props => {
 	const prettyAvatarHeadline = username => username.substring(0, 1);
 
 	return (
-		<Marker
-			position={[
+		<CircleMarker
+			center={[
 				props.element.geometry.coordinates[0],
 				props.element.geometry.coordinates[1]
 			]}
+			radius={12 + props.element.properties.value * 1.75}
+			fillOpacity={0.5}
+			stroke={false}
+			color={color}
 		>
 			<Tooltip direction="bottom">
 				<div className={classes.root}>
@@ -48,9 +60,14 @@ const markerTraffic = props => {
 							props.element.properties.time
 						)}
 					/>
-					<CardContent>
+					<CardContent style={{ color }}>
 						<Typography color="inherit" variant="button">
-							{props.element.properties.value}
+							{text}
+							<Badge
+								color="primary"
+								badgeContent={props.element.properties.value}
+								className={classes.margin}
+							/>
 						</Typography>
 						<Typography variant="body1" component="p">
 							{props.element.properties.name}
@@ -80,7 +97,7 @@ const markerTraffic = props => {
 					</CardActions>
 				</div>
 			</Tooltip>
-		</Marker>
+		</CircleMarker>
 	);
 };
 

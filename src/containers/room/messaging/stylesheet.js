@@ -6,7 +6,8 @@ export const styles = theme => ({
 		width: "100%",
 		height: "100%",
 		display: "flex",
-		flexDirection: "column"
+		flexDirection: "column",
+		zIndex: 1000
 	},
 	messageContainer: {
 		padding: theme.spacing(0.5),

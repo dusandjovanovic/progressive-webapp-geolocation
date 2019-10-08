@@ -107,6 +107,7 @@ class Room extends React.Component {
 							markersMetadata={this.props.markersMetadata}
 							metadata={this.props.metadata}
 							heatMap={this.props.filterHeatMapManaged}
+							filter={this.props.filter}
 						/>
 					</Grid>
 					<Statusbar
@@ -159,6 +160,7 @@ Room.propTypes = {
 	metadata: PropTypes.arrayOf(PropTypes.object),
 	markerCurrentLocation: PropTypes.object,
 	roomAddMetadataInit: PropTypes.func.isRequired,
+	filter: PropTypes.func.isRequired,
 	filterNearby: PropTypes.func.isRequired,
 	filterRecent: PropTypes.func.isRequired,
 	filterHeatMap: PropTypes.func.isRequired,

@@ -40,8 +40,10 @@ const withGeolocation = WrappedComponent => {
 			this.setState(
 				{
 					location: {
-						latitude: position.coords.latitude,
-						longitude: position.coords.longitude
+						latitude:
+							(position.coords && position.coords.latitude) || 0,
+						longitude:
+							(position.coords && position.coords.longitude) || 0
 					}
 				},
 				async () => {
