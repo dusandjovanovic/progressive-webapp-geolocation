@@ -2,6 +2,11 @@
 runtime: nodejs
 env: flex
 
+# [START scaling]
+manual_scaling:
+    instances: 1
+# [END scaling]
+
 # [START network]
 network:
     session_affinity: true

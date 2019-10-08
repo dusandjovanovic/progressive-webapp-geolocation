@@ -1,12 +1,20 @@
-import isSameWeek from "date-fns/isSameWeek";
+import differenceInCalendarDays from "date-fns/differenceInCalendarDays";
 
-export const filterMetadataByTime = (array, referent = new Date()) => {
-	return array.filter(element =>
-		isSameWeek(new Date(element.properties.time), referent)
+export const filterMetadataByTime = (
+	array,
+	offset,
+	referentDate = new Date()
+) => {
+	return array.filter(
+		element =>
+			differenceInCalendarDays(
+				new Date(element.properties.time),
+				referentDate
+			) >= -offset
 	);
 };
 
-export const filterMetadataByDistance = (array, referent, distance = 1000) => {
+export const filterMetadataByDistance = (array, referent, distance) => {
 	return array.filter(
 		element =>
 			latLonDistance(
